@@ -8,11 +8,16 @@ import androidx.test.filters.SmallTest
 import com.github.godspeed010.weblib.feature_library.data.data_source.FolderDao
 import com.github.godspeed010.weblib.feature_library.data.data_source.LibraryDatabase
 import com.github.godspeed010.weblib.feature_library.data.data_source.NovelDao
+import com.github.godspeed010.weblib.feature_library.domain.model.Folder
+import com.github.godspeed010.weblib.feature_library.domain.model.Novel
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
 
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 
 @ExperimentalCoroutinesApi
@@ -43,5 +48,23 @@ class FolderWithNovelTest {
         database.close()
     }
 
+    @Test
+    fun getNovelsFromFolder() = runBlockingTest {
+        val folder = Folder(0, "testFolder")
+        folderDao.insertFolder(folder)
+
+        val folderNovels = listOf(
+            Novel(id = 1, title = "one", "url", 0),
+            Novel(id = 2, title = "two", "url2", 0),
+            Novel(id = 3, title = "three", "url3", 0),
+            Novel(id = 4, title = "four", "url4", 0),
+            Novel(id = 5, title = "five", "url5", 0),
+        )
+        folderNovels.forEach { novelDao.insertNovel(it) }
+
+        val novelsFromFolder = folder.id?.let { folderDao.getFolderWithNovels(it) }?.novels
+
+        assertThat(novelsFromFolder).containsExactlyElementsIn(folderNovels)
+    }
 
 }

@@ -57,7 +57,7 @@ class NovelDaoTest {
             Novel(1, "title", "url", 0),
             Novel(2, "name", "url_Here", 0),
         )
-        val remainingNovel = Novel(1, "name", "url_Here", 1)
+        val remainingNovel = Novel(5, "name", "url_Here", 1)
         novels.forEach { novelDao.insertNovel(it) }
         novelDao.insertNovel(remainingNovel)
 

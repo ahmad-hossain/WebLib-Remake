@@ -14,4 +14,8 @@ abstract class LibraryDatabase : RoomDatabase() {
 
     abstract fun folderDao(): FolderDao
     abstract fun novelDao(): NovelDao
+
+    companion object {
+        const val DATABASE_NAME = "library_db"
+    }
 }
