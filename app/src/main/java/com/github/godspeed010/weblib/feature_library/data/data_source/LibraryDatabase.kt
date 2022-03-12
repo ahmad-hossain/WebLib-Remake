@@ -12,8 +12,8 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 )
 abstract class LibraryDatabase : RoomDatabase() {
 
-    abstract fun folderDao(): FolderDao
-    abstract fun novelDao(): NovelDao
+    abstract val folderDao: FolderDao
+    abstract val novelDao: NovelDao
 
     companion object {
         const val DATABASE_NAME = "library_db"
