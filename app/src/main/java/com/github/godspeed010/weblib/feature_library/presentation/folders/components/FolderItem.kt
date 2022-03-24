@@ -18,13 +18,16 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 @Composable
 fun FolderItem(
     folder: Folder,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onFolderClicked: () -> Unit,
+    onMoreClicked: () -> Unit
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
                 //todo navigate to novels screen
+                onFolderClicked()
             }
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -38,9 +41,7 @@ fun FolderItem(
             modifier = Modifier.weight(1f),
             text = folder.title
         )
-        IconButton(onClick = {
-            //todo open BottomSheet for Edit and Delete options
-        }) {
+        IconButton(onClick = onMoreClicked) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
                 contentDescription = "More"
@@ -53,6 +54,8 @@ fun FolderItem(
 @Composable
 fun FolderItemPreview() {
     FolderItem(
-        Folder(title = "Testing")
+        Folder(title = "Testing"),
+        onFolderClicked = {},
+        onMoreClicked = {}
     )
 }

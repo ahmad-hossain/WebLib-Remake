@@ -2,17 +2,26 @@ package com.github.godspeed010.weblib.feature_library.presentation.folders.compo
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
+@ExperimentalComposeUiApi
 @Composable
 fun AddEditFolderDialog(
     modifier: Modifier = Modifier,
@@ -22,6 +31,12 @@ fun AddEditFolderDialog(
     onDismissDialog: () -> Unit,
     onConfirmDialog: () -> Unit
 ) {
+    val focusRequester = FocusRequester()
+    LaunchedEffect(true) {
+        focusRequester.requestFocus()
+    }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Dialog(
         onDismissRequest = onDismissDialog,
     ) {
@@ -47,11 +62,21 @@ fun AddEditFolderDialog(
                 OutlinedTextField(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .padding(horizontal = 24.dp),
+                        .padding(horizontal = 24.dp)
+                        .focusRequester(focusRequester),
                     value = folderName,
                     onValueChange = {
                         onTextChange(it)
-                    }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                            onConfirmDialog()
+                        }
+                    )
                 )
 
                 Spacer(Modifier.height(10.dp))

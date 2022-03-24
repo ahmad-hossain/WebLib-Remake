@@ -4,18 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.github.godspeed010.weblib.feature_library.presentation.folders.FoldersScreen
-import com.github.godspeed010.weblib.feature_library.presentation.folders.NavGraphs
+import androidx.compose.ui.ExperimentalComposeUiApi
+import com.github.godspeed010.weblib.feature_library.presentation.NavGraphs
 import com.github.godspeed010.weblib.ui.theme.WebLibTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
-import dagger.hilt.EntryPoint
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

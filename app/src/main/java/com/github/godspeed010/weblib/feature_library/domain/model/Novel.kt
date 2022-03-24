@@ -1,10 +1,13 @@
 package com.github.godspeed010.weblib.feature_library.domain.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(
     foreignKeys = [
         ForeignKey(
@@ -25,4 +28,4 @@ data class Novel(
     val title: String,
     val url: String,
     val folderId: Int
-)
+) : Parcelable

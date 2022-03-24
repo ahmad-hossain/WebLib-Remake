@@ -71,6 +71,7 @@ class FoldersViewModel @Inject constructor(
                     dialogTextFieldText = event.folderName
                 )
             }
+            FoldersEvent.FolderClicked -> TODO()
         }
     }
 

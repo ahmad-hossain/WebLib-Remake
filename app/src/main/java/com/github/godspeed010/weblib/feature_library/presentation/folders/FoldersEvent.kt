@@ -6,6 +6,7 @@ sealed class FoldersEvent {
     object AddFolder : FoldersEvent()
     data class UpdateFolder(val folder: Folder) : FoldersEvent()
     data class DeleteFolder(val folder: Folder) : FoldersEvent()
+    object FolderClicked : FoldersEvent()
     object RestoreFolder : FoldersEvent()
     object AddFolderClicked : FoldersEvent()
     data class EditFolderClicked(val folder: Folder) : FoldersEvent()
