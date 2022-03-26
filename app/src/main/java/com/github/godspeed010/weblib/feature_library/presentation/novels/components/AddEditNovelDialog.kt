@@ -9,23 +9,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentPaste
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.layout.AlignmentLine
-import androidx.compose.ui.layout.FirstBaseline
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import kotlinx.coroutines.delay
 
 @ExperimentalComposeUiApi
 @Composable
@@ -39,29 +38,32 @@ fun AddEditNovelDialog(
     onDismissDialog: () -> Unit,
     onConfirmDialog: () -> Unit
 ) {
-    val focusRequester = FocusRequester()
-    val focusManager = LocalFocusManager.current
-    LaunchedEffect(true) {
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        delay(300)
         focusRequester.requestFocus()
     }
     val keyboardController = LocalSoftwareKeyboardController.current
     val localClipboardManager = LocalClipboardManager.current
 
     Dialog(
+        properties = DialogProperties(usePlatformDefaultWidth = false),
         onDismissRequest = onDismissDialog,
     ) {
         Card(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier
+                .width(IntrinsicSize.Min),
             shape = RoundedCornerShape(16.dp),
             backgroundColor = MaterialTheme.colors.surface,
             elevation = 24.dp
         ) {
             Column {
+                val focusManager = LocalFocusManager.current
+
                 // Title
                 Text(
                     modifier = Modifier
-                        .firstBaselineToTop(40.dp)
-                        .padding(horizontal = 24.dp),
+                        .padding(start = 24.dp, end = 24.dp, top = 16.dp),
                     text = title,
                     style = MaterialTheme.typography.h6
                 )
@@ -73,6 +75,7 @@ fun AddEditNovelDialog(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(horizontal = 24.dp)
+                        .width(TextFieldDefaults.MinWidth)
                         .focusRequester(focusRequester),
                     value = novelTitle,
                     onValueChange = {
@@ -94,7 +97,8 @@ fun AddEditNovelDialog(
                 OutlinedTextField(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .padding(horizontal = 24.dp),
+                        .padding(horizontal = 24.dp)
+                        .width(TextFieldDefaults.MinWidth),
                     value = novelUrl,
                     onValueChange = {
                         onNovelUrlChanged(it)
@@ -139,25 +143,6 @@ fun AddEditNovelDialog(
                 }
             }
         }
-    }
-}
-
-fun Modifier.firstBaselineToTop(
-    firstBaselineToTop: Dp
-) = layout { measurable, constraints ->
-    // Measure the composable
-    val placeable = measurable.measure(constraints)
-
-    // Check the composable has a first baseline
-    check(placeable[FirstBaseline] != AlignmentLine.Unspecified)
-    val firstBaseline = placeable[FirstBaseline]
-
-    // Height of the composable with padding - first baseline
-    val placeableY = firstBaselineToTop.roundToPx() - firstBaseline
-    val height = placeable.height + placeableY
-    layout(placeable.width, height) {
-        // Where the composable gets placed
-        placeable.placeRelative(0, placeableY)
     }
 }
 
