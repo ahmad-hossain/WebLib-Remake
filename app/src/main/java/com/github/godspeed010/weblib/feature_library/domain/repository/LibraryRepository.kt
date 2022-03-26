@@ -27,5 +27,5 @@ interface LibraryRepository {
 
     suspend fun deleteFolder(folder: Folder)
 
-    suspend fun getFolderWithNovels(folderId: Int): FolderWithNovel
+    fun getFolderWithNovels(folderId: Int): LiveData<FolderWithNovel>
 }

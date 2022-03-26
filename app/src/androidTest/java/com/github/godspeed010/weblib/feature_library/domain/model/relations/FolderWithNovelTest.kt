@@ -39,8 +39,8 @@ class FolderWithNovelTest {
             LibraryDatabase::class.java
         ).allowMainThreadQueries().build()
 
-        folderDao = database.folderDao()
-        novelDao = database.novelDao()
+        folderDao = database.folderDao
+        novelDao = database.novelDao
     }
 
     @After

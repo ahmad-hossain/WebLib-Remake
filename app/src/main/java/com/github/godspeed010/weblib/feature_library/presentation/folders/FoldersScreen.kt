@@ -78,7 +78,7 @@ fun FoldersScreen(
                         navigator.navigate(NovelsScreenDestination(folder))
                     },
                     onMoreClicked = {
-                        //todo create bottom sheet with list of all Folders
+                        //TODO create DropdownMenu with Edit and Delete options
                     }
                 )
             }

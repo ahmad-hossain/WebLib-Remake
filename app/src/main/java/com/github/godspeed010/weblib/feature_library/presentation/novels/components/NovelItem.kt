@@ -1,4 +1,4 @@
-package com.github.godspeed010.weblib.feature_library.presentation.folders.components
+package com.github.godspeed010.weblib.feature_library.presentation.novels.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,38 +7,39 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material.icons.outlined.InsertDriveFile
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.godspeed010.weblib.feature_library.domain.model.Folder
+import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 
 @Composable
-fun FolderItem(
-    folder: Folder,
+fun NovelItem(
+    novel: Novel,
     modifier: Modifier = Modifier,
-    onFolderClicked: () -> Unit,
+    onNovelClicked: () -> Unit,
     onMoreClicked: () -> Unit
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
-                onFolderClicked()
+                onNovelClicked()
             }
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = Icons.Outlined.Folder,
-            contentDescription = "Folder"
+            imageVector = Icons.Outlined.BookmarkBorder,
+            contentDescription = "Novel"
         )
         Spacer(modifier = Modifier.width(15.dp))
         Text(
             modifier = Modifier.weight(1f),
-            text = folder.title
+            text = novel.title
         )
         IconButton(onClick = onMoreClicked) {
             Icon(
@@ -51,10 +52,10 @@ fun FolderItem(
 
 @Preview
 @Composable
-fun FolderItemPreview() {
-    FolderItem(
-        Folder(title = "Testing"),
-        onFolderClicked = {},
+fun NovelItemPreview() {
+    NovelItem(
+        Novel(title = "Testing", url = "", folderId = 0),
+        onNovelClicked = {},
         onMoreClicked = {}
     )
 }

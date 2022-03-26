@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
-import com.github.godspeed010.weblib.feature_library.domain.use_case.FolderUseCases
+import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.FolderUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,13 +54,11 @@ class FoldersViewModel @Inject constructor(
             is FoldersEvent.CancelFolderDialog -> {
                 Log.i(TAG, "CancelFolderDialog")
 
-                //Make AlertDialog for adding a Folder disappear
+                //Make AlertDialog for adding a Folder disappear & clear TextField State
                 _foldersScreenState.value = foldersScreenState.value.copy(
-                    isAddFolderDialogVisible = false
-                )
-                //Clear TextField State
-                _foldersScreenState.value = foldersScreenState.value.copy(
+                    isAddFolderDialogVisible = false,
                     dialogTextFieldText = ""
+
                 )
             }
             is FoldersEvent.EnteredFolderName -> {
@@ -71,7 +69,7 @@ class FoldersViewModel @Inject constructor(
                     dialogTextFieldText = event.folderName
                 )
             }
-            FoldersEvent.FolderClicked -> TODO()
+            is FoldersEvent.FolderClicked -> TODO()
         }
     }
 

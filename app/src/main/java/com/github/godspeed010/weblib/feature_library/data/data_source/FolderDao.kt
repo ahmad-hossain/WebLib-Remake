@@ -24,5 +24,5 @@ interface FolderDao {
 
     @Transaction
     @Query("SELECT * FROM folder WHERE id = :folderId")
-    suspend fun getFolderWithNovels(folderId: Int): FolderWithNovel
+    fun getFolderWithNovels(folderId: Int): LiveData<FolderWithNovel>
 }

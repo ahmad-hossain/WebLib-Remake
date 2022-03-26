@@ -52,7 +52,7 @@ class LibraryRepositoryImpl(
         return folderDao.deleteFolder(folder)
     }
 
-    override suspend fun getFolderWithNovels(folderId: Int): FolderWithNovel {
+    override fun getFolderWithNovels(folderId: Int): LiveData<FolderWithNovel> {
         return folderDao.getFolderWithNovels(folderId)
     }
 }

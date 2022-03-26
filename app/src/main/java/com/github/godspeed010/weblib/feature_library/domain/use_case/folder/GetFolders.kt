@@ -1,4 +1,4 @@
-package com.github.godspeed010.weblib.feature_library.domain.use_case
+package com.github.godspeed010.weblib.feature_library.domain.use_case.folder
 
 import androidx.lifecycle.LiveData
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder

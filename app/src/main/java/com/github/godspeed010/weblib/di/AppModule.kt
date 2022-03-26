@@ -5,9 +5,14 @@ import androidx.room.Room
 import com.github.godspeed010.weblib.feature_library.data.data_source.LibraryDatabase
 import com.github.godspeed010.weblib.feature_library.data.repository.LibraryRepositoryImpl
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
-import com.github.godspeed010.weblib.feature_library.domain.use_case.AddFolder
-import com.github.godspeed010.weblib.feature_library.domain.use_case.FolderUseCases
-import com.github.godspeed010.weblib.feature_library.domain.use_case.GetFolders
+import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.AddFolder
+import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.FolderUseCases
+import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.GetFolders
+import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.AddNovel
+import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.GetFolderWithNovels
+import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.GetNovels
+import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.NovelUseCases
+import com.github.godspeed010.weblib.feature_library.presentation.novels.NovelsEvent
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,6 +45,16 @@ object AppModule {
         return FolderUseCases(
             AddFolder(repository),
             GetFolders(repository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideNovelUseCases(repository: LibraryRepository) : NovelUseCases {
+        return NovelUseCases(
+            GetNovels(repository),
+            AddNovel(repository),
+            GetFolderWithNovels(repository)
         )
     }
 }

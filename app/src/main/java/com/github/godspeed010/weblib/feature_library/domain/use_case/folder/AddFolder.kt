@@ -1,4 +1,4 @@
-package com.github.godspeed010.weblib.feature_library.domain.use_case
+package com.github.godspeed010.weblib.feature_library.domain.use_case.folder
 
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
