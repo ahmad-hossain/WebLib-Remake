@@ -47,17 +47,17 @@ class NovelDaoTest {
 
     @Test
     fun folderDeletionDeletesChildNovels() = runBlockingTest {
-        val parentFolder = Folder(0, "title")
-        val remainingFolder = Folder(1, "Title")
+        val parentFolder = Folder(1, "title")
+        val remainingFolder = Folder(2, "Title")
         folderDao.insertFolder(parentFolder)
         folderDao.insertFolder(remainingFolder)
 
         val novels = listOf(
-            Novel(0, "name", "url", 0),
-            Novel(1, "title", "url", 0),
-            Novel(2, "name", "url_Here", 0),
+            Novel(1, "name", "url", 1),
+            Novel(2, "title", "url", 1),
+            Novel(3, "name", "url_Here", 1),
         )
-        val remainingNovel = Novel(5, "name", "url_Here", 1)
+        val remainingNovel = Novel(5, "name", "url_Here", 2)
         novels.forEach { novelDao.insertNovel(it) }
         novelDao.insertNovel(remainingNovel)
 
@@ -71,10 +71,10 @@ class NovelDaoTest {
     @Test
     fun addNovel() = runBlockingTest {
         //folder with same folderId must be created first due to parent-child relationship
-        val parentFolder = Folder(0, "title")
+        val parentFolder = Folder(1, "title")
         folderDao.insertFolder(parentFolder)
 
-        val novel = Novel(0, "title", "url", 0)
+        val novel = Novel(1, "title", "url", 1)
         novelDao.insertNovel(novel)
 
         val allNovels = novelDao.getNovels().getOrAwaitValue()
@@ -83,11 +83,11 @@ class NovelDaoTest {
 
     @Test
     fun deleteNovel() = runBlockingTest {
-        val parentFolder = Folder(0, "title")
+        val parentFolder = Folder(1, "title")
         folderDao.insertFolder(parentFolder)
 
-        val novel = Novel(1, "title", "url", 0)
-        val remainingNovel = Novel(2, "something", "urlabc", 0)
+        val novel = Novel(1, "title", "url", 1)
+        val remainingNovel = Novel(2, "something", "urlabc", 1)
         novelDao.insertNovel(novel)
         novelDao.insertNovel(remainingNovel)
         novelDao.deleteNovel(novel)
@@ -99,11 +99,11 @@ class NovelDaoTest {
 
     @Test
     fun updateNovel() = runBlockingTest {
-        val parentFolder = Folder(0, "title")
+        val parentFolder = Folder(1, "title")
         folderDao.insertFolder(parentFolder)
 
-        val novel = Novel(0, "title", "url", 0)
-        val updatedNovel = Novel(0, "new", "newurl", 0)
+        val novel = Novel(3, "title", "url", 1)
+        val updatedNovel = Novel(3, "new", "newurl", 1)
         novelDao.insertNovel(novel)
         novelDao.updateNovel(updatedNovel)
 
@@ -121,10 +121,10 @@ class NovelDaoTest {
         )
         folders.forEach { folderDao.insertFolder(it) }
 
-        val novel1 = Novel(0, "hello", "url", 9)
-        val novel2 = Novel(1, "hello world", "url", 8)
-        val novel3 = Novel(2, "title", "hello", 7)
-        val noMatch = Novel(3, "title", "url", 6)
+        val novel1 = Novel(1, "hello", "url", 9)
+        val novel2 = Novel(2, "hello world", "url", 8)
+        val novel3 = Novel(3, "title", "hello", 7)
+        val noMatch = Novel(4, "title", "url", 6)
         novelDao.insertNovel(novel1)
         novelDao.insertNovel(novel2)
         novelDao.insertNovel(novel3)

@@ -47,7 +47,7 @@ class FolderDaoTest {
 
     @Test
     fun insertFolder() = runBlockingTest {
-        val folder = Folder(0, title = "title")
+        val folder = Folder(1, title = "title")
         folderDao.insertFolder(folder)
 
         val allFolders = folderDao.getFolders().getOrAwaitValue()
@@ -57,8 +57,8 @@ class FolderDaoTest {
 
     @Test
     fun deleteFolder() = runBlockingTest {
-        val folder = Folder(0, "title")
-        val remainingFolder = Folder(1, "a_title")
+        val folder = Folder(1, "title")
+        val remainingFolder = Folder(2, "a_title")
         folderDao.insertFolder(folder)
         folderDao.insertFolder(remainingFolder)
         folderDao.deleteFolder(folder)
@@ -70,10 +70,10 @@ class FolderDaoTest {
 
     @Test
     fun updateFolder() = runBlockingTest {
-        val folder = Folder(0, "name")
+        val folder = Folder(id = 5, "name")
         folderDao.insertFolder(folder)
 
-        val updatedFolder = Folder(0, "updated")
+        val updatedFolder = Folder(5, "updated")
         folderDao.updateFolder(updatedFolder)
 
         val allFolders = folderDao.getFolders().getOrAwaitValue()
@@ -83,17 +83,17 @@ class FolderDaoTest {
 
     @Test
     fun folderUpdateRetainsNovels() = runBlockingTest {
-        val folder = Folder(0, "name")
+        val folder = Folder(5, "name")
         folderDao.insertFolder(folder)
 
         val novels = listOf(
-            Novel(0, "title", "url", 0),
-            Novel(1, "titleabc", "url", 0),
-            Novel(2, "title", "url", 0),
+            Novel(1, "title", "url", 5),
+            Novel(2, "titleabc", "url", 5),
+            Novel(3, "title", "url", 5),
         )
         novels.forEach { novelDao.insertNovel(it) }
 
-        val updatedFolder = Folder(0, "updated")
+        val updatedFolder = Folder(5, "updated")
         folderDao.updateFolder(updatedFolder)
 
         val allNovels = novelDao.getNovels().getOrAwaitValue()
@@ -104,9 +104,9 @@ class FolderDaoTest {
     @Test
     fun getFolderNames() = runBlockingTest {
         val folders = listOf(
-            Folder(0, "one"),
-            Folder(1, "two"),
-            Folder(2, "three")
+            Folder(1, "one"),
+            Folder(2, "two"),
+            Folder(3, "three")
         )
 
         folders.forEach { folderDao.insertFolder(it) }

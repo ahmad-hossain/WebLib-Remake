@@ -24,7 +24,7 @@ import kotlinx.parcelize.Parcelize
 )
 data class Novel(
     @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
+    val id: Int = 0,
     val title: String,
     val url: String,
     val folderId: Int
