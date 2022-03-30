@@ -1,6 +1,7 @@
 package com.github.godspeed010.weblib.feature_library.presentation.novels
 
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
+import com.github.godspeed010.weblib.feature_library.presentation.folders.FoldersEvent
 
 sealed class NovelsEvent {
     object AddNovel : NovelsEvent()
@@ -13,4 +14,6 @@ sealed class NovelsEvent {
     object CancelNovelDialog : NovelsEvent()
     data class EnteredNovelTitle(val novelTitle: String) : NovelsEvent()
     data class EnteredNovelUrl(val novelUrl: String) : NovelsEvent()
+    data class MoreOptionsClicked(val novelId: Int) : NovelsEvent()
+    object MoreOptionsDismissed : NovelsEvent()
 }

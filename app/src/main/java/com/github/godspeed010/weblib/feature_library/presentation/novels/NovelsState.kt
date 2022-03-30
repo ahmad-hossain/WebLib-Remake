@@ -10,4 +10,5 @@ data class NovelsState(
     val isAddEditNovelDialogVisible : Boolean = false,
     val dialogNovelTitle: String = "",
     val dialogNovelUrl: String = "",
-)
+    val expandedDropdownNovelId: Int? = null,
+    )

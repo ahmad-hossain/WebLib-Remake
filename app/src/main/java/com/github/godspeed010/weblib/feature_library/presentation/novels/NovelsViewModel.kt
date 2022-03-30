@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.NovelUseCases
+import com.github.godspeed010.weblib.feature_library.presentation.folders.FoldersEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -87,6 +88,22 @@ class NovelsViewModel @Inject constructor(
                 //update the novelName State
                 _novelsScreenState.value = novelsScreenState.value.copy(
                     dialogNovelUrl = event.novelUrl
+                )
+            }
+            is NovelsEvent.MoreOptionsClicked -> {
+                Log.d(TAG, "More options clicked for Folder ${event.novelId}")
+
+                //Expand Dropdown
+                _novelsScreenState.value = novelsScreenState.value.copy(
+                    expandedDropdownNovelId = event.novelId
+                )
+            }
+            is NovelsEvent.MoreOptionsDismissed -> {
+                Log.d(TAG,"More options dismissed for Novel ${novelsScreenState.value.expandedDropdownNovelId}")
+
+                //Collapse Dropdown
+                _novelsScreenState.value = novelsScreenState.value.copy(
+                    expandedDropdownNovelId = null
                 )
             }
         }

@@ -59,7 +59,6 @@ class FoldersViewModel @Inject constructor(
                 _foldersScreenState.value = foldersScreenState.value.copy(
                     isAddFolderDialogVisible = false,
                     dialogTextFieldText = ""
-
                 )
             }
             is FoldersEvent.EnteredFolderName -> {
@@ -80,7 +79,7 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.MoreOptionsDismissed -> {
-                Log.d(TAG, "More options dismissed for Folder ${foldersScreenState.value.expandedDropdownFolderId}")
+                Log.d(TAG,"More options dismissed for Folder ${foldersScreenState.value.expandedDropdownFolderId}")
 
                 //Collapse Dropdown
                 _foldersScreenState.value = foldersScreenState.value.copy(

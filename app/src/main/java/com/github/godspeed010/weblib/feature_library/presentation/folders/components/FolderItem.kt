@@ -20,14 +20,14 @@ fun FolderItem(
     modifier: Modifier = Modifier,
     onFolderClicked: () -> Unit,
     onMoreClicked: () -> Unit,
-    onDismissDropdown: () -> Unit
+    onDismissDropdown: () -> Unit,
+    dropdownOptions: List<String> = listOf("Move", "More", "Delete")
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(Alignment.End)
     ) {
-        val dropdownOptions = listOf("Move", "More", "Delete")
         DropdownMenu(
             expanded = expandedDropdownFolderId == folder.id,
             onDismissRequest = onDismissDropdown

@@ -2,9 +2,7 @@ package com.github.godspeed010.weblib.feature_library.presentation.novels.compon
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.BookmarkBorder
@@ -20,9 +18,28 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 fun NovelItem(
     novel: Novel,
     modifier: Modifier = Modifier,
+    expandedDropdownNovelId: Int?,
     onNovelClicked: () -> Unit,
-    onMoreClicked: () -> Unit
+    onMoreClicked: () -> Unit,
+    onDismissDropdown: () -> Unit,
+    dropdownOptions: List<String> = listOf("Move", "More", "Delete")
 ) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.End)
+    ) {
+        DropdownMenu(
+            expanded = expandedDropdownNovelId == novel.id,
+            onDismissRequest = onDismissDropdown
+        ) {
+            dropdownOptions.forEachIndexed { index, s ->
+                DropdownMenuItem(onClick = { /*TODO*/ }) {
+                    Text(s)
+                }
+            }
+        }
+    }
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -55,7 +72,9 @@ fun NovelItem(
 fun NovelItemPreview() {
     NovelItem(
         Novel(title = "Testing", url = "", folderId = 0),
+        expandedDropdownNovelId = null,
         onNovelClicked = {},
-        onMoreClicked = {}
+        onMoreClicked = {},
+        onDismissDropdown = {}
     )
 }
