@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private val TAG = "FoldersViewModel"
+
 @HiltViewModel
 class FoldersViewModel @Inject constructor(
     private val folderUseCases: FolderUseCases
@@ -70,6 +71,22 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.FolderClicked -> TODO()
+            is FoldersEvent.MoreOptionsClicked -> {
+                Log.d(TAG, "More options clicked for Folder ${event.folderId}")
+
+                //Expand Dropdown
+                _foldersScreenState.value = foldersScreenState.value.copy(
+                    expandedDropdownFolderId = event.folderId
+                )
+            }
+            is FoldersEvent.MoreOptionsDismissed -> {
+                Log.d(TAG, "More options dismissed for Folder ${foldersScreenState.value.expandedDropdownFolderId}")
+
+                //Collapse Dropdown
+                _foldersScreenState.value = foldersScreenState.value.copy(
+                    expandedDropdownFolderId = null
+                )
+            }
         }
     }
 

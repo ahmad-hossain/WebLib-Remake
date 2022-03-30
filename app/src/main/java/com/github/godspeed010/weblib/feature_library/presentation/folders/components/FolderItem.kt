@@ -2,9 +2,7 @@ package com.github.godspeed010.weblib.feature_library.presentation.folders.compo
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Folder
@@ -18,10 +16,29 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 @Composable
 fun FolderItem(
     folder: Folder,
+    expandedDropdownFolderId: Int?,
     modifier: Modifier = Modifier,
     onFolderClicked: () -> Unit,
-    onMoreClicked: () -> Unit
+    onMoreClicked: () -> Unit,
+    onDismissDropdown: () -> Unit
 ) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.End)
+    ) {
+        val dropdownOptions = listOf("Move", "More", "Delete")
+        DropdownMenu(
+            expanded = expandedDropdownFolderId == folder.id,
+            onDismissRequest = onDismissDropdown
+        ) {
+            dropdownOptions.forEachIndexed { index, s ->
+                DropdownMenuItem(onClick = { /*TODO*/ }) {
+                    Text(s)
+                }
+            }
+        }
+    }
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -53,8 +70,10 @@ fun FolderItem(
 @Composable
 fun FolderItemPreview() {
     FolderItem(
-        Folder(title = "Testing"),
+        folder = Folder(title = "Testing", id = 0),
+        expandedDropdownFolderId = 0,
         onFolderClicked = {},
-        onMoreClicked = {}
+        onMoreClicked = {},
+        onDismissDropdown = {}
     )
 }

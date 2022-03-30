@@ -12,4 +12,6 @@ sealed class FoldersEvent {
     data class EditFolderClicked(val folder: Folder) : FoldersEvent()
     object CancelFolderDialog : FoldersEvent()
     data class EnteredFolderName(val folderName: String) : FoldersEvent()
+    data class MoreOptionsClicked(val folderId: Int) : FoldersEvent()
+    object MoreOptionsDismissed : FoldersEvent()
 }

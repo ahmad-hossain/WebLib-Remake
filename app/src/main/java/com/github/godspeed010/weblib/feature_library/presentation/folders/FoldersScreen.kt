@@ -1,21 +1,16 @@
 package com.github.godspeed010.weblib.feature_library.presentation.folders
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.feature_library.presentation.destinations.NovelsScreenDestination
@@ -37,10 +32,12 @@ fun FoldersScreen(
     val scaffoldState = rememberScaffoldState()
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
         scaffoldState = scaffoldState,
+        topBar = {
+            TopAppBar(
+                title = { Text("Folders") }
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -68,18 +65,21 @@ fun FoldersScreen(
                 }
             )
         }
-
-        LazyColumn {
+        LazyColumn(
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 56.dp)
+            ) {
             items(folders) { folder ->
                 FolderItem(
                     folder = folder,
+                    expandedDropdownFolderId = state.expandedDropdownFolderId,
                     onFolderClicked = {
                         //Navigate to NovelsScreen & send clicked Folder
                         navigator.navigate(NovelsScreenDestination(folder))
                     },
                     onMoreClicked = {
-                        //TODO create DropdownMenu with Edit and Delete options
-                    }
+                        viewModel.onEvent(FoldersEvent.MoreOptionsClicked(folder.id))
+                    },
+                    onDismissDropdown = { viewModel.onEvent(FoldersEvent.MoreOptionsDismissed) }
                 )
             }
         }
