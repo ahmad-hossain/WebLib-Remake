@@ -27,12 +27,17 @@ class FoldersViewModel @Inject constructor(
                 Log.i(TAG, "AddFolder")
 
                 viewModelScope.launch(Dispatchers.IO) {
+                    //Add Folder. If id is 0, will generate new id. Else, overrides Folder
                     folderUseCases.addFolder(
-                        Folder(title = foldersScreenState.value.dialogTextFieldText)
+                        Folder(
+                            id = foldersScreenState.value.dialogFolderId,
+                            title = foldersScreenState.value.dialogTextFieldText
+                        )
                     )
-                    //Clear TextField state
+                    //Clear TextField state & reset dialogFolderId
                     _foldersScreenState.value = foldersScreenState.value.copy(
-                        dialogTextFieldText = ""
+                        dialogTextFieldText = "",
+                        dialogFolderId = 0
                     )
                 }
                 //Make AlertDialog for adding a Folder invisible
@@ -41,7 +46,13 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.UpdateFolder -> TODO()
-            is FoldersEvent.DeleteFolder -> TODO()
+            is FoldersEvent.DeleteFolder -> {
+                Log.i(TAG, "DeleteFolder")
+
+                viewModelScope.launch(Dispatchers.IO) {
+                    folderUseCases.deleteFolder(event.folder)
+                }
+            }
             is FoldersEvent.RestoreFolder -> TODO()
             is FoldersEvent.AddFolderClicked -> {
                 Log.i(TAG, "AddFolderClicked")
@@ -51,7 +62,15 @@ class FoldersViewModel @Inject constructor(
                     isAddFolderDialogVisible = true
                 )
             }
-            is FoldersEvent.EditFolderClicked -> TODO()
+            is FoldersEvent.EditFolderClicked -> {
+                //Set TextField state & close Dropdown
+                _foldersScreenState.value = foldersScreenState.value.copy(
+                    expandedDropdownFolderId = null,
+                    dialogFolderId = event.folder.id,
+                    dialogTextFieldText = event.folder.title,
+                    isAddFolderDialogVisible = true
+                )
+            }
             is FoldersEvent.CancelFolderDialog -> {
                 Log.i(TAG, "CancelFolderDialog")
 

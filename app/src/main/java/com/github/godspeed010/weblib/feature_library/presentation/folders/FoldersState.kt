@@ -8,5 +8,6 @@ data class FoldersState(
     val folders : LiveData<List<Folder>> = MutableLiveData(),
     val isAddFolderDialogVisible : Boolean = false,
     val dialogTextFieldText: String = "",
+    val dialogFolderId: Int = 0,
     val expandedDropdownFolderId: Int? = null,
 )

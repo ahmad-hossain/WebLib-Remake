@@ -9,8 +9,11 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 
 @Composable
@@ -21,8 +24,13 @@ fun FolderItem(
     onFolderClicked: () -> Unit,
     onMoreClicked: () -> Unit,
     onDismissDropdown: () -> Unit,
-    dropdownOptions: List<String> = listOf("Move", "More", "Delete")
+    dropdownOptions: Array<String> = stringArrayResource(id = R.array.folder_dropdown_options),
+    onEditClicked: () -> Unit,
+    onDeleteClicked: () -> Unit
 ) {
+    val edit = stringResource(id = R.string.edit)
+    val delete = stringResource(id = R.string.delete)
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -32,8 +40,13 @@ fun FolderItem(
             expanded = expandedDropdownFolderId == folder.id,
             onDismissRequest = onDismissDropdown
         ) {
-            dropdownOptions.forEachIndexed { index, s ->
-                DropdownMenuItem(onClick = { /*TODO*/ }) {
+            dropdownOptions.forEach { s ->
+                DropdownMenuItem(onClick = {
+                    when (s) {
+                        edit -> onEditClicked()
+                        delete -> onDeleteClicked()
+                    }
+                }) {
                     Text(s)
                 }
             }
@@ -74,6 +87,8 @@ fun FolderItemPreview() {
         expandedDropdownFolderId = 0,
         onFolderClicked = {},
         onMoreClicked = {},
-        onDismissDropdown = {}
+        onDismissDropdown = {},
+        onEditClicked = {},
+        onDeleteClicked = {}
     )
 }

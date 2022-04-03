@@ -135,4 +135,20 @@ class NovelDaoTest {
         assertThat(queriedNovels).containsExactly(novel1, novel2, novel3)
     }
 
+    @Test
+    fun getNovels() = runBlockingTest {
+        val parentFolder = Folder(id = 5, title = "title here")
+        folderDao.insertFolder(parentFolder)
+
+        val novels = listOf(
+            Novel(1, "title", "url", 5),
+            Novel(2, "titleabc", "url", 5),
+            Novel(3, "title", "url", 5),
+        )
+        novels.forEach { novelDao.insertNovel(it) }
+
+        val allNovels = novelDao.getNovels().getOrAwaitValue()
+
+        assertThat(allNovels).containsExactlyElementsIn(novels)
+    }
 }

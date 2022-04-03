@@ -28,4 +28,6 @@ interface LibraryRepository {
     suspend fun deleteFolder(folder: Folder)
 
     fun getFolderWithNovels(folderId: Int): LiveData<FolderWithNovel>
+
+    suspend fun insertOrUpdateFolder(folder: Folder)
 }

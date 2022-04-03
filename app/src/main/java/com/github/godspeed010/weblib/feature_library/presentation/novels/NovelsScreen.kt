@@ -99,6 +99,17 @@ fun NovelsScreen(
                     },
                     onDismissDropdown = {
                         viewModel.onEvent(NovelsEvent.MoreOptionsDismissed)
+                    },
+                    onEditClicked = {
+                        //todo
+                        viewModel.onEvent(NovelsEvent.EditNovelClicked(novel))
+                    },
+                    onDeleteClicked = {
+                        //todo
+                        viewModel.onEvent(NovelsEvent.DeleteNovel(novel))
+                    },
+                    onMoveClicked = {
+                        //todo
                     }
                 )
             }

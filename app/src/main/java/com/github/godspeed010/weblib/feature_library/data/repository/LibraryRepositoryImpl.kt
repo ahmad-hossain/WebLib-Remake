@@ -17,15 +17,15 @@ class LibraryRepositoryImpl(
     }
 
     override suspend fun insertNovel(novel: Novel) {
-        return novelDao.insertNovel(novel)
+        novelDao.insertNovel(novel)
     }
 
     override suspend fun updateNovel(novel: Novel) {
-        return novelDao.updateNovel(novel)
+        novelDao.updateNovel(novel)
     }
 
     override suspend fun deleteNovel(novel: Novel) {
-        return novelDao.deleteNovel(novel)
+        novelDao.deleteNovel(novel)
     }
 
     override suspend fun findNovelsByNameOrUrl(query: String): List<Novel> {
@@ -41,18 +41,22 @@ class LibraryRepositoryImpl(
     }
 
     override suspend fun insertFolder(folder: Folder) {
-        return folderDao.insertFolder(folder)
+        folderDao.insertFolder(folder)
     }
 
     override suspend fun updateFolder(folder: Folder) {
-        return folderDao.updateFolder(folder)
+        folderDao.updateFolder(folder)
     }
 
     override suspend fun deleteFolder(folder: Folder) {
-        return folderDao.deleteFolder(folder)
+        folderDao.deleteFolder(folder)
     }
 
     override fun getFolderWithNovels(folderId: Int): LiveData<FolderWithNovel> {
         return folderDao.getFolderWithNovels(folderId)
+    }
+
+    override suspend fun insertOrUpdateFolder(folder: Folder) {
+        folderDao.insertOrUpdateFolder(folder)
     }
 }

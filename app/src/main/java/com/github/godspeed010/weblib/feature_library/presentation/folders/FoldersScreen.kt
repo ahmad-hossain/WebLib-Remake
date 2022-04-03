@@ -4,17 +4,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.core.components.WebLibBottomAppBar
@@ -95,7 +91,15 @@ fun FoldersScreen(
                     onMoreClicked = {
                         viewModel.onEvent(FoldersEvent.MoreOptionsClicked(folder.id))
                     },
-                    onDismissDropdown = { viewModel.onEvent(FoldersEvent.MoreOptionsDismissed) }
+                    onDismissDropdown = {
+                        viewModel.onEvent(FoldersEvent.MoreOptionsDismissed)
+                    },
+                    onEditClicked = {
+                        viewModel.onEvent(FoldersEvent.EditFolderClicked(folder))
+                    },
+                    onDeleteClicked = {
+                        viewModel.onEvent(FoldersEvent.DeleteFolder(folder))
+                    }
                 )
             }
         }

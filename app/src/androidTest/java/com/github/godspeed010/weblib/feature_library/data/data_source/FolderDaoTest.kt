@@ -115,4 +115,55 @@ class FolderDaoTest {
 
         assertThat(dbFolderNames).isEqualTo(folderNames)
     }
+
+// Tests not functional. Loading infinitely. Cause unknown.
+//    @Test
+//    fun insertOrUpdateAddsFolder() = runBlockingTest {
+//        println("upsertAddFolder println")
+//        Log.d("testingdao", "start")
+//
+//        val folder = Folder(id = 1, title = "abc")
+//        folderDao.insertOrUpdateFolder(folder) // loads infinitely
+//
+//        Log.d("testingdao", "inserted folder")
+//
+//        val allFolders = folderDao.getFolders().getOrAwaitValue()
+//
+//        Log.d("testingdao", "gotFolders")
+//
+//        assertThat(allFolders).containsExactly(folder)
+//    }
+//
+//    @Test
+//    fun insertOrUpdateUpdatesFolder() = runBlockingTest {
+//        var folder = Folder(id = 1, title = "abc")
+//        folderDao.insertOrUpdateFolder(folder)
+//
+//        //change folder title
+//        folder = folder.copy(title = "testing123")
+//
+//        val allFolders = folderDao.getFolders().getOrAwaitValue()
+//
+//        assertThat(allFolders).containsExactly(folder)
+//    }
+//
+//    @Test
+//    fun insertOrUpdateRetainsNovels() = runBlockingTest {
+//        var folder = Folder(5, "name")
+//        folderDao.insertOrUpdateFolder(folder)
+//
+//        val novels = listOf(
+//            Novel(1, "title", "url", 5),
+//            Novel(2, "titleabc", "url", 5),
+//            Novel(3, "title", "url", 5),
+//        )
+//        novels.forEach { novelDao.insertNovel(it) }
+//
+//        folder = folder.copy(title = "updated")
+//        folderDao.insertOrUpdateFolder(folder)
+//
+//        val allNovels = novelDao.getNovels().getOrAwaitValue()
+//
+//        assertThat(allNovels).containsExactlyElementsIn(novels)
+//    }
 }

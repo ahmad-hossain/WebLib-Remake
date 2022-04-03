@@ -6,6 +6,7 @@ import com.github.godspeed010.weblib.feature_library.data.data_source.LibraryDat
 import com.github.godspeed010.weblib.feature_library.data.repository.LibraryRepositoryImpl
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
 import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.AddFolder
+import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.DeleteFolder
 import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.FolderUseCases
 import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.GetFolders
 import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.AddNovel
@@ -44,7 +45,8 @@ object AppModule {
     fun provideFolderUseCases(repository: LibraryRepository) : FolderUseCases {
         return FolderUseCases(
             AddFolder(repository),
-            GetFolders(repository)
+            GetFolders(repository),
+            DeleteFolder(repository)
         )
     }
 

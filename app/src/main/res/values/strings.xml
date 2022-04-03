@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">WebLib</string>
+    <string name="edit">Edit</string>
+    <string name="move">Move</string>
+    <string name="delete">Delete</string>
+
+    <string-array name="folder_dropdown_options">
+        <item>@string/edit</item>
+        <item>@string/delete</item>
+    </string-array>
+
+    <string-array name="novel_dropdown_options">
+        <item>@string/move</item>
+        <item>@string/edit</item>
+        <item>@string/delete</item>
+    </string-array>
 </resources>

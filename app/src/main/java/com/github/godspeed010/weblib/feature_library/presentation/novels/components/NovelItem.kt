@@ -6,12 +6,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.BookmarkBorder
-import androidx.compose.material.icons.outlined.InsertDriveFile
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 
 @Composable
@@ -22,8 +24,15 @@ fun NovelItem(
     onNovelClicked: () -> Unit,
     onMoreClicked: () -> Unit,
     onDismissDropdown: () -> Unit,
-    dropdownOptions: List<String> = listOf("Move", "More", "Delete")
+    dropdownOptions: Array<String> = stringArrayResource(id = R.array.novel_dropdown_options),
+    onEditClicked: () -> Unit,
+    onDeleteClicked: () -> Unit,
+    onMoveClicked: () -> Unit,
 ) {
+    val move = stringResource(id = R.string.move)
+    val edit = stringResource(id = R.string.edit)
+    val delete = stringResource(id = R.string.delete)
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -33,8 +42,14 @@ fun NovelItem(
             expanded = expandedDropdownNovelId == novel.id,
             onDismissRequest = onDismissDropdown
         ) {
-            dropdownOptions.forEachIndexed { index, s ->
-                DropdownMenuItem(onClick = { /*TODO*/ }) {
+            dropdownOptions.forEach { s ->
+                DropdownMenuItem(onClick = {
+                    when (s) {
+                        move -> onMoveClicked()
+                        edit -> onEditClicked()
+                        delete -> onDeleteClicked()
+                    }
+                }) {
                     Text(s)
                 }
             }
@@ -75,6 +90,9 @@ fun NovelItemPreview() {
         expandedDropdownNovelId = null,
         onNovelClicked = {},
         onMoreClicked = {},
-        onDismissDropdown = {}
+        onDismissDropdown = {},
+        onEditClicked = {},
+        onDeleteClicked = {},
+        onMoveClicked = {}
     )
 }
