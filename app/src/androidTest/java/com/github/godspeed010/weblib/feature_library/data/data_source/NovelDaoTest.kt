@@ -49,8 +49,8 @@ class NovelDaoTest {
     fun folderDeletionDeletesChildNovels() = runBlockingTest {
         val parentFolder = Folder(1, "title")
         val remainingFolder = Folder(2, "Title")
-        folderDao.insertFolder(parentFolder)
-        folderDao.insertFolder(remainingFolder)
+        folderDao.insert(parentFolder)
+        folderDao.insert(remainingFolder)
 
         val novels = listOf(
             Novel(1, "name", "url", 1),
@@ -58,10 +58,10 @@ class NovelDaoTest {
             Novel(3, "name", "url_Here", 1),
         )
         val remainingNovel = Novel(5, "name", "url_Here", 2)
-        novels.forEach { novelDao.insertNovel(it) }
-        novelDao.insertNovel(remainingNovel)
+        novels.forEach { novelDao.insert(it) }
+        novelDao.insert(remainingNovel)
 
-        folderDao.deleteFolder(parentFolder)
+        folderDao.delete(parentFolder)
 
         val allNovels = novelDao.getNovels().getOrAwaitValue()
 
@@ -72,10 +72,10 @@ class NovelDaoTest {
     fun addNovel() = runBlockingTest {
         //folder with same folderId must be created first due to parent-child relationship
         val parentFolder = Folder(1, "title")
-        folderDao.insertFolder(parentFolder)
+        folderDao.insert(parentFolder)
 
         val novel = Novel(1, "title", "url", 1)
-        novelDao.insertNovel(novel)
+        novelDao.insert(novel)
 
         val allNovels = novelDao.getNovels().getOrAwaitValue()
         assertThat(allNovels).containsExactly(novel)
@@ -84,13 +84,13 @@ class NovelDaoTest {
     @Test
     fun deleteNovel() = runBlockingTest {
         val parentFolder = Folder(1, "title")
-        folderDao.insertFolder(parentFolder)
+        folderDao.insert(parentFolder)
 
         val novel = Novel(1, "title", "url", 1)
         val remainingNovel = Novel(2, "something", "urlabc", 1)
-        novelDao.insertNovel(novel)
-        novelDao.insertNovel(remainingNovel)
-        novelDao.deleteNovel(novel)
+        novelDao.insert(novel)
+        novelDao.insert(remainingNovel)
+        novelDao.delete(novel)
 
         val allNovels = novelDao.getNovels().getOrAwaitValue()
 
@@ -100,12 +100,12 @@ class NovelDaoTest {
     @Test
     fun updateNovel() = runBlockingTest {
         val parentFolder = Folder(1, "title")
-        folderDao.insertFolder(parentFolder)
+        folderDao.insert(parentFolder)
 
         val novel = Novel(3, "title", "url", 1)
         val updatedNovel = Novel(3, "new", "newurl", 1)
-        novelDao.insertNovel(novel)
-        novelDao.updateNovel(updatedNovel)
+        novelDao.insert(novel)
+        novelDao.update(updatedNovel)
 
         val allNovels = novelDao.getNovels().getOrAwaitValue()
         assertThat(allNovels).containsExactly(updatedNovel)
@@ -119,16 +119,16 @@ class NovelDaoTest {
             Folder(8, "abcTitle"),
             Folder(6, "titleHere"),
         )
-        folders.forEach { folderDao.insertFolder(it) }
+        folders.forEach { folderDao.insert(it) }
 
         val novel1 = Novel(1, "hello", "url", 9)
         val novel2 = Novel(2, "hello world", "url", 8)
         val novel3 = Novel(3, "title", "hello", 7)
         val noMatch = Novel(4, "title", "url", 6)
-        novelDao.insertNovel(novel1)
-        novelDao.insertNovel(novel2)
-        novelDao.insertNovel(novel3)
-        novelDao.insertNovel(noMatch)
+        novelDao.insert(novel1)
+        novelDao.insert(novel2)
+        novelDao.insert(novel3)
+        novelDao.insert(noMatch)
 
         val queriedNovels = novelDao.findNovelsByNameOrUrl("%hell%")
 
@@ -138,14 +138,14 @@ class NovelDaoTest {
     @Test
     fun getNovels() = runBlockingTest {
         val parentFolder = Folder(id = 5, title = "title here")
-        folderDao.insertFolder(parentFolder)
+        folderDao.insert(parentFolder)
 
         val novels = listOf(
             Novel(1, "title", "url", 5),
             Novel(2, "titleabc", "url", 5),
             Novel(3, "title", "url", 5),
         )
-        novels.forEach { novelDao.insertNovel(it) }
+        novels.forEach { novelDao.insert(it) }
 
         val allNovels = novelDao.getNovels().getOrAwaitValue()
 

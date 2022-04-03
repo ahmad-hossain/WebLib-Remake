@@ -48,7 +48,7 @@ class FolderDaoTest {
     @Test
     fun insertFolder() = runBlockingTest {
         val folder = Folder(1, title = "title")
-        folderDao.insertFolder(folder)
+        folderDao.insert(folder)
 
         val allFolders = folderDao.getFolders().getOrAwaitValue()
 
@@ -59,9 +59,9 @@ class FolderDaoTest {
     fun deleteFolder() = runBlockingTest {
         val folder = Folder(1, "title")
         val remainingFolder = Folder(2, "a_title")
-        folderDao.insertFolder(folder)
-        folderDao.insertFolder(remainingFolder)
-        folderDao.deleteFolder(folder)
+        folderDao.insert(folder)
+        folderDao.insert(remainingFolder)
+        folderDao.delete(folder)
 
         val allFolders = folderDao.getFolders().getOrAwaitValue()
 
@@ -71,10 +71,10 @@ class FolderDaoTest {
     @Test
     fun updateFolder() = runBlockingTest {
         val folder = Folder(id = 5, "name")
-        folderDao.insertFolder(folder)
+        folderDao.insert(folder)
 
         val updatedFolder = Folder(5, "updated")
-        folderDao.updateFolder(updatedFolder)
+        folderDao.update(updatedFolder)
 
         val allFolders = folderDao.getFolders().getOrAwaitValue()
 
@@ -84,17 +84,17 @@ class FolderDaoTest {
     @Test
     fun folderUpdateRetainsNovels() = runBlockingTest {
         val folder = Folder(5, "name")
-        folderDao.insertFolder(folder)
+        folderDao.insert(folder)
 
         val novels = listOf(
             Novel(1, "title", "url", 5),
             Novel(2, "titleabc", "url", 5),
             Novel(3, "title", "url", 5),
         )
-        novels.forEach { novelDao.insertNovel(it) }
+        novels.forEach { novelDao.insert(it) }
 
         val updatedFolder = Folder(5, "updated")
-        folderDao.updateFolder(updatedFolder)
+        folderDao.update(updatedFolder)
 
         val allNovels = novelDao.getNovels().getOrAwaitValue()
 
@@ -109,7 +109,7 @@ class FolderDaoTest {
             Folder(3, "three")
         )
 
-        folders.forEach { folderDao.insertFolder(it) }
+        folders.forEach { folderDao.insert(it) }
         val folderNames = folders.map { it.title }
         val dbFolderNames = folderDao.getFolderNames()
 
@@ -123,7 +123,7 @@ class FolderDaoTest {
 //        Log.d("testingdao", "start")
 //
 //        val folder = Folder(id = 1, title = "abc")
-//        folderDao.insertOrUpdateFolder(folder) // loads infinitely
+//        folderDao.insertOrUpdate(folder) // loads infinitely
 //
 //        Log.d("testingdao", "inserted folder")
 //
@@ -137,7 +137,7 @@ class FolderDaoTest {
 //    @Test
 //    fun insertOrUpdateUpdatesFolder() = runBlockingTest {
 //        var folder = Folder(id = 1, title = "abc")
-//        folderDao.insertOrUpdateFolder(folder)
+//        folderDao.insertOrUpdate(folder)
 //
 //        //change folder title
 //        folder = folder.copy(title = "testing123")
@@ -150,7 +150,7 @@ class FolderDaoTest {
 //    @Test
 //    fun insertOrUpdateRetainsNovels() = runBlockingTest {
 //        var folder = Folder(5, "name")
-//        folderDao.insertOrUpdateFolder(folder)
+//        folderDao.insertOrUpdate(folder)
 //
 //        val novels = listOf(
 //            Novel(1, "title", "url", 5),
@@ -160,7 +160,7 @@ class FolderDaoTest {
 //        novels.forEach { novelDao.insertNovel(it) }
 //
 //        folder = folder.copy(title = "updated")
-//        folderDao.insertOrUpdateFolder(folder)
+//        folderDao.insertOrUpdate(folder)
 //
 //        val allNovels = novelDao.getNovels().getOrAwaitValue()
 //

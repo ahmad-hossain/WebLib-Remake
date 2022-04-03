@@ -52,7 +52,7 @@ class FolderWithNovelTest {
     @Test
     fun getNovelsFromFolder() = runBlockingTest {
         val folder = Folder(1, "testFolder")
-        folderDao.insertFolder(folder)
+        folderDao.insert(folder)
 
         val folderNovels = listOf(
             Novel(id = 1, title = "one", "url", 1),
@@ -61,7 +61,7 @@ class FolderWithNovelTest {
             Novel(id = 4, title = "four", "url4", 1),
             Novel(id = 5, title = "five", "url5", 1),
         )
-        folderNovels.forEach { novelDao.insertNovel(it) }
+        folderNovels.forEach { novelDao.insert(it) }
 
         val novelsFromFolder = folder.id.let { folderDao.getFolderWithNovels(it) }.getOrAwaitValue().novels
 
