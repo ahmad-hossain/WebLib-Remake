@@ -19,11 +19,14 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.github.godspeed010.weblib.R
+import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import kotlinx.coroutines.delay
 
 @ExperimentalComposeUiApi
@@ -78,6 +81,7 @@ fun AddEditNovelDialog(
                         .width(TextFieldDefaults.MinWidth)
                         .focusRequester(focusRequester),
                     value = novelTitle,
+                    label = { Text(stringResource(id = R.string.hint_title)) },
                     onValueChange = {
                         onNovelTitleChanged(it)
                     },
@@ -100,6 +104,7 @@ fun AddEditNovelDialog(
                         .padding(horizontal = 24.dp)
                         .width(TextFieldDefaults.MinWidth),
                     value = novelUrl,
+                    label = { Text(stringResource(R.string.hint_url)) },
                     onValueChange = {
                         onNovelUrlChanged(it)
                     },

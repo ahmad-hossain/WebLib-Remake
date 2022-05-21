@@ -14,10 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.github.godspeed010.weblib.R
 import kotlinx.coroutines.delay
 
 @ExperimentalComposeUiApi
@@ -67,6 +69,7 @@ fun AddEditFolderDialog(
                         .width(TextFieldDefaults.MinWidth)
                         .focusRequester(focusRequester),
                     value = folderName,
+                    label = { Text(stringResource(R.string.hint_title)) },
                     onValueChange = {
                         onTextChange(it)
                     },
