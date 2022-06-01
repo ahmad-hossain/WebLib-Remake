@@ -16,6 +16,10 @@ class LibraryRepositoryImpl(
         return novelDao.getNovels()
     }
 
+    override suspend fun insertOrUpdateNovel(novel: Novel) {
+        novelDao.insertOrUpdate(novel)
+    }
+
     override suspend fun insertNovel(novel: Novel) {
         novelDao.insert(novel)
     }

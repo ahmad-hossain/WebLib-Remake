@@ -9,6 +9,8 @@ import com.github.godspeed010.weblib.feature_library.domain.model.relations.Fold
 interface LibraryRepository {
     fun getNovels() : LiveData<List<Novel>>
 
+    suspend fun insertOrUpdateNovel(novel: Novel)
+
     suspend fun insertNovel(novel: Novel)
 
     suspend fun updateNovel(novel: Novel)

@@ -37,6 +37,7 @@ class NovelsViewModel @Inject constructor(
                     novelUseCases.addNovel(
                         Novel(
                             folderId = folder.id,
+                            id = novelsScreenState.value.dialogNovelId,
                             title = novelsScreenState.value.dialogNovelTitle,
                             url = novelsScreenState.value.dialogNovelUrl
                         )
@@ -46,6 +47,7 @@ class NovelsViewModel @Inject constructor(
                     _novelsScreenState.value = novelsScreenState.value.copy(
                         dialogNovelTitle = "",
                         dialogNovelUrl = "",
+                        dialogNovelId = 0
                     )
                 }
                 //Make AddEditNovelDialog Gone
@@ -70,7 +72,16 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.DeleteNovel -> TODO()
-            is NovelsEvent.EditNovelClicked -> TODO()
+            is NovelsEvent.EditNovelClicked -> {
+                //Set TextField state & close Dropdown
+                _novelsScreenState.value = novelsScreenState.value.copy(
+                    expandedDropdownNovelId = null,
+                    dialogNovelId = event.novel.id,
+                    dialogNovelTitle = event.novel.title,
+                    dialogNovelUrl = event.novel.url,
+                    isAddEditNovelDialogVisible = true
+                )
+            }
             is NovelsEvent.NovelClicked -> TODO()
             is NovelsEvent.RestoreNovel -> TODO()
             is NovelsEvent.UpdateNovel -> TODO()

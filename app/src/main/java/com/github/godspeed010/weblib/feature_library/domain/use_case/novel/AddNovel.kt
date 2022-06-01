@@ -8,6 +8,6 @@ class AddNovel(
 ) {
 
     suspend operator fun invoke(novel: Novel) {
-        repository.insertNovel(novel)
+        repository.insertOrUpdateNovel(novel)
     }
 }
