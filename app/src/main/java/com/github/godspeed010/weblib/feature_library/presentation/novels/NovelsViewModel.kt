@@ -45,6 +45,7 @@ class NovelsViewModel @Inject constructor(
 
                     //Clear TextField states
                     _novelsScreenState.value = novelsScreenState.value.copy(
+                        dialogTitle = "",
                         dialogNovelTitle = "",
                         dialogNovelUrl = "",
                         dialogNovelId = 0
@@ -60,6 +61,7 @@ class NovelsViewModel @Inject constructor(
 
                 //make AddEditNovelDialog visible
                 _novelsScreenState.value = novelsScreenState.value.copy(
+                    dialogTitle = "Add Folder", //todo use String Resource
                     isAddEditNovelDialogVisible = true
                 )
             }
@@ -75,6 +77,7 @@ class NovelsViewModel @Inject constructor(
             is NovelsEvent.EditNovelClicked -> {
                 //Set TextField state & close Dropdown
                 _novelsScreenState.value = novelsScreenState.value.copy(
+                    dialogTitle = "Edit Folder",
                     expandedDropdownNovelId = null,
                     dialogNovelId = event.novel.id,
                     dialogNovelTitle = event.novel.title,

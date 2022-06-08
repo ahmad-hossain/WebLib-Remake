@@ -36,13 +36,14 @@ class FoldersViewModel @Inject constructor(
                     )
                     //Clear TextField state & reset dialogFolderId
                     _foldersScreenState.value = foldersScreenState.value.copy(
+                        dialogTitle = "",
                         dialogTextFieldText = "",
                         dialogFolderId = 0
                     )
                 }
                 //Make AlertDialog for adding a Folder invisible
                 _foldersScreenState.value = foldersScreenState.value.copy(
-                    isAddFolderDialogVisible = false
+                    isAddEditFolderDialogVisible = false
                 )
             }
             is FoldersEvent.UpdateFolder -> TODO()
@@ -59,7 +60,8 @@ class FoldersViewModel @Inject constructor(
 
                 //Make AlertDialog for adding a Folder visible
                 _foldersScreenState.value = foldersScreenState.value.copy(
-                    isAddFolderDialogVisible = true
+                    isAddEditFolderDialogVisible = true,
+                    dialogTitle = "Add Folder"
                 )
             }
             is FoldersEvent.EditFolderClicked -> {
@@ -68,7 +70,8 @@ class FoldersViewModel @Inject constructor(
                     expandedDropdownFolderId = null,
                     dialogFolderId = event.folder.id,
                     dialogTextFieldText = event.folder.title,
-                    isAddFolderDialogVisible = true
+                    isAddEditFolderDialogVisible = true,
+                    dialogTitle = "Edit Folder"
                 )
             }
             is FoldersEvent.CancelFolderDialog -> {
@@ -76,7 +79,7 @@ class FoldersViewModel @Inject constructor(
 
                 //Make AlertDialog for adding a Folder disappear & clear TextField State
                 _foldersScreenState.value = foldersScreenState.value.copy(
-                    isAddFolderDialogVisible = false,
+                    isAddEditFolderDialogVisible = false,
                     dialogTextFieldText = ""
                 )
             }

@@ -74,7 +74,7 @@ fun NovelsScreen(
         if (state.isAddEditNovelDialogVisible) {
             //todo use ENUM class with visibility states for changing title to Add or Edit
             AddEditNovelDialog(
-                title = "Add Novel",
+                title = state.dialogTitle,
                 novelTitle = state.dialogNovelTitle,
                 novelUrl = state.dialogNovelUrl,
                 onNovelTitleChanged = { viewModel.onEvent(NovelsEvent.EnteredNovelTitle(it)) },
