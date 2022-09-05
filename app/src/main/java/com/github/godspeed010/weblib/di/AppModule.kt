@@ -9,10 +9,7 @@ import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.AddF
 import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.DeleteFolder
 import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.FolderUseCases
 import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.GetFolders
-import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.AddNovel
-import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.GetFolderWithNovels
-import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.GetNovels
-import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.NovelUseCases
+import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.*
 import com.github.godspeed010.weblib.feature_library.presentation.novels.NovelsEvent
 import dagger.Module
 import dagger.Provides
@@ -56,7 +53,8 @@ object AppModule {
         return NovelUseCases(
             GetNovels(repository),
             AddNovel(repository),
-            GetFolderWithNovels(repository)
+            GetFolderWithNovels(repository),
+            DeleteNovel(repository)
         )
     }
 }

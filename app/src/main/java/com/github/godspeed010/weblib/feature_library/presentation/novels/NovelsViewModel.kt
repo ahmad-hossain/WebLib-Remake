@@ -73,7 +73,13 @@ class NovelsViewModel @Inject constructor(
                     dialogNovelUrl = ""
                 )
             }
-            is NovelsEvent.DeleteNovel -> TODO()
+            is NovelsEvent.DeleteNovel -> {
+                Log.i(TAG, "DeleteNovel")
+
+                viewModelScope.launch(Dispatchers.IO) {
+                    novelUseCases.deleteNovel(event.novel)
+                }
+            }
             is NovelsEvent.EditNovelClicked -> {
                 //Set TextField state & close Dropdown
                 _novelsScreenState.value = novelsScreenState.value.copy(
