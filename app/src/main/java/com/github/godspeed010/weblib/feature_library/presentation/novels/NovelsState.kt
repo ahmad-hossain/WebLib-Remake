@@ -7,10 +7,10 @@ import com.github.godspeed010.weblib.feature_library.domain.model.relations.Fold
 
 data class NovelsState(
     val folderWithNovels: LiveData<FolderWithNovel> = MutableLiveData(),
-    val isAddEditNovelDialogVisible : Boolean = false,
+    val isAddEditNovelDialogVisible: Boolean = false,
     val dialogTitle: String = "",
     val dialogNovelId: Int = 0,
     val dialogNovelTitle: String = "",
     val dialogNovelUrl: String = "",
     val expandedDropdownNovelId: Int? = null,
-    )
+)

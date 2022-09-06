@@ -9,13 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.NovelUseCases
-import com.github.godspeed010.weblib.feature_library.presentation.folders.FoldersEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private val TAG = "NovelsViewModel"
+private const val TAG = "NovelsViewModel"
 
 @HiltViewModel
 class NovelsViewModel @Inject constructor(
