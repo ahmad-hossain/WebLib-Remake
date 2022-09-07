@@ -1,5 +1,6 @@
 package com.github.godspeed010.weblib.feature_library.presentation.folders
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,12 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.core.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.core.model.Screen
-import com.github.godspeed010.weblib.feature_library.presentation.destinations.NovelsScreenDestination
+import com.github.godspeed010.weblib.destinations.NovelsScreenDestination
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.AddEditFolderDialog
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.FolderItem
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter") //todo get rid of this
 @Destination(start = true)
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi

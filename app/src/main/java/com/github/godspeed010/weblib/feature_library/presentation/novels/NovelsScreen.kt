@@ -1,8 +1,7 @@
 package com.github.godspeed010.weblib.feature_library.presentation.novels
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -12,11 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.core.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.core.model.Screen
+import com.github.godspeed010.weblib.destinations.WebViewScreenDestination
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.relations.FolderWithNovel
 import com.github.godspeed010.weblib.feature_library.presentation.novels.components.AddEditNovelDialog
@@ -28,6 +27,7 @@ data class NovelsScreenNavArgs(
     val folder: Folder
 )
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter") //todo get rid of this
 @ExperimentalComposeUiApi
 @Destination(navArgsDelegate = NovelsScreenNavArgs::class)
 @Composable
@@ -91,7 +91,7 @@ fun NovelsScreen(
                     novel = novel,
                     expandedDropdownNovelId = state.expandedDropdownNovelId,
                     onNovelClicked = {
-                        //todo navigate to WebView
+                         navigator.navigate(WebViewScreenDestination(novel))
                     },
                     onMoreClicked = {
                         //todo create Dropdown Menu with Move, Edit, Delete options
