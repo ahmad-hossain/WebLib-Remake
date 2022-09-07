@@ -5,7 +5,7 @@ import com.google.accompanist.web.WebViewNavigator
 import com.google.accompanist.web.WebViewState
 
 data class WebViewScreenState(
-    val addressBarUrl: String = "",
+    val addressBarText: String = "",
     val isDarkModeEnabled: Boolean = false,
     val webViewState: WebViewState = WebViewState(WebContent.Url("")),
     val webViewNavigator: WebViewNavigator

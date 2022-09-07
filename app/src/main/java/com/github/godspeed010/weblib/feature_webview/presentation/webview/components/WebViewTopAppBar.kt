@@ -81,11 +81,6 @@ fun WebViewTopAppBar(
 @Composable
 fun PreviewWebViewTopAppBar() {
     WebViewTopAppBar(
-        url = "Hello there",
-        onUrlEntered = {},
-        onBackButtonClicked = {},
-        onRefreshClicked = {},
-        onMoreOptionsClicked = {},
-        onUrlSubmitted = {}
+        url = "Hello there", {}, {}, {}, {}, {}
     )
 }

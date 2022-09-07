@@ -29,15 +29,13 @@ class WebViewViewModel(
             is WebViewEvent.EnteredUrl -> {
                 Log.d(TAG, "EnteredUrl")
 
-                _webViewScreenState.value = webViewScreenState.value.copy(
-                    addressBarUrl = event.url
-                )
+                _webViewScreenState.value = webViewScreenState.value.copy(addressBarText = event.url)
             }
             is WebViewEvent.SubmittedUrl -> {
-                Log.d(TAG, "SubmittedUrl: ${webViewScreenState.value.addressBarUrl}")
+                Log.d(TAG, "SubmittedUrl: ${webViewScreenState.value.addressBarText}")
 
                 _webViewScreenState.value = webViewScreenState.value.copy(
-                    webViewState = WebViewState(WebContent.Url(webViewScreenState.value.addressBarUrl))
+                    webViewState = WebViewState(WebContent.Url(webViewScreenState.value.addressBarText))
                 )
             }
             is WebViewEvent.ToggleDarkMode -> TODO()
@@ -47,6 +45,8 @@ class WebViewViewModel(
             is WebViewEvent.MoreOptionsClicked -> TODO()
             is WebViewEvent.NewPageVisited -> {
                 Log.d(TAG, "NewPageVisited: ${event.url}")
+
+                _webViewScreenState.value = webViewScreenState.value.copy(addressBarText = event.url)
             }
         }
     }
