@@ -3,12 +3,13 @@ package com.github.godspeed010.weblib.feature_library.presentation.novels
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.NovelUseCases
+import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +22,8 @@ class NovelsViewModel @Inject constructor(
     private val novelUseCases: NovelUseCases,
     state: SavedStateHandle
 ) : ViewModel() {
-    val folder: Folder = state.get<Folder>("folder")!!
+    @OptIn(ExperimentalComposeUiApi::class)
+    val navArgs: NovelsScreenNavArgs = state.navArgs()
 
     private val _novelsScreenState = mutableStateOf(NovelsState())
     val novelsScreenState: State<NovelsState> = _novelsScreenState
@@ -35,7 +37,7 @@ class NovelsViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     novelUseCases.addNovel(
                         Novel(
-                            folderId = folder.id,
+                            folderId = navArgs.folder.id,
                             id = novelsScreenState.value.dialogNovelId,
                             title = novelsScreenState.value.dialogNovelTitle,
                             url = novelsScreenState.value.dialogNovelUrl
@@ -131,8 +133,9 @@ class NovelsViewModel @Inject constructor(
     //todo should instead be getting novels using a Folder
     init {
         viewModelScope.launch {
+            Log.i(TAG, "Opened Folder: ${navArgs.folder.title}")
             _novelsScreenState.value = novelsScreenState.value.copy(
-                folderWithNovels = novelUseCases.getFolderWithNovels(folder.id)
+                folderWithNovels = novelUseCases.getFolderWithNovels(navArgs.folder.id)
             )
         }
     }
