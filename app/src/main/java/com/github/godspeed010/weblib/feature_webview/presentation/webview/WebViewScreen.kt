@@ -1,14 +1,17 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
+import android.webkit.WebView
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.WebViewTopAppBar
+import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -39,11 +42,27 @@ fun WebViewScreen(
             )
         }
     ) { innerPadding ->
-        WebView( //todo add client
+        WebView(
             modifier = Modifier.padding(innerPadding),
             state = state.webViewState,
             onCreated = { it.settings.javaScriptEnabled = true },
             navigator = state.webViewNavigator,
+            client = remember {
+                CustomWebViewClient(
+                    onNewPageVisited = { viewModel.onEvent(WebViewEvent.NewPageVisited(it)) }
+                )
+            }
         )
+    }
+}
+
+// todo move to separate file
+class CustomWebViewClient(
+    private val onNewPageVisited: (String) -> Unit
+) : AccompanistWebViewClient() {
+    override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
+        super.doUpdateVisitedHistory(view, url, isReload)
+
+        url?.let { onNewPageVisited(it) }
     }
 }

@@ -27,13 +27,15 @@ class WebViewViewModel(
     fun onEvent(event: WebViewEvent) {
         when(event) {
             is WebViewEvent.EnteredUrl -> {
-                Log.i(TAG, "EnteredUrl")
+                Log.d(TAG, "EnteredUrl")
 
                 _webViewScreenState.value = webViewScreenState.value.copy(
                     addressBarUrl = event.url
                 )
             }
             is WebViewEvent.SubmittedUrl -> {
+                Log.d(TAG, "SubmittedUrl: ${webViewScreenState.value.addressBarUrl}")
+
                 _webViewScreenState.value = webViewScreenState.value.copy(
                     webViewState = WebViewState(WebContent.Url(webViewScreenState.value.addressBarUrl))
                 )
@@ -43,6 +45,9 @@ class WebViewViewModel(
                 _webViewScreenState.value.webViewNavigator.reload()
             }
             is WebViewEvent.MoreOptionsClicked -> TODO()
+            is WebViewEvent.NewPageVisited -> {
+                Log.d(TAG, "NewPageVisited: ${event.url}")
+            }
         }
     }
 
