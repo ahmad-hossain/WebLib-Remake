@@ -41,9 +41,9 @@ fun WebViewScreen(
                 }
             )
         }
-    ) { padding ->
+    ) { innerPadding ->
         WebView(
-            modifier = Modifier.padding(padding),
+            modifier = Modifier.padding(innerPadding),
             state = state.webViewState
         )
     }

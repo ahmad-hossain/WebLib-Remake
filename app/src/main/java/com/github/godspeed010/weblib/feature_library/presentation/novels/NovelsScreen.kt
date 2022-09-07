@@ -1,6 +1,5 @@
 package com.github.godspeed010.weblib.feature_library.presentation.novels
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,7 +26,6 @@ data class NovelsScreenNavArgs(
     val folder: Folder
 )
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter") //todo get rid of this
 @ExperimentalComposeUiApi
 @Destination(navArgsDelegate = NovelsScreenNavArgs::class)
 @Composable
@@ -69,7 +67,7 @@ fun NovelsScreen(
                 )
             }
         }
-    ) {
+    ) { innerPadding ->
         //todo AddEditNovelDialog
         if (state.isAddEditNovelDialogVisible) {
             //todo use ENUM class with visibility states for changing title to Add or Edit
@@ -84,7 +82,7 @@ fun NovelsScreen(
             )
         }
         LazyColumn(
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 56.dp)
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 10.dp, bottom = innerPadding.calculateBottomPadding())
         ) {
             items(novels) { novel ->
                 NovelItem(

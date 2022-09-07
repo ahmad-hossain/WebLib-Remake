@@ -1,6 +1,5 @@
 package com.github.godspeed010.weblib.feature_library.presentation.folders
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,7 +21,6 @@ import com.github.godspeed010.weblib.feature_library.presentation.folders.compon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter") //todo get rid of this
 @Destination(start = true)
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
@@ -63,7 +61,7 @@ fun FoldersScreen(
                 )
             }
         }
-    ) {
+    ) { innerPadding ->
         if (state.isAddEditFolderDialogVisible) {
             AddEditFolderDialog(
                 title = state.dialogTitle,
@@ -80,7 +78,7 @@ fun FoldersScreen(
             )
         }
         LazyColumn(
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 56.dp)
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 10.dp, bottom = innerPadding.calculateBottomPadding())
         ) {
             items(folders) { folder ->
                 FolderItem(
