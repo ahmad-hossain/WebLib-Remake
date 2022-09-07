@@ -33,18 +33,16 @@ fun WebViewScreen(
                 url = state.addressBarUrl,
                 onUrlEntered = { viewModel.onEvent(WebViewEvent.EnteredUrl(it)) },
                 onBackButtonClicked = { navigator.popBackStack() },
-                onRefreshClicked = {
-                    //TODO
-                },
-                onMoreOptionsClicked = {
-                    //TODO
-                }
+                onRefreshClicked = { viewModel.onEvent(WebViewEvent.ReloadClicked) },
+                onMoreOptionsClicked = { viewModel.onEvent(WebViewEvent.MoreOptionsClicked) },
             )
         }
     ) { innerPadding ->
-        WebView(
+        WebView( //todo add client
             modifier = Modifier.padding(innerPadding),
-            state = state.webViewState
+            state = state.webViewState,
+            onCreated = { it.settings.javaScriptEnabled = true },
+            navigator = state.webViewNavigator,
         )
     }
 }
