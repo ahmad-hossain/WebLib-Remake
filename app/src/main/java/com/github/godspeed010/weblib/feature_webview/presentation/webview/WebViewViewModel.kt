@@ -33,8 +33,10 @@ class WebViewViewModel(
                     addressBarUrl = event.url
                 )
             }
-            is WebViewEvent.SubmitUrl -> {
-                //todo update webViewState with new URL
+            is WebViewEvent.SubmittedUrl -> {
+                _webViewScreenState.value = webViewScreenState.value.copy(
+                    webViewState = WebViewState(WebContent.Url(webViewScreenState.value.addressBarUrl))
+                )
             }
             is WebViewEvent.ToggleDarkMode -> TODO()
             is WebViewEvent.ReloadClicked -> {

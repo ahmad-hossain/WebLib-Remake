@@ -32,6 +32,7 @@ fun WebViewScreen(
             WebViewTopAppBar(
                 url = state.addressBarUrl,
                 onUrlEntered = { viewModel.onEvent(WebViewEvent.EnteredUrl(it)) },
+                onUrlSubmitted = { viewModel.onEvent(WebViewEvent.SubmittedUrl) },
                 onBackButtonClicked = { navigator.popBackStack() },
                 onRefreshClicked = { viewModel.onEvent(WebViewEvent.ReloadClicked) },
                 onMoreOptionsClicked = { viewModel.onEvent(WebViewEvent.MoreOptionsClicked) },

@@ -3,9 +3,12 @@ package com.github.godspeed010.weblib.feature_webview.presentation.webview.compo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.TopAppBar
@@ -19,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
@@ -27,6 +31,7 @@ import com.github.godspeed010.weblib.R
 fun WebViewTopAppBar(
     url: String,
     onUrlEntered: (String) -> Unit,
+    onUrlSubmitted: () -> Unit,
     onBackButtonClicked: () -> Unit,
     onRefreshClicked: () -> Unit,
     onMoreOptionsClicked: () -> Unit
@@ -48,10 +53,16 @@ fun WebViewTopAppBar(
                 contentAlignment = Alignment.CenterStart
             ) {
                 BasicTextField(
-                    modifier = Modifier.padding(horizontal = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
                     value = url,
                     onValueChange = onUrlEntered,
-                    singleLine = true
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = { onUrlSubmitted() }
+                    ),
                 )
             }
         },
@@ -75,5 +86,6 @@ fun PreviewWebViewTopAppBar() {
         onBackButtonClicked = {},
         onRefreshClicked = {},
         onMoreOptionsClicked = {},
+        onUrlSubmitted = {}
     )
 }
