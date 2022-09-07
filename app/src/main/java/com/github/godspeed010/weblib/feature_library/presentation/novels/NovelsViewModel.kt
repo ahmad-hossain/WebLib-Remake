@@ -7,6 +7,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.NovelUseCases
 import com.github.godspeed010.weblib.navArgs
@@ -23,7 +24,7 @@ class NovelsViewModel @Inject constructor(
     state: SavedStateHandle
 ) : ViewModel() {
     @OptIn(ExperimentalComposeUiApi::class)
-    val navArgs: NovelsScreenNavArgs = state.navArgs()
+    val folder: Folder = state.navArgs<NovelsScreenNavArgs>().folder
 
     private val _novelsScreenState = mutableStateOf(NovelsState())
     val novelsScreenState: State<NovelsState> = _novelsScreenState
@@ -37,7 +38,7 @@ class NovelsViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     novelUseCases.addNovel(
                         Novel(
-                            folderId = navArgs.folder.id,
+                            folderId = folder.id,
                             id = novelsScreenState.value.dialogNovelId,
                             title = novelsScreenState.value.dialogNovelTitle,
                             url = novelsScreenState.value.dialogNovelUrl
@@ -133,9 +134,9 @@ class NovelsViewModel @Inject constructor(
     //todo should instead be getting novels using a Folder
     init {
         viewModelScope.launch {
-            Log.i(TAG, "Opened Folder: ${navArgs.folder.title}")
+            Log.i(TAG, "Opened Folder: ${folder.title}")
             _novelsScreenState.value = novelsScreenState.value.copy(
-                folderWithNovels = novelUseCases.getFolderWithNovels(navArgs.folder.id)
+                folderWithNovels = novelUseCases.getFolderWithNovels(folder.id)
             )
         }
     }

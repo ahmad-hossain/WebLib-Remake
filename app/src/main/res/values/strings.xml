@@ -16,4 +16,9 @@
         <item>@string/edit</item>
         <item>@string/delete</item>
     </string-array>
+
+    <!--  cd means Content Description  -->
+    <string name="cd_go_back">Go Back</string>
+    <string name="cd_refresh_page">Refresh Page</string>
+    <string name="cd_more_options">More Options</string>
 </resources>

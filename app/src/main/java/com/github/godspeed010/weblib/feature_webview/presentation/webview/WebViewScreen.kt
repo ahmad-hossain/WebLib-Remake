@@ -1,25 +1,28 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.WebViewTopAppBar
+import com.google.accompanist.web.WebView
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter") //todo remove
-@Destination
+data class WebViewScreenNavArgs(
+    val novel: Novel
+)
+
+@Destination(navArgsDelegate = WebViewScreenNavArgs::class)
 @Composable
 fun WebViewScreen(
     navigator: DestinationsNavigator,
-    novel: Novel,
     viewModel: WebViewViewModel = hiltViewModel()
 ) {
-
     val state by viewModel.webViewScreenState
     val scaffoldState = rememberScaffoldState()
 
@@ -27,12 +30,21 @@ fun WebViewScreen(
         scaffoldState = scaffoldState,
         topBar = {
             WebViewTopAppBar(
-                url = state.url,
+                url = state.addressBarUrl,
                 onUrlEntered = { viewModel.onEvent(WebViewEvent.EnteredUrl(it)) },
-                onBackButtonClicked = { navigator.popBackStack() }
+                onBackButtonClicked = { navigator.popBackStack() },
+                onRefreshClicked = {
+                    //TODO
+                },
+                onMoreOptionsClicked = {
+                    //TODO
+                }
             )
         }
-    ) {
-
+    ) { padding ->
+        WebView(
+            modifier = Modifier.padding(padding),
+            state = state.webViewState
+        )
     }
 }

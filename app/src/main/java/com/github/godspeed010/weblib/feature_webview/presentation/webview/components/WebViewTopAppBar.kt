@@ -11,25 +11,31 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.godspeed010.weblib.R
 
 @Composable
 fun WebViewTopAppBar(
     url: String,
     onUrlEntered: (String) -> Unit,
-    onBackButtonClicked: () -> Unit
+    onBackButtonClicked: () -> Unit,
+    onRefreshClicked: () -> Unit,
+    onMoreOptionsClicked: () -> Unit
 ) {
+    val ctx = LocalContext.current
     TopAppBar(
         navigationIcon = {
             IconButton(onClick = onBackButtonClicked) {
-                Icon(Icons.Default.ArrowBack, contentDescription = null)
+                Icon(Icons.Default.ArrowBack, contentDescription = ctx.getString(R.string.cd_go_back))
             }
         },
         title = {
@@ -50,8 +56,11 @@ fun WebViewTopAppBar(
             }
         },
         actions = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(Icons.Default.DarkMode, contentDescription = null)
+            IconButton(onClick = onRefreshClicked) {
+                Icon(Icons.Default.Refresh, contentDescription = ctx.getString(R.string.cd_refresh_page))
+            }
+            IconButton(onClick = onMoreOptionsClicked) {
+                Icon(Icons.Default.MoreVert, contentDescription = ctx.getString(R.string.cd_more_options))
             }
         }
     )
@@ -63,6 +72,8 @@ fun PreviewWebViewTopAppBar() {
     WebViewTopAppBar(
         url = "Hello there",
         onUrlEntered = {},
-        onBackButtonClicked = {}
+        onBackButtonClicked = {},
+        onRefreshClicked = {},
+        onMoreOptionsClicked = {},
     )
 }
