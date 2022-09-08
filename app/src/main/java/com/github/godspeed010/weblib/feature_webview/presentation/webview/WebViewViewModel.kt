@@ -1,8 +1,9 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
 import android.util.Log
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.*
@@ -22,51 +23,41 @@ private val AppBarHeight = 56.dp
 
 @HiltViewModel
 class WebViewViewModel @Inject constructor(
-    private val libraryRepository: LibraryRepository,
-    state: SavedStateHandle
+    private val repository: LibraryRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel(), DefaultLifecycleObserver {
     @OptIn(ExperimentalComposeUiApi::class)
-    val novel: Novel = state.navArgs<WebViewScreenNavArgs>().novel
+    val novel: Novel = savedStateHandle.navArgs<WebViewScreenNavArgs>().novel
 
-    private val _webViewScreenState = mutableStateOf(WebViewScreenState(webViewNavigator = WebViewNavigator(viewModelScope)))
-    val webViewScreenState: State<WebViewScreenState> = _webViewScreenState
+    var state by mutableStateOf(WebViewScreenState(webViewNavigator = WebViewNavigator(viewModelScope)))
+        private set
 
     fun onEvent(event: WebViewEvent) {
         when(event) {
             is WebViewEvent.EnteredUrl -> {
                 Log.d(TAG, "EnteredUrl")
 
-                _webViewScreenState.value = webViewScreenState.value.copy(addressBarText = event.url)
+                state = state.copy(addressBarText = event.url)
             }
             is WebViewEvent.SubmittedUrl -> {
-                Log.d(TAG, "SubmittedUrl: ${webViewScreenState.value.addressBarText}")
+                Log.d(TAG, "SubmittedUrl: ${state.addressBarText}")
 
-                _webViewScreenState.value = webViewScreenState.value.copy(
-                    webViewState = WebViewState(WebContent.Url(webViewScreenState.value.addressBarText))
+                state = state.copy(
+                    webViewState = WebViewState(WebContent.Url(state.addressBarText))
                 )
             }
             is WebViewEvent.ToggleDarkMode -> TODO()
             is WebViewEvent.ReloadClicked -> {
                 Log.d(TAG, "ReloadClicked")
-                _webViewScreenState.value.webViewNavigator.reload()
+                state.webViewNavigator.reload()
             }
             is WebViewEvent.MoreOptionsClicked -> TODO()
             is WebViewEvent.NewPageVisited -> {
                 Log.d(TAG, "NewPageVisited: ${event.url}")
 
-                _webViewScreenState.value = webViewScreenState.value.copy(addressBarText = event.url)
+                state = state.copy(addressBarText = event.url)
             }
-            is WebViewEvent.WebPageScrolled -> {
-                Log.d(TAG, "WebPageScrolled")
-
-                //todo move into use case?
-                val toolbarHeightPx = with(event.localDensity) { AppBarHeight.roundToPx().toFloat() }
-                val deltaY = event.oldY - event.y
-                val newOffset = webViewScreenState.value.toolbarOffsetHeightPx + deltaY
-                _webViewScreenState.value = webViewScreenState.value.copy(
-                    toolbarOffsetHeightPx = newOffset.coerceIn(-toolbarHeightPx, 0f)
-                )
-            }
+            is WebViewEvent.WebPageScrolled -> updateToolbarOffsetHeight(event)
         }
     }
 
@@ -77,17 +68,28 @@ class WebViewViewModel @Inject constructor(
         updateNovel()
     }
 
+    private fun updateToolbarOffsetHeight(event: WebViewEvent.WebPageScrolled) {
+        Log.d(TAG, "WebPageScrolled")
+
+        val toolbarHeightPx = with(event.localDensity) { AppBarHeight.roundToPx().toFloat() }
+        val deltaY = event.oldY - event.y
+        val newOffset = state.toolbarOffsetHeightPx + deltaY
+        state = state.copy(
+            toolbarOffsetHeightPx = newOffset.coerceIn(-toolbarHeightPx, 0f)
+        )
+    }
+
     private fun updateNovel() {
-        val currentUrl = webViewScreenState.value.webViewState.content.getCurrentUrl()
+        val currentUrl = state.webViewState.content.getCurrentUrl()
         currentUrl?.let {
             viewModelScope.launch(Dispatchers.IO) {
-                libraryRepository.updateNovel(novel.copy(url = it))
+                repository.updateNovel(novel.copy(url = it))
             }
         }
     }
 
     init {
-        _webViewScreenState.value = webViewScreenState.value.copy(
+        state = state.copy(
             webViewState = WebViewState(WebContent.Url(novel.url))
         )
     }

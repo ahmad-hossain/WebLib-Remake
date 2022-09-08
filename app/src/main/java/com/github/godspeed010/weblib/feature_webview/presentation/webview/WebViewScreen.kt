@@ -35,7 +35,7 @@ fun WebViewScreen(
     navigator: DestinationsNavigator,
     viewModel: WebViewViewModel = hiltViewModel()
 ) {
-    val state by viewModel.webViewScreenState
+    val state = viewModel.state
     val localDensity = LocalDensity.current
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
 
