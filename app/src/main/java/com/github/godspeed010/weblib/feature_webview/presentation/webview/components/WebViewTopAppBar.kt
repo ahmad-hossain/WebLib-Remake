@@ -29,6 +29,7 @@ import com.github.godspeed010.weblib.R
 
 @Composable
 fun WebViewTopAppBar(
+    modifier: Modifier = Modifier,
     url: String,
     onUrlEntered: (String) -> Unit,
     onUrlSubmitted: () -> Unit,
@@ -38,6 +39,7 @@ fun WebViewTopAppBar(
 ) {
     val ctx = LocalContext.current
     TopAppBar(
+        modifier = modifier,
         navigationIcon = {
             IconButton(onClick = onBackButtonClicked) {
                 Icon(Icons.Default.ArrowBack, contentDescription = ctx.getString(R.string.cd_go_back))
@@ -81,6 +83,6 @@ fun WebViewTopAppBar(
 @Composable
 fun PreviewWebViewTopAppBar() {
     WebViewTopAppBar(
-        url = "Hello there", {}, {}, {}, {}, {}
+        Modifier, url = "Hello there", {}, {}, {}, {}, {}
     )
 }

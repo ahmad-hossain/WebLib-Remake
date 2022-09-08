@@ -1,9 +1,6 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
-import android.webkit.WebView
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
@@ -11,16 +8,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.WebViewTopAppBar
+import com.github.godspeed010.weblib.feature_webview.util.CustomWebViewClient
+import com.github.godspeed010.weblib.feature_webview.util.LoadingState
+import com.github.godspeed010.weblib.feature_webview.util.WebView
 import com.github.godspeed010.weblib.observeLifecycle
-import com.google.accompanist.web.AccompanistWebViewClient
-import com.google.accompanist.web.LoadingState
-import com.google.accompanist.web.WebView
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlin.math.roundToInt
 
 data class WebViewScreenNavArgs(
     val novel: Novel
@@ -34,12 +34,16 @@ fun WebViewScreen(
 ) {
     val state by viewModel.webViewScreenState
     val scaffoldState = rememberScaffoldState()
+    val localDensity = LocalDensity.current
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
+            //todo remove out of scaffold. Maybe that will fix whitespace when collapsed
+            // Other possible solution: Increase WebView height while Toolbar collapses
             WebViewTopAppBar(
+                modifier = Modifier.offset { IntOffset(0, state.toolbarOffsetHeightPx.roundToInt() ) },
                 url = state.addressBarText,
                 onUrlEntered = { viewModel.onEvent(WebViewEvent.EnteredUrl(it)) },
                 onUrlSubmitted = { viewModel.onEvent(WebViewEvent.SubmittedUrl) },
@@ -66,19 +70,9 @@ fun WebViewScreen(
                     CustomWebViewClient(
                         onNewPageVisited = { viewModel.onEvent(WebViewEvent.NewPageVisited(it)) }
                     )
-                }
+                },
+                onWebPageScroll = { x, y, oldX, oldY -> viewModel.onEvent(WebViewEvent.WebPageScrolled(localDensity, x, y, oldX, oldY)) }
             )
         }
-    }
-}
-
-// todo move to separate file
-class CustomWebViewClient(
-    private val onNewPageVisited: (String) -> Unit
-) : AccompanistWebViewClient() {
-    override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
-        super.doUpdateVisitedHistory(view, url, isReload)
-
-        url?.let { onNewPageVisited(it) }
     }
 }
