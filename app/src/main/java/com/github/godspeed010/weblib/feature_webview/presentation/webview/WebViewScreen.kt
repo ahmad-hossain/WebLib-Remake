@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.WebViewTopAppBar
+import com.github.godspeed010.weblib.observeLifecycle
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.LoadingState
 import com.google.accompanist.web.WebView
@@ -32,6 +34,7 @@ fun WebViewScreen(
 ) {
     val state by viewModel.webViewScreenState
     val scaffoldState = rememberScaffoldState()
+    viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
 
     Scaffold(
         scaffoldState = scaffoldState,
