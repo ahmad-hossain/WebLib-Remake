@@ -32,7 +32,7 @@ fun FoldersScreen(
     navigator: DestinationsNavigator,
     viewModel: FoldersViewModel = hiltViewModel()
 ) {
-    val state by viewModel.foldersScreenState
+    val state = viewModel.state
     val folders by state.folders.observeAsState(emptyList())
     val scaffoldState = rememberScaffoldState()
 

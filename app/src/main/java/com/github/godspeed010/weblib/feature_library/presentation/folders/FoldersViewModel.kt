@@ -1,7 +1,8 @@
 package com.github.godspeed010.weblib.feature_library.presentation.folders
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
@@ -16,8 +17,8 @@ import javax.inject.Inject
 class FoldersViewModel @Inject constructor(
     private val folderUseCases: FolderUseCases
 ) : ViewModel() {
-    private val _foldersScreenState = mutableStateOf(FoldersState())
-    val foldersScreenState: State<FoldersState> = _foldersScreenState
+    var state by mutableStateOf(FoldersState())
+        private set
 
     fun onEvent(event: FoldersEvent) {
         when (event) {
@@ -28,19 +29,19 @@ class FoldersViewModel @Inject constructor(
                     //Add Folder. If id is 0, will generate new id. Else, overrides Folder
                     folderUseCases.addFolder(
                         Folder(
-                            id = foldersScreenState.value.dialogFolderId,
-                            title = foldersScreenState.value.dialogTextFieldText
+                            id = state.dialogFolderId,
+                            title = state.dialogTextFieldText
                         )
                     )
                     //Clear TextField state & reset dialogFolderId
-                    _foldersScreenState.value = foldersScreenState.value.copy(
+                    state = state.copy(
                         dialogTitle = "",
                         dialogTextFieldText = "",
                         dialogFolderId = 0
                     )
                 }
                 //Make AlertDialog for adding a Folder invisible
-                _foldersScreenState.value = foldersScreenState.value.copy(
+                state = state.copy(
                     isAddEditFolderDialogVisible = false
                 )
             }
@@ -57,14 +58,14 @@ class FoldersViewModel @Inject constructor(
                 Timber.d("AddFolderClicked")
 
                 //Make AlertDialog for adding a Folder visible
-                _foldersScreenState.value = foldersScreenState.value.copy(
+                state = state.copy(
                     isAddEditFolderDialogVisible = true,
                     dialogTitle = "Add Folder"
                 )
             }
             is FoldersEvent.EditFolderClicked -> {
                 //Set TextField state & close Dropdown
-                _foldersScreenState.value = foldersScreenState.value.copy(
+                state = state.copy(
                     expandedDropdownFolderId = null,
                     dialogFolderId = event.folder.id,
                     dialogTextFieldText = event.folder.title,
@@ -76,7 +77,7 @@ class FoldersViewModel @Inject constructor(
                 Timber.d("CancelFolderDialog")
 
                 //Make AlertDialog for adding a Folder disappear & clear TextField State
-                _foldersScreenState.value = foldersScreenState.value.copy(
+                state = state.copy(
                     isAddEditFolderDialogVisible = false,
                     dialogTextFieldText = ""
                 )
@@ -85,7 +86,7 @@ class FoldersViewModel @Inject constructor(
                 Timber.d("EnteredFolderName")
 
                 //update the folderName State
-                _foldersScreenState.value = foldersScreenState.value.copy(
+                state = state.copy(
                     dialogTextFieldText = event.folderName
                 )
             }
@@ -94,15 +95,15 @@ class FoldersViewModel @Inject constructor(
                 Timber.d("More options clicked for Folder ${event.folderId}")
 
                 //Expand Dropdown
-                _foldersScreenState.value = foldersScreenState.value.copy(
+                state = state.copy(
                     expandedDropdownFolderId = event.folderId
                 )
             }
             is FoldersEvent.MoreOptionsDismissed -> {
-                Timber.d("More options dismissed for Folder ${foldersScreenState.value.expandedDropdownFolderId}")
+                Timber.d("More options dismissed for Folder ${state.expandedDropdownFolderId}")
 
                 //Collapse Dropdown
-                _foldersScreenState.value = foldersScreenState.value.copy(
+                state = state.copy(
                     expandedDropdownFolderId = null
                 )
             }
@@ -110,7 +111,7 @@ class FoldersViewModel @Inject constructor(
     }
 
     init {
-        _foldersScreenState.value = foldersScreenState.value.copy(
+        state = state.copy(
             folders = folderUseCases.getFolders()
         )
     }

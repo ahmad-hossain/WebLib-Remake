@@ -1,7 +1,8 @@
 package com.github.godspeed010.weblib.feature_library.presentation.novels
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -19,13 +20,13 @@ import javax.inject.Inject
 @HiltViewModel
 class NovelsViewModel @Inject constructor(
     private val novelUseCases: NovelUseCases,
-    state: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     @OptIn(ExperimentalComposeUiApi::class)
-    val folder: Folder = state.navArgs<NovelsScreenNavArgs>().folder
+    val folder: Folder = savedStateHandle.navArgs<NovelsScreenNavArgs>().folder
 
-    private val _novelsScreenState = mutableStateOf(NovelsState())
-    val novelsScreenState: State<NovelsState> = _novelsScreenState
+    var state by mutableStateOf(NovelsState())
+        private set
 
     fun onEvent(event: NovelsEvent) {
         when (event) {
@@ -37,14 +38,14 @@ class NovelsViewModel @Inject constructor(
                     novelUseCases.addNovel(
                         Novel(
                             folderId = folder.id,
-                            id = novelsScreenState.value.dialogNovelId,
-                            title = novelsScreenState.value.dialogNovelTitle,
-                            url = novelsScreenState.value.dialogNovelUrl
+                            id = state.dialogNovelId,
+                            title = state.dialogNovelTitle,
+                            url = state.dialogNovelUrl
                         )
                     )
 
                     //Clear TextField states
-                    _novelsScreenState.value = novelsScreenState.value.copy(
+                    state = state.copy(
                         dialogTitle = "",
                         dialogNovelTitle = "",
                         dialogNovelUrl = "",
@@ -52,7 +53,7 @@ class NovelsViewModel @Inject constructor(
                     )
                 }
                 //Make AddEditNovelDialog Gone
-                _novelsScreenState.value = novelsScreenState.value.copy(
+                state = state.copy(
                     isAddEditNovelDialogVisible = false
                 )
             }
@@ -60,14 +61,14 @@ class NovelsViewModel @Inject constructor(
                 Timber.d("AddNovelClicked")
 
                 //make AddEditNovelDialog visible
-                _novelsScreenState.value = novelsScreenState.value.copy(
+                state = state.copy(
                     dialogTitle = "Add Novel",
                     isAddEditNovelDialogVisible = true
                 )
             }
             is NovelsEvent.CancelNovelDialog -> {
                 //Make Dialog Gone
-                _novelsScreenState.value = novelsScreenState.value.copy(
+                state = state.copy(
                     isAddEditNovelDialogVisible = false,
                     dialogNovelTitle = "",
                     dialogNovelUrl = ""
@@ -82,7 +83,7 @@ class NovelsViewModel @Inject constructor(
             }
             is NovelsEvent.EditNovelClicked -> {
                 //Set TextField state & close Dropdown
-                _novelsScreenState.value = novelsScreenState.value.copy(
+                state = state.copy(
                     dialogTitle = "Edit Novel",
                     expandedDropdownNovelId = null,
                     dialogNovelId = event.novel.id,
@@ -98,7 +99,7 @@ class NovelsViewModel @Inject constructor(
                 Timber.d("EnteredNovelTitle")
 
                 //update the novelName State
-                _novelsScreenState.value = novelsScreenState.value.copy(
+                state = state.copy(
                     dialogNovelTitle = event.novelTitle
                 )
             }
@@ -106,7 +107,7 @@ class NovelsViewModel @Inject constructor(
                 Timber.d("EnteredNovelUrl")
 
                 //update the novelName State
-                _novelsScreenState.value = novelsScreenState.value.copy(
+                state = state.copy(
                     dialogNovelUrl = event.novelUrl
                 )
             }
@@ -114,15 +115,15 @@ class NovelsViewModel @Inject constructor(
                 Timber.d("More options clicked for Folder ${event.novelId}")
 
                 //Expand Dropdown
-                _novelsScreenState.value = novelsScreenState.value.copy(
+                state = state.copy(
                     expandedDropdownNovelId = event.novelId
                 )
             }
             is NovelsEvent.MoreOptionsDismissed -> {
-                Timber.d("More options dismissed for Novel ${novelsScreenState.value.expandedDropdownNovelId}")
+                Timber.d("More options dismissed for Novel ${state.expandedDropdownNovelId}")
 
                 //Collapse Dropdown
-                _novelsScreenState.value = novelsScreenState.value.copy(
+                state = state.copy(
                     expandedDropdownNovelId = null
                 )
             }
@@ -133,7 +134,8 @@ class NovelsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             Timber.d("Opened Folder: ${folder.title}")
-            _novelsScreenState.value = novelsScreenState.value.copy(
+
+            state = state.copy(
                 folderWithNovels = novelUseCases.getFolderWithNovels(folder.id)
             )
         }

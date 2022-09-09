@@ -7,7 +7,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
@@ -36,7 +35,7 @@ fun NovelsScreen(
     navigator: DestinationsNavigator,
     viewModel: NovelsViewModel = hiltViewModel()
 ) {
-    val state by viewModel.novelsScreenState
+    val state = viewModel.state
     val folderWithNovels = state.folderWithNovels.observeAsState(
         FolderWithNovel(
             Folder(title = ""),
@@ -95,7 +94,6 @@ fun NovelsScreen(
                          navigator.navigate(WebViewScreenDestination(novel))
                     },
                     onMoreClicked = {
-                        //todo create Dropdown Menu with Move, Edit, Delete options
                         viewModel.onEvent(NovelsEvent.MoreOptionsClicked(novel.id))
                     },
                     onDismissDropdown = {
