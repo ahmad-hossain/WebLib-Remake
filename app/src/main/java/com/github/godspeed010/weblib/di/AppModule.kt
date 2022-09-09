@@ -5,12 +5,11 @@ import androidx.room.Room
 import com.github.godspeed010.weblib.feature_library.data.data_source.LibraryDatabase
 import com.github.godspeed010.weblib.feature_library.data.repository.LibraryRepositoryImpl
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
-import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.AddFolder
+import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.AddOrUpdateFolder
 import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.DeleteFolder
 import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.FolderUseCases
 import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.GetFolders
 import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.*
-import com.github.godspeed010.weblib.feature_library.presentation.novels.NovelsEvent
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,7 +40,7 @@ object AppModule {
     @Singleton
     fun provideFolderUseCases(repository: LibraryRepository) : FolderUseCases {
         return FolderUseCases(
-            AddFolder(repository),
+            AddOrUpdateFolder(repository),
             GetFolders(repository),
             DeleteFolder(repository)
         )
@@ -52,7 +51,7 @@ object AppModule {
     fun provideNovelUseCases(repository: LibraryRepository) : NovelUseCases {
         return NovelUseCases(
             GetNovels(repository),
-            AddNovel(repository),
+            AddOrUpdateNovel(repository),
             GetFolderWithNovels(repository),
             DeleteNovel(repository)
         )

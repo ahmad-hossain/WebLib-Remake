@@ -18,7 +18,6 @@ import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.core.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.core.model.Screen
 import com.github.godspeed010.weblib.destinations.NovelsScreenDestination
-import com.github.godspeed010.weblib.destinations.SearchScreenDestination
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.AddEditFolderDialog
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.FolderItem
 import com.ramcosta.composedestinations.annotation.Destination
@@ -44,7 +43,7 @@ fun FoldersScreen(
         bottomBar = {
             WebLibBottomAppBar(
                 currentScreen = Screen.Home,
-                onClickSearch = { navigator.navigate(SearchScreenDestination()) }
+                onClickSearch = { }
             )
         },
         floatingActionButtonPosition = FabPosition.Center,
@@ -52,7 +51,7 @@ fun FoldersScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.onEvent(FoldersEvent.AddFolderClicked)
+                    viewModel.onEvent(FoldersEvent.FabClicked)
                 }) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -72,7 +71,7 @@ fun FoldersScreen(
                     viewModel.onEvent(FoldersEvent.CancelFolderDialog)
                 },
                 onConfirmDialog = {
-                    viewModel.onEvent(FoldersEvent.AddFolder)
+                    viewModel.onEvent(FoldersEvent.AddOrUpdateFolder)
                 }
             )
         }
@@ -83,22 +82,11 @@ fun FoldersScreen(
                 FolderItem(
                     folder = folder,
                     expandedDropdownFolderId = state.expandedDropdownFolderId,
-                    onFolderClicked = {
-                        //Navigate to NovelsScreen & send clicked Folder
-                        navigator.navigate(NovelsScreenDestination(folder))
-                    },
-                    onMoreClicked = {
-                        viewModel.onEvent(FoldersEvent.MoreOptionsClicked(folder.id))
-                    },
-                    onDismissDropdown = {
-                        viewModel.onEvent(FoldersEvent.MoreOptionsDismissed)
-                    },
-                    onEditClicked = {
-                        viewModel.onEvent(FoldersEvent.EditFolderClicked(folder))
-                    },
-                    onDeleteClicked = {
-                        viewModel.onEvent(FoldersEvent.DeleteFolder(folder))
-                    }
+                    onFolderClicked = { navigator.navigate(NovelsScreenDestination(folder)) },
+                    onMoreClicked = { viewModel.onEvent(FoldersEvent.MoreOptionsClicked(folder.id)) },
+                    onDismissDropdown = { viewModel.onEvent(FoldersEvent.MoreOptionsDismissed) },
+                    onEditClicked = { viewModel.onEvent(FoldersEvent.EditFolderClicked(folder)) },
+                    onDeleteClicked = { viewModel.onEvent(FoldersEvent.DeleteFolder(folder)) }
                 )
             }
         }

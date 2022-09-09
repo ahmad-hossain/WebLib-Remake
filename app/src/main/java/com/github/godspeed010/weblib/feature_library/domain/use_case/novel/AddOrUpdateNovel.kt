@@ -3,7 +3,7 @@ package com.github.godspeed010.weblib.feature_library.domain.use_case.novel
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
 
-class AddNovel(
+class AddOrUpdateNovel(
     private val repository: LibraryRepository
 ) {
 

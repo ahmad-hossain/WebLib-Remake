@@ -15,7 +15,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.core.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.core.model.Screen
-import com.github.godspeed010.weblib.destinations.SearchScreenDestination
 import com.github.godspeed010.weblib.destinations.WebViewScreenDestination
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.relations.FolderWithNovel
@@ -55,7 +54,7 @@ fun NovelsScreen(
             WebLibBottomAppBar(
                 currentScreen = Screen.Home,
                 onClickHome = { navigator.popBackStack() },
-                onClickSearch = { navigator.navigate(SearchScreenDestination()) }
+                onClickSearch = { }
             )
         },
         floatingActionButtonPosition = FabPosition.Center,
@@ -63,7 +62,7 @@ fun NovelsScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.onEvent(NovelsEvent.AddNovelClicked)
+                    viewModel.onEvent(NovelsEvent.FabClicked)
                 }) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -80,7 +79,7 @@ fun NovelsScreen(
                 onNovelTitleChanged = { viewModel.onEvent(NovelsEvent.EnteredNovelTitle(it)) },
                 onNovelUrlChanged = { viewModel.onEvent(NovelsEvent.EnteredNovelUrl(it)) },
                 onDismissDialog = { viewModel.onEvent(NovelsEvent.CancelNovelDialog) },
-                onConfirmDialog = { viewModel.onEvent(NovelsEvent.AddNovel) }
+                onConfirmDialog = { viewModel.onEvent(NovelsEvent.AddOrUpdateNovel) }
             )
         }
         LazyColumn(
@@ -90,24 +89,12 @@ fun NovelsScreen(
                 NovelItem(
                     novel = novel,
                     expandedDropdownNovelId = state.expandedDropdownNovelId,
-                    onNovelClicked = {
-                         navigator.navigate(WebViewScreenDestination(novel))
-                    },
-                    onMoreClicked = {
-                        viewModel.onEvent(NovelsEvent.MoreOptionsClicked(novel.id))
-                    },
-                    onDismissDropdown = {
-                        viewModel.onEvent(NovelsEvent.MoreOptionsDismissed)
-                    },
-                    onEditClicked = {
-                        viewModel.onEvent(NovelsEvent.EditNovelClicked(novel))
-                    },
-                    onDeleteClicked = {
-                        viewModel.onEvent(NovelsEvent.DeleteNovel(novel))
-                    },
-                    onMoveClicked = {
-                        //todo
-                    }
+                    onNovelClicked = { navigator.navigate(WebViewScreenDestination(novel)) },
+                    onMoreClicked = { viewModel.onEvent(NovelsEvent.MoreOptionsClicked(novel.id)) },
+                    onDismissDropdown = { viewModel.onEvent(NovelsEvent.MoreOptionsDismissed) },
+                    onEditClicked = { viewModel.onEvent(NovelsEvent.EditNovelClicked(novel)) },
+                    onDeleteClicked = { viewModel.onEvent(NovelsEvent.DeleteNovel(novel)) },
+                    onMoveClicked = { viewModel.onEvent(NovelsEvent.MoveNovel(novel)) }
                 )
             }
         }

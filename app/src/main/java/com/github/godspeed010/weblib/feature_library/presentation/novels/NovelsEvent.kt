@@ -1,15 +1,14 @@
 package com.github.godspeed010.weblib.feature_library.presentation.novels
 
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
-import com.github.godspeed010.weblib.feature_library.presentation.folders.FoldersEvent
 
 sealed class NovelsEvent {
-    object AddNovel : NovelsEvent()
-    data class UpdateNovel(val novel: Novel) : NovelsEvent()
+    object AddOrUpdateNovel : NovelsEvent()
+    data class MoveNovel(val novel: Novel) : NovelsEvent()
     data class DeleteNovel(val novel: Novel) : NovelsEvent()
     object NovelClicked : NovelsEvent()
     object RestoreNovel : NovelsEvent()
-    object AddNovelClicked : NovelsEvent()
+    object FabClicked : NovelsEvent()
     data class EditNovelClicked(val novel: Novel) : NovelsEvent()
     object CancelNovelDialog : NovelsEvent()
     data class EnteredNovelTitle(val novelTitle: String) : NovelsEvent()

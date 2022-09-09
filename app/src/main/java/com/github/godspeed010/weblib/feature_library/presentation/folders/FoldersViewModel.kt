@@ -22,12 +22,12 @@ class FoldersViewModel @Inject constructor(
 
     fun onEvent(event: FoldersEvent) {
         when (event) {
-            is FoldersEvent.AddFolder -> {
+            is FoldersEvent.AddOrUpdateFolder -> {
                 Timber.d("AddFolder")
 
                 viewModelScope.launch(Dispatchers.IO) {
                     //Add Folder. If id is 0, will generate new id. Else, overrides Folder
-                    folderUseCases.addFolder(
+                    folderUseCases.addOrUpdateFolder(
                         Folder(
                             id = state.dialogFolderId,
                             title = state.dialogTextFieldText
@@ -45,7 +45,6 @@ class FoldersViewModel @Inject constructor(
                     isAddEditFolderDialogVisible = false
                 )
             }
-            is FoldersEvent.UpdateFolder -> TODO()
             is FoldersEvent.DeleteFolder -> {
                 Timber.d("DeleteFolder")
 
@@ -54,7 +53,7 @@ class FoldersViewModel @Inject constructor(
                 }
             }
             is FoldersEvent.RestoreFolder -> TODO()
-            is FoldersEvent.AddFolderClicked -> {
+            is FoldersEvent.FabClicked -> {
                 Timber.d("AddFolderClicked")
 
                 //Make AlertDialog for adding a Folder visible

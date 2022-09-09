@@ -30,12 +30,12 @@ class NovelsViewModel @Inject constructor(
 
     fun onEvent(event: NovelsEvent) {
         when (event) {
-            is NovelsEvent.AddNovel -> {
+            is NovelsEvent.AddOrUpdateNovel -> {
                 Timber.d("Add Novel")
 
                 //Add Novel
                 viewModelScope.launch(Dispatchers.IO) {
-                    novelUseCases.addNovel(
+                    novelUseCases.addOrUpdateNovel(
                         Novel(
                             folderId = folder.id,
                             id = state.dialogNovelId,
@@ -57,7 +57,7 @@ class NovelsViewModel @Inject constructor(
                     isAddEditNovelDialogVisible = false
                 )
             }
-            is NovelsEvent.AddNovelClicked -> {
+            is NovelsEvent.FabClicked -> {
                 Timber.d("AddNovelClicked")
 
                 //make AddEditNovelDialog visible
@@ -94,7 +94,6 @@ class NovelsViewModel @Inject constructor(
             }
             is NovelsEvent.NovelClicked -> TODO()
             is NovelsEvent.RestoreNovel -> TODO()
-            is NovelsEvent.UpdateNovel -> TODO()
             is NovelsEvent.EnteredNovelTitle -> {
                 Timber.d("EnteredNovelTitle")
 
@@ -127,6 +126,7 @@ class NovelsViewModel @Inject constructor(
                     expandedDropdownNovelId = null
                 )
             }
+            is NovelsEvent.MoveNovel -> TODO()
         }
     }
 
