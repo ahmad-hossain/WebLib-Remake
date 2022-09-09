@@ -21,7 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,12 +37,11 @@ fun WebViewTopAppBar(
     onRefreshClicked: () -> Unit,
     onMoreOptionsClicked: () -> Unit
 ) {
-    val ctx = LocalContext.current
     TopAppBar(
         modifier = modifier,
         navigationIcon = {
             IconButton(onClick = onBackButtonClicked) {
-                Icon(Icons.Default.ArrowBack, contentDescription = ctx.getString(R.string.cd_go_back))
+                Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.cd_go_back))
             }
         },
         title = {
@@ -70,10 +69,10 @@ fun WebViewTopAppBar(
         },
         actions = {
             IconButton(onClick = onRefreshClicked) {
-                Icon(Icons.Default.Refresh, contentDescription = ctx.getString(R.string.cd_refresh_page))
+                Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.cd_refresh_page))
             }
             IconButton(onClick = onMoreOptionsClicked) {
-                Icon(Icons.Default.MoreVert, contentDescription = ctx.getString(R.string.cd_more_options))
+                Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.cd_more_options))
             }
         }
     )

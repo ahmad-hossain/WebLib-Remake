@@ -10,10 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.core.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.core.model.Screen
+import com.github.godspeed010.weblib.destinations.SearchScreenDestination
 import com.github.godspeed010.weblib.destinations.WebViewScreenDestination
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.relations.FolderWithNovel
@@ -46,12 +49,14 @@ fun NovelsScreen(
 
     Scaffold(
         scaffoldState = scaffoldState,
+        topBar = {
+            TopAppBar({ Text(stringResource(R.string.novels)) })
+        },
         bottomBar = {
             WebLibBottomAppBar(
-                currentScreen = Screen.Account,
-                onClickHome = {
-                    //todo
-                }
+                currentScreen = Screen.Home,
+                onClickHome = { navigator.popBackStack() },
+                onClickSearch = { navigator.navigate(SearchScreenDestination()) }
             )
         },
         floatingActionButtonPosition = FabPosition.Center,
@@ -68,9 +73,7 @@ fun NovelsScreen(
             }
         }
     ) { innerPadding ->
-        //todo AddEditNovelDialog
         if (state.isAddEditNovelDialogVisible) {
-            //todo use ENUM class with visibility states for changing title to Add or Edit
             AddEditNovelDialog(
                 title = state.dialogTitle,
                 novelTitle = state.dialogNovelTitle,

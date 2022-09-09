@@ -7,7 +7,7 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.github.godspeed010.weblib.core.model.Screen
@@ -17,7 +17,7 @@ fun WebLibBottomAppBar(
     modifier: Modifier = Modifier,
     currentScreen: Screen,
     onClickHome: () -> Unit = {},
-    onClickAccount: () -> Unit = {}
+    onClickSearch: () -> Unit = {}
 ) {
     BottomAppBar(
         modifier = modifier,
@@ -34,11 +34,11 @@ fun WebLibBottomAppBar(
                 }
             )
             BottomNavigationItem(
-                selected = Screen.Account == currentScreen,
-                onClick = onClickAccount,
+                selected = Screen.Search == currentScreen,
+                onClick = onClickSearch,
                 icon = {
                     Icon(
-                        imageVector = Icons.Outlined.Person, contentDescription = "Account"
+                        imageVector = Icons.Outlined.Search, contentDescription = "Search"
                     )
                 }
             )
