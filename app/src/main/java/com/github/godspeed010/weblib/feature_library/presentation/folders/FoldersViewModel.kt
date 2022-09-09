@@ -22,7 +22,7 @@ class FoldersViewModel @Inject constructor(
     fun onEvent(event: FoldersEvent) {
         when (event) {
             is FoldersEvent.AddFolder -> {
-                Timber.i("AddFolder")
+                Timber.d("AddFolder")
 
                 viewModelScope.launch(Dispatchers.IO) {
                     //Add Folder. If id is 0, will generate new id. Else, overrides Folder
@@ -46,7 +46,7 @@ class FoldersViewModel @Inject constructor(
             }
             is FoldersEvent.UpdateFolder -> TODO()
             is FoldersEvent.DeleteFolder -> {
-                Timber.i("DeleteFolder")
+                Timber.d("DeleteFolder")
 
                 viewModelScope.launch(Dispatchers.IO) {
                     folderUseCases.deleteFolder(event.folder)
@@ -54,7 +54,7 @@ class FoldersViewModel @Inject constructor(
             }
             is FoldersEvent.RestoreFolder -> TODO()
             is FoldersEvent.AddFolderClicked -> {
-                Timber.i("AddFolderClicked")
+                Timber.d("AddFolderClicked")
 
                 //Make AlertDialog for adding a Folder visible
                 _foldersScreenState.value = foldersScreenState.value.copy(
@@ -73,7 +73,7 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.CancelFolderDialog -> {
-                Timber.i("CancelFolderDialog")
+                Timber.d("CancelFolderDialog")
 
                 //Make AlertDialog for adding a Folder disappear & clear TextField State
                 _foldersScreenState.value = foldersScreenState.value.copy(
@@ -82,7 +82,7 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.EnteredFolderName -> {
-                Timber.i("EnteredFolderName")
+                Timber.d("EnteredFolderName")
 
                 //update the folderName State
                 _foldersScreenState.value = foldersScreenState.value.copy(

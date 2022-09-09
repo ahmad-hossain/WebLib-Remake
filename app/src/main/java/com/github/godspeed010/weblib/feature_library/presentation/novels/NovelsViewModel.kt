@@ -30,7 +30,7 @@ class NovelsViewModel @Inject constructor(
     fun onEvent(event: NovelsEvent) {
         when (event) {
             is NovelsEvent.AddNovel -> {
-                Timber.i("Add Novel")
+                Timber.d("Add Novel")
 
                 //Add Novel
                 viewModelScope.launch(Dispatchers.IO) {
@@ -57,7 +57,7 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.AddNovelClicked -> {
-                Timber.i("AddNovelClicked")
+                Timber.d("AddNovelClicked")
 
                 //make AddEditNovelDialog visible
                 _novelsScreenState.value = novelsScreenState.value.copy(
@@ -74,7 +74,7 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.DeleteNovel -> {
-                Timber.i("DeleteNovel")
+                Timber.d("DeleteNovel")
 
                 viewModelScope.launch(Dispatchers.IO) {
                     novelUseCases.deleteNovel(event.novel)
@@ -95,7 +95,7 @@ class NovelsViewModel @Inject constructor(
             is NovelsEvent.RestoreNovel -> TODO()
             is NovelsEvent.UpdateNovel -> TODO()
             is NovelsEvent.EnteredNovelTitle -> {
-                Timber.i("EnteredNovelTitle")
+                Timber.d("EnteredNovelTitle")
 
                 //update the novelName State
                 _novelsScreenState.value = novelsScreenState.value.copy(
@@ -103,7 +103,7 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.EnteredNovelUrl -> {
-                Timber.i("EnteredNovelUrl")
+                Timber.d("EnteredNovelUrl")
 
                 //update the novelName State
                 _novelsScreenState.value = novelsScreenState.value.copy(
@@ -132,7 +132,7 @@ class NovelsViewModel @Inject constructor(
     //todo should instead be getting novels using a Folder
     init {
         viewModelScope.launch {
-            Timber.i("Opened Folder: ${folder.title}")
+            Timber.d("Opened Folder: ${folder.title}")
             _novelsScreenState.value = novelsScreenState.value.copy(
                 folderWithNovels = novelUseCases.getFolderWithNovels(folder.id)
             )
