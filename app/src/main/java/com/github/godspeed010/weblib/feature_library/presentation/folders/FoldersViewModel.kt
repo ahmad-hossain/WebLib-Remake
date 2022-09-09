@@ -1,6 +1,5 @@
 package com.github.godspeed010.weblib.feature_library.presentation.folders
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -10,9 +9,8 @@ import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.Fold
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
-
-private val TAG = "FoldersViewModel"
 
 @HiltViewModel
 class FoldersViewModel @Inject constructor(
@@ -24,7 +22,7 @@ class FoldersViewModel @Inject constructor(
     fun onEvent(event: FoldersEvent) {
         when (event) {
             is FoldersEvent.AddFolder -> {
-                Log.i(TAG, "AddFolder")
+                Timber.i("AddFolder")
 
                 viewModelScope.launch(Dispatchers.IO) {
                     //Add Folder. If id is 0, will generate new id. Else, overrides Folder
@@ -48,7 +46,7 @@ class FoldersViewModel @Inject constructor(
             }
             is FoldersEvent.UpdateFolder -> TODO()
             is FoldersEvent.DeleteFolder -> {
-                Log.i(TAG, "DeleteFolder")
+                Timber.i("DeleteFolder")
 
                 viewModelScope.launch(Dispatchers.IO) {
                     folderUseCases.deleteFolder(event.folder)
@@ -56,7 +54,7 @@ class FoldersViewModel @Inject constructor(
             }
             is FoldersEvent.RestoreFolder -> TODO()
             is FoldersEvent.AddFolderClicked -> {
-                Log.i(TAG, "AddFolderClicked")
+                Timber.i("AddFolderClicked")
 
                 //Make AlertDialog for adding a Folder visible
                 _foldersScreenState.value = foldersScreenState.value.copy(
@@ -75,7 +73,7 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.CancelFolderDialog -> {
-                Log.i(TAG, "CancelFolderDialog")
+                Timber.i("CancelFolderDialog")
 
                 //Make AlertDialog for adding a Folder disappear & clear TextField State
                 _foldersScreenState.value = foldersScreenState.value.copy(
@@ -84,7 +82,7 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.EnteredFolderName -> {
-                Log.i(TAG, "EnteredFolderName")
+                Timber.i("EnteredFolderName")
 
                 //update the folderName State
                 _foldersScreenState.value = foldersScreenState.value.copy(
@@ -93,7 +91,7 @@ class FoldersViewModel @Inject constructor(
             }
             is FoldersEvent.FolderClicked -> TODO()
             is FoldersEvent.MoreOptionsClicked -> {
-                Log.d(TAG, "More options clicked for Folder ${event.folderId}")
+                Timber.d("More options clicked for Folder ${event.folderId}")
 
                 //Expand Dropdown
                 _foldersScreenState.value = foldersScreenState.value.copy(
@@ -101,7 +99,7 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.MoreOptionsDismissed -> {
-                Log.d(TAG,"More options dismissed for Folder ${foldersScreenState.value.expandedDropdownFolderId}")
+                Timber.d("More options dismissed for Folder ${foldersScreenState.value.expandedDropdownFolderId}")
 
                 //Collapse Dropdown
                 _foldersScreenState.value = foldersScreenState.value.copy(

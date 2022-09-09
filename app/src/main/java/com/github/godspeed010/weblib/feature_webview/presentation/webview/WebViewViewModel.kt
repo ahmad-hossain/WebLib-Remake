@@ -1,6 +1,5 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,16 +8,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.*
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
-import com.github.godspeed010.weblib.feature_webview.util.WebContent
-import com.github.godspeed010.weblib.feature_webview.util.WebViewNavigator
-import com.github.godspeed010.weblib.feature_webview.util.WebViewState
+import com.github.godspeed010.weblib.feature_webview.util.*
 import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
-private const val TAG = "WebViewViewModel"
 private val AppBarHeight = 56.dp
 
 @HiltViewModel
@@ -26,6 +23,7 @@ class WebViewViewModel @Inject constructor(
     private val repository: LibraryRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(), DefaultLifecycleObserver {
+
     @OptIn(ExperimentalComposeUiApi::class)
     val novel: Novel = savedStateHandle.navArgs<WebViewScreenNavArgs>().novel
 
@@ -35,25 +33,19 @@ class WebViewViewModel @Inject constructor(
     fun onEvent(event: WebViewEvent) {
         when(event) {
             is WebViewEvent.EnteredUrl -> {
-                Log.d(TAG, "EnteredUrl")
+                Timber.d("EnteredUrl")
 
                 state = state.copy(addressBarText = event.url)
             }
-            is WebViewEvent.SubmittedUrl -> {
-                Log.d(TAG, "SubmittedUrl: ${state.addressBarText}")
-
-                state = state.copy(
-                    webViewState = WebViewState(WebContent.Url(state.addressBarText))
-                )
-            }
+            is WebViewEvent.SubmittedUrl -> handleSubmittedUrl()
             is WebViewEvent.ToggleDarkMode -> TODO()
             is WebViewEvent.ReloadClicked -> {
-                Log.d(TAG, "ReloadClicked")
+                Timber.d("ReloadClicked")
                 state.webViewNavigator.reload()
             }
             is WebViewEvent.MoreOptionsClicked -> TODO()
             is WebViewEvent.NewPageVisited -> {
-                Log.d(TAG, "NewPageVisited: ${event.url}")
+                Timber.d("NewPageVisited: ${event.url}")
 
                 state = state.copy(addressBarText = event.url)
             }
@@ -63,13 +55,36 @@ class WebViewViewModel @Inject constructor(
 
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
-        Log.d(TAG, "WebViewViewModel onStop")
+        Timber.d("WebViewViewModel onStop")
 
         updateNovel()
     }
 
+    /**
+     * Handler functions (business logic)
+     */
+
+    private fun handleSubmittedUrl() {
+        Timber.d("SubmittedUrl: ${state.addressBarText}")
+
+        var addressBarText = state.addressBarText
+
+        if (!addressBarText.isUrl()) {
+            Timber.d("Entered text isn't url. Converting to Google search")
+            addressBarText = addressBarText.asGoogleSearch()
+        }
+        else {
+            addressBarText = addressBarText.makeHttpsIfNeeded()
+        }
+
+        Timber.d("Loading url: $addressBarText")
+        state = state.copy(
+            webViewState = WebViewState(WebContent.Url(addressBarText))
+        )
+    }
+
     private fun updateToolbarOffsetHeight(event: WebViewEvent.WebPageScrolled) {
-        Log.d(TAG, "WebPageScrolled")
+        Timber.d("WebPageScrolled")
 
         val toolbarHeightPx = with(event.localDensity) { AppBarHeight.roundToPx().toFloat() }
         val deltaY = event.oldY - event.y

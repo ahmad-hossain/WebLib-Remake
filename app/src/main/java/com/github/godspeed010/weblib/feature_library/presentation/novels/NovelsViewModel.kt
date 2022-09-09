@@ -1,6 +1,5 @@
 package com.github.godspeed010.weblib.feature_library.presentation.novels
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -14,9 +13,8 @@ import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
-
-private const val TAG = "NovelsViewModel"
 
 @HiltViewModel
 class NovelsViewModel @Inject constructor(
@@ -32,7 +30,7 @@ class NovelsViewModel @Inject constructor(
     fun onEvent(event: NovelsEvent) {
         when (event) {
             is NovelsEvent.AddNovel -> {
-                Log.i(TAG, "Add Novel")
+                Timber.i("Add Novel")
 
                 //Add Novel
                 viewModelScope.launch(Dispatchers.IO) {
@@ -59,7 +57,7 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.AddNovelClicked -> {
-                Log.i(TAG, "AddNovelClicked")
+                Timber.i("AddNovelClicked")
 
                 //make AddEditNovelDialog visible
                 _novelsScreenState.value = novelsScreenState.value.copy(
@@ -76,7 +74,7 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.DeleteNovel -> {
-                Log.i(TAG, "DeleteNovel")
+                Timber.i("DeleteNovel")
 
                 viewModelScope.launch(Dispatchers.IO) {
                     novelUseCases.deleteNovel(event.novel)
@@ -97,7 +95,7 @@ class NovelsViewModel @Inject constructor(
             is NovelsEvent.RestoreNovel -> TODO()
             is NovelsEvent.UpdateNovel -> TODO()
             is NovelsEvent.EnteredNovelTitle -> {
-                Log.i(TAG, "EnteredNovelTitle")
+                Timber.i("EnteredNovelTitle")
 
                 //update the novelName State
                 _novelsScreenState.value = novelsScreenState.value.copy(
@@ -105,7 +103,7 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.EnteredNovelUrl -> {
-                Log.i(TAG, "EnteredNovelUrl")
+                Timber.i("EnteredNovelUrl")
 
                 //update the novelName State
                 _novelsScreenState.value = novelsScreenState.value.copy(
@@ -113,7 +111,7 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.MoreOptionsClicked -> {
-                Log.d(TAG, "More options clicked for Folder ${event.novelId}")
+                Timber.d("More options clicked for Folder ${event.novelId}")
 
                 //Expand Dropdown
                 _novelsScreenState.value = novelsScreenState.value.copy(
@@ -121,7 +119,7 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.MoreOptionsDismissed -> {
-                Log.d(TAG,"More options dismissed for Novel ${novelsScreenState.value.expandedDropdownNovelId}")
+                Timber.d("More options dismissed for Novel ${novelsScreenState.value.expandedDropdownNovelId}")
 
                 //Collapse Dropdown
                 _novelsScreenState.value = novelsScreenState.value.copy(
@@ -134,7 +132,7 @@ class NovelsViewModel @Inject constructor(
     //todo should instead be getting novels using a Folder
     init {
         viewModelScope.launch {
-            Log.i(TAG, "Opened Folder: ${folder.title}")
+            Timber.i("Opened Folder: ${folder.title}")
             _novelsScreenState.value = novelsScreenState.value.copy(
                 folderWithNovels = novelUseCases.getFolderWithNovels(folder.id)
             )
