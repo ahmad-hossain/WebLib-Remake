@@ -65,7 +65,7 @@ class FoldersViewModel @Inject constructor(
             is FoldersEvent.EditFolderClicked -> {
                 //Set TextField state & close Dropdown
                 state = state.copy(
-                    expandedDropdownFolderId = null,
+                    expandedDropdownItemListIndex = null,
                     dialogFolderId = event.folder.id,
                     dialogTextFieldText = event.folder.title,
                     isAddEditFolderDialogVisible = true,
@@ -91,21 +91,24 @@ class FoldersViewModel @Inject constructor(
             }
             is FoldersEvent.FolderClicked -> TODO()
             is FoldersEvent.MoreOptionsClicked -> {
-                Timber.d("More options clicked for Folder ${event.folderId}")
+                Timber.d("More options clicked for Item index ${event.listIndex}")
 
                 //Expand Dropdown
                 state = state.copy(
-                    expandedDropdownFolderId = event.folderId
+                    expandedDropdownItemListIndex = event.listIndex
                 )
             }
             is FoldersEvent.MoreOptionsDismissed -> {
-                Timber.d("More options dismissed for Folder ${state.expandedDropdownFolderId}")
+                Timber.d("More options dismissed for Item index ${state.expandedDropdownItemListIndex}")
 
                 //Collapse Dropdown
                 state = state.copy(
-                    expandedDropdownFolderId = null
+                    expandedDropdownItemListIndex = null
                 )
             }
+            is FoldersEvent.DeleteNovel -> TODO()
+            is FoldersEvent.EditNovelClicked -> TODO()
+            is FoldersEvent.MoveNovel -> TODO()
         }
     }
 

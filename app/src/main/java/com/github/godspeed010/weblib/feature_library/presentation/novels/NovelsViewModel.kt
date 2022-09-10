@@ -85,7 +85,7 @@ class NovelsViewModel @Inject constructor(
                 //Set TextField state & close Dropdown
                 state = state.copy(
                     dialogTitle = "Edit Novel",
-                    expandedDropdownNovelId = null,
+                    expandedDropdownNovelListIndex = null,
                     dialogNovelId = event.novel.id,
                     dialogNovelTitle = event.novel.title,
                     dialogNovelUrl = event.novel.url,
@@ -111,19 +111,19 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.MoreOptionsClicked -> {
-                Timber.d("More options clicked for Folder ${event.novelId}")
+                Timber.d("More options clicked for Novel at index ${event.index}")
 
                 //Expand Dropdown
                 state = state.copy(
-                    expandedDropdownNovelId = event.novelId
+                    expandedDropdownNovelListIndex = event.index
                 )
             }
             is NovelsEvent.MoreOptionsDismissed -> {
-                Timber.d("More options dismissed for Novel ${state.expandedDropdownNovelId}")
+                Timber.d("More options dismissed for Novel at index ${state.expandedDropdownNovelListIndex}")
 
                 //Collapse Dropdown
                 state = state.copy(
-                    expandedDropdownNovelId = null
+                    expandedDropdownNovelListIndex = null
                 )
             }
             is NovelsEvent.MoveNovel -> TODO()

@@ -13,6 +13,6 @@ sealed class NovelsEvent {
     object CancelNovelDialog : NovelsEvent()
     data class EnteredNovelTitle(val novelTitle: String) : NovelsEvent()
     data class EnteredNovelUrl(val novelUrl: String) : NovelsEvent()
-    data class MoreOptionsClicked(val novelId: Int) : NovelsEvent()
+    data class MoreOptionsClicked(val index: Int) : NovelsEvent()
     object MoreOptionsDismissed : NovelsEvent()
 }

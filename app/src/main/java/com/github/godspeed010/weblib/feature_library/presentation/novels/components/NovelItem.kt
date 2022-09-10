@@ -20,7 +20,7 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 fun NovelItem(
     novel: Novel,
     modifier: Modifier = Modifier,
-    expandedDropdownNovelId: Int?,
+    isDropdownExpanded: Boolean,
     onNovelClicked: () -> Unit,
     onMoreClicked: () -> Unit,
     onDismissDropdown: () -> Unit,
@@ -39,7 +39,7 @@ fun NovelItem(
             .wrapContentWidth(Alignment.End)
     ) {
         DropdownMenu(
-            expanded = expandedDropdownNovelId == novel.id,
+            expanded = isDropdownExpanded,
             onDismissRequest = onDismissDropdown
         ) {
             dropdownOptions.forEach { s ->
@@ -87,7 +87,7 @@ fun NovelItem(
 fun NovelItemPreview() {
     NovelItem(
         Novel(title = "Testing", url = "", folderId = 0),
-        expandedDropdownNovelId = null,
+        isDropdownExpanded = true,
         onNovelClicked = {},
         onMoreClicked = {},
         onDismissDropdown = {},

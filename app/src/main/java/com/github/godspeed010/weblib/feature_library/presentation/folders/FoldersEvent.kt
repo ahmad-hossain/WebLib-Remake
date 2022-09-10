@@ -1,6 +1,7 @@
 package com.github.godspeed010.weblib.feature_library.presentation.folders
 
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
+import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 
 sealed class FoldersEvent {
     object AddOrUpdateFolder : FoldersEvent()
@@ -11,6 +12,10 @@ sealed class FoldersEvent {
     data class EditFolderClicked(val folder: Folder) : FoldersEvent()
     object CancelFolderDialog : FoldersEvent()
     data class EnteredFolderName(val folderName: String) : FoldersEvent()
-    data class MoreOptionsClicked(val folderId: Int) : FoldersEvent()
+    data class MoreOptionsClicked(val listIndex: Int) : FoldersEvent()
     object MoreOptionsDismissed : FoldersEvent()
+    
+    data class EditNovelClicked(val novel: Novel) : FoldersEvent()
+    data class DeleteNovel(val novel: Novel) : FoldersEvent()
+    data class MoveNovel(val novel: Novel) : FoldersEvent()
 }

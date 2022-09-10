@@ -2,7 +2,7 @@ package com.github.godspeed010.weblib.feature_library.presentation.novels
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -85,12 +85,12 @@ fun NovelsScreen(
         LazyColumn(
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 10.dp, bottom = innerPadding.calculateBottomPadding())
         ) {
-            items(novels) { novel ->
+            itemsIndexed(novels) { index, novel ->
                 NovelItem(
                     novel = novel,
-                    expandedDropdownNovelId = state.expandedDropdownNovelId,
+                    isDropdownExpanded =  (index == state.expandedDropdownNovelListIndex),
                     onNovelClicked = { navigator.navigate(WebViewScreenDestination(novel)) },
-                    onMoreClicked = { viewModel.onEvent(NovelsEvent.MoreOptionsClicked(novel.id)) },
+                    onMoreClicked = { viewModel.onEvent(NovelsEvent.MoreOptionsClicked(index)) },
                     onDismissDropdown = { viewModel.onEvent(NovelsEvent.MoreOptionsDismissed) },
                     onEditClicked = { viewModel.onEvent(NovelsEvent.EditNovelClicked(novel)) },
                     onDeleteClicked = { viewModel.onEvent(NovelsEvent.DeleteNovel(novel)) },

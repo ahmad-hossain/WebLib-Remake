@@ -19,7 +19,7 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 @Composable
 fun FolderItem(
     folder: Folder,
-    expandedDropdownFolderId: Int?,
+    isDropdownExpanded: Boolean,
     modifier: Modifier = Modifier,
     onFolderClicked: () -> Unit,
     onMoreClicked: () -> Unit,
@@ -37,7 +37,7 @@ fun FolderItem(
             .wrapContentWidth(Alignment.End)
     ) {
         DropdownMenu(
-            expanded = expandedDropdownFolderId == folder.id,
+            expanded = isDropdownExpanded,
             onDismissRequest = onDismissDropdown
         ) {
             dropdownOptions.forEach { s ->
@@ -84,7 +84,7 @@ fun FolderItem(
 fun FolderItemPreview() {
     FolderItem(
         folder = Folder(title = "Testing", id = 0),
-        expandedDropdownFolderId = 0,
+        isDropdownExpanded = true,
         onFolderClicked = {},
         onMoreClicked = {},
         onDismissDropdown = {},
