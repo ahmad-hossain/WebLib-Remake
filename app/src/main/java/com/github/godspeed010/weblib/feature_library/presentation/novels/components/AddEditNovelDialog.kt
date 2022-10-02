@@ -1,7 +1,9 @@
 package com.github.godspeed010.weblib.feature_library.presentation.novels.components
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -23,10 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.github.godspeed010.weblib.R
-import com.github.godspeed010.weblib.feature_library.domain.model.Novel
+import com.github.godspeed010.weblib.feature_library.common.components.CustomDialog
 import kotlinx.coroutines.delay
 
 @ExperimentalComposeUiApi
@@ -41,114 +41,90 @@ fun AddEditNovelDialog(
     onDismissDialog: () -> Unit,
     onConfirmDialog: () -> Unit
 ) {
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit) {
-        delay(300)
-        focusRequester.requestFocus()
-    }
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val localClipboardManager = LocalClipboardManager.current
-
-    Dialog(
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-        onDismissRequest = onDismissDialog,
-    ) {
-        Card(
-            modifier = modifier
-                .width(IntrinsicSize.Min),
-            shape = RoundedCornerShape(16.dp),
-            backgroundColor = MaterialTheme.colors.surface,
-            elevation = 24.dp
-        ) {
-            Column {
-                val focusManager = LocalFocusManager.current
-
-                // Title
-                Text(
-                    modifier = Modifier
-                        .padding(start = 24.dp, end = 24.dp, top = 16.dp),
-                    text = title,
-                    style = MaterialTheme.typography.h6
-                )
-
-                Spacer(Modifier.height(16.dp))
-
-                // Novel Name TextField
-                OutlinedTextField(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(horizontal = 24.dp)
-                        .width(TextFieldDefaults.MinWidth)
-                        .focusRequester(focusRequester),
-                    value = novelTitle,
-                    label = { Text(stringResource(id = R.string.hint_title)) },
-                    onValueChange = {
-                        onNovelTitleChanged(it)
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = {
-                            focusManager.moveFocus(FocusDirection.Down)
-                        }
-                    )
-                )
-
-                Spacer(Modifier.height(10.dp))
-
-                // Novel URL TextField
-                OutlinedTextField(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(horizontal = 24.dp)
-                        .width(TextFieldDefaults.MinWidth),
-                    value = novelUrl,
-                    label = { Text(stringResource(R.string.hint_url)) },
-                    onValueChange = {
-                        onNovelUrlChanged(it)
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = {
-                            onNovelUrlChanged(localClipboardManager.getText().toString())
-                        }) {
-                            Icon(
-                                imageVector = Icons.Outlined.ContentPaste,
-                                contentDescription = "Paste"
-                            )
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            keyboardController?.hide()
-                            onConfirmDialog()
-                        }
-                    )
-                )
-
-                Spacer(Modifier.height(10.dp))
-
-                //Submit and Cancel Buttons
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp, end = 8.dp),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = onDismissDialog) {
-                        Text("CANCEL")
-                    }
-                    Spacer(Modifier.width(8.dp))
-                    TextButton(onClick = onConfirmDialog) {
-                        Text("OK")
-                    }
-                }
+    CustomDialog(
+        modifier = modifier,
+        onDismissDialog = onDismissDialog,
+        title = {
+            Text(
+                modifier = Modifier
+                    .padding(start = 24.dp, end = 24.dp, top = 16.dp),
+                text = title,
+                style = MaterialTheme.typography.h6
+            )
+        },
+        content = {
+            val focusManager = LocalFocusManager.current
+            val focusRequester = remember { FocusRequester() }
+            LaunchedEffect(Unit) {
+                delay(300)
+                focusRequester.requestFocus()
             }
+            val keyboardController = LocalSoftwareKeyboardController.current
+            val localClipboardManager = LocalClipboardManager.current
+
+            // Novel Name TextField
+            OutlinedTextField(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(horizontal = 24.dp)
+                    .width(TextFieldDefaults.MinWidth)
+                    .focusRequester(focusRequester),
+                value = novelTitle,
+                label = { Text(stringResource(id = R.string.hint_title)) },
+                onValueChange = {
+                    onNovelTitleChanged(it)
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                )
+            )
+
+            Spacer(Modifier.height(10.dp))
+
+            // Novel URL TextField
+            OutlinedTextField(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(horizontal = 24.dp)
+                    .width(TextFieldDefaults.MinWidth),
+                value = novelUrl,
+                label = { Text(stringResource(R.string.hint_url)) },
+                onValueChange = {
+                    onNovelUrlChanged(it)
+                },
+                trailingIcon = {
+                    IconButton(onClick = {
+                        onNovelUrlChanged(localClipboardManager.getText().toString())
+                    }) {
+                        Icon(
+                            imageVector = Icons.Outlined.ContentPaste,
+                            contentDescription = "Paste"
+                        )
+                    }
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                        onConfirmDialog()
+                    }
+                )
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onDismissDialog) { Text("CANCEL") }
+        },
+        dismissButton = {
+            TextButton(onClick = onConfirmDialog) { Text("OK") }
         }
-    }
+    )
 }
 
 @ExperimentalComposeUiApi
