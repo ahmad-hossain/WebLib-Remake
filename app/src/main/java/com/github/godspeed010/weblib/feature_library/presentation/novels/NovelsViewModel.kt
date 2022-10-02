@@ -130,7 +130,6 @@ class NovelsViewModel @Inject constructor(
         }
     }
 
-    //todo should instead be getting novels using a Folder
     init {
         viewModelScope.launch {
             Timber.d("Opened Folder: ${folder.title}")
