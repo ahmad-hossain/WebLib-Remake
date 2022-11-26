@@ -7,9 +7,11 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -38,12 +40,24 @@ fun FoldersScreen(
     val state = viewModel.state
     val folders by state.folders.observeAsState(emptyList())
     val displayedList = if (state.searchQuery.isEmpty()) folders else state.filteredItems
-    val scaffoldState = rememberScaffoldState()
+    val scaffoldState = rememberScaffoldState(drawerState = state.modalDrawerState)
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            TopAppBar({ Text(stringResource(R.string.folders)) })
+            TopAppBar(title = { Text(stringResource(R.string.folders)) },
+                navigationIcon = {
+                IconButton(
+                    onClick = { viewModel.onEvent(FoldersEvent.MenuClicked(scope)) },
+                    content = {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "Menu"
+                    )
+                })
+
+            })
         },
         bottomBar = {
             WebLibBottomAppBar(
@@ -51,6 +65,7 @@ fun FoldersScreen(
                 onClickSearch = { }
             )
         },
+        drawerContent = { /** TODO */ },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
