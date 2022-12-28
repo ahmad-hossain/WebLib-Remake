@@ -60,7 +60,6 @@ fun WebViewScreen(
 
         WebView(
             modifier = Modifier
-                .requiredHeight(LocalConfiguration.current.screenHeightDp.dp)
                 .offset { IntOffset(0, state.toolbarOffsetHeightPx.roundToInt()) },
             state = state.webViewState,
             onCreated = { it.settings.javaScriptEnabled = true },
