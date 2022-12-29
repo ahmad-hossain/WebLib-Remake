@@ -1,5 +1,6 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
+import android.webkit.WebSettings
 import androidx.compose.ui.unit.Density
 
 sealed class WebViewEvent {
@@ -10,4 +11,6 @@ sealed class WebViewEvent {
     data class WebPageScrolled(val localDensity: Density, val x: Int, val y: Int, val oldX: Int, val oldY: Int) : WebViewEvent()
     object ReloadClicked : WebViewEvent()
     object MoreOptionsToggled : WebViewEvent()
+    data class WebViewCreated(val settings: WebSettings, val isDeviceDarkModeEnabled: Boolean) : WebViewEvent()
+    object WebViewDisposed : WebViewEvent()
 }

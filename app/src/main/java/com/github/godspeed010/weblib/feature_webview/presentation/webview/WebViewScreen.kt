@@ -1,5 +1,6 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material.LinearProgressIndicator
@@ -57,11 +58,13 @@ fun WebViewScreen(
             )
         }
 
+        val isSystemInDarkTheme = isSystemInDarkTheme()
         WebView(
             modifier = Modifier
                 .offset { IntOffset(0, state.toolbarOffsetHeightPx.roundToInt()) },
             state = state.webViewState,
-            onCreated = { it.settings.javaScriptEnabled = true },
+            onCreated = { viewModel.onEvent(WebViewEvent.WebViewCreated(it.settings, isSystemInDarkTheme)) },
+            onDispose = { viewModel.onEvent(WebViewEvent.WebViewDisposed) },
             navigator = state.webViewNavigator,
             client = remember {
                 CustomWebViewClient(

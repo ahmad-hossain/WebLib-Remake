@@ -1,5 +1,6 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
+import android.webkit.WebSettings
 import com.github.godspeed010.weblib.feature_webview.util.WebContent
 import com.github.godspeed010.weblib.feature_webview.util.WebViewNavigator
 import com.github.godspeed010.weblib.feature_webview.util.WebViewState
@@ -11,4 +12,5 @@ data class WebViewScreenState(
     val webViewNavigator: WebViewNavigator,
     val toolbarOffsetHeightPx: Float = 0f,
     val isMoreOptionsDropdownEnabled: Boolean = false,
+    val webViewSettings: WebSettings? = null,
 )

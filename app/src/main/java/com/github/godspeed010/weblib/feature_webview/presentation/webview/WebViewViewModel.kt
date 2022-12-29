@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.*
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewFeature
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
 import com.github.godspeed010.weblib.feature_webview.util.*
@@ -38,7 +40,13 @@ class WebViewViewModel @Inject constructor(
                 state = state.copy(addressBarText = event.url)
             }
             is WebViewEvent.SubmittedUrl -> handleSubmittedUrl()
-            is WebViewEvent.ToggleDarkMode -> TODO()
+            is WebViewEvent.ToggleDarkMode -> {
+                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && state.webViewSettings != null) {
+                    val setting = if (state.isDarkModeEnabled) WebSettingsCompat.FORCE_DARK_OFF else WebSettingsCompat.FORCE_DARK_ON
+                    WebSettingsCompat.setForceDark(state.webViewSettings!!, setting)
+                    state = state.copy(isDarkModeEnabled = !state.isDarkModeEnabled)
+                }
+            }
             is WebViewEvent.ReloadClicked -> {
                 Timber.d("ReloadClicked")
                 state.webViewNavigator.reload()
@@ -52,6 +60,14 @@ class WebViewViewModel @Inject constructor(
                 state = state.copy(addressBarText = event.url)
             }
             is WebViewEvent.WebPageScrolled -> updateToolbarOffsetHeight(event)
+            is WebViewEvent.WebViewCreated -> {
+                state = state.copy(webViewSettings = event.settings)
+                state.webViewSettings?.javaScriptEnabled = true
+                // TODO enable dark mode if event.isDarkModeEnabled
+            }
+            is WebViewEvent.WebViewDisposed -> {
+                state = state.copy(webViewSettings = null)
+            }
         }
     }
 
