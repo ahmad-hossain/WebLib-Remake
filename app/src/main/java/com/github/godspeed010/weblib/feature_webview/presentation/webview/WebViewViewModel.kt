@@ -53,7 +53,23 @@ class WebViewViewModel @Inject constructor(
                     state.copy(addressBarText = event.url)
                 }
             }
-            is WebViewEvent.SubmittedUrl -> handleSubmittedUrl()
+            is WebViewEvent.SubmittedUrl -> {
+                Timber.d("SubmittedUrl: ${state.addressBarText.text}")
+
+                var addressBarText = state.addressBarText.text
+
+                if (!addressBarText.isUrl()) {
+                    Timber.d("Entered text isn't url. Converting to Google search")
+                    addressBarText = addressBarText.asGoogleSearch()
+                } else {
+                    addressBarText = addressBarText.makeHttpsIfNeeded()
+                }
+
+                Timber.d("Loading url: $addressBarText")
+                state = state.copy(
+                    webViewState = WebViewState(WebContent.Url(addressBarText))
+                )
+            }
             is WebViewEvent.ToggleDarkMode -> {
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && state.webViewSettings != null) {
                     val setting = if (state.isDarkModeEnabled) WebSettingsCompat.FORCE_DARK_OFF else WebSettingsCompat.FORCE_DARK_ON
@@ -73,7 +89,16 @@ class WebViewViewModel @Inject constructor(
 
                 state = state.copy(addressBarText = TextFieldValue(event.url))
             }
-            is WebViewEvent.WebPageScrolled -> updateToolbarOffsetHeight(event)
+            is WebViewEvent.WebPageScrolled -> {
+                Timber.d("WebPageScrolled")
+
+                val toolbarHeightPx = with(event.localDensity) { AppBarHeight.roundToPx().toFloat() }
+                val deltaY = event.oldY - event.y
+                val newOffset = state.toolbarOffsetHeightPx + deltaY
+                state = state.copy(
+                    toolbarOffsetHeightPx = newOffset.coerceIn(-toolbarHeightPx, 0f)
+                )
+            }
             is WebViewEvent.WebViewCreated -> {
                 state = state.copy(webViewSettings = event.settings)
                 state.webViewSettings?.javaScriptEnabled = true
@@ -97,40 +122,6 @@ class WebViewViewModel @Inject constructor(
         Timber.d("WebViewViewModel onStop")
 
         updateNovel()
-    }
-
-    /**
-     * Handler functions (business logic)
-     */
-
-    private fun handleSubmittedUrl() {
-        Timber.d("SubmittedUrl: ${state.addressBarText.text}")
-
-        var addressBarText = state.addressBarText.text
-
-        if (!addressBarText.isUrl()) {
-            Timber.d("Entered text isn't url. Converting to Google search")
-            addressBarText = addressBarText.asGoogleSearch()
-        }
-        else {
-            addressBarText = addressBarText.makeHttpsIfNeeded()
-        }
-
-        Timber.d("Loading url: $addressBarText")
-        state = state.copy(
-            webViewState = WebViewState(WebContent.Url(addressBarText))
-        )
-    }
-
-    private fun updateToolbarOffsetHeight(event: WebViewEvent.WebPageScrolled) {
-        Timber.d("WebPageScrolled")
-
-        val toolbarHeightPx = with(event.localDensity) { AppBarHeight.roundToPx().toFloat() }
-        val deltaY = event.oldY - event.y
-        val newOffset = state.toolbarOffsetHeightPx + deltaY
-        state = state.copy(
-            toolbarOffsetHeightPx = newOffset.coerceIn(-toolbarHeightPx, 0f)
-        )
     }
 
     private fun updateNovel() {
