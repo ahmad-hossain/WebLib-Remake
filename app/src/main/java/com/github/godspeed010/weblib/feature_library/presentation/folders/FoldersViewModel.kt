@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.FolderUseCases
+import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,16 +29,12 @@ class FoldersViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     //Add Folder. If id is 0, will generate new id. Else, overrides Folder
                     folderUseCases.addOrUpdateFolder(
-                        Folder(
-                            id = state.dialogFolderId,
-                            title = state.dialogTextFieldText
-                        )
+                        state.dialogFolder.copy(lastModified = TimeUtil.currentTimeSeconds())
                     )
                     //Clear TextField state & reset dialogFolderId
                     state = state.copy(
                         dialogTitle = "",
-                        dialogTextFieldText = "",
-                        dialogFolderId = 0
+                        dialogFolder = Folder.createWithDefaults(),
                     )
                 }
                 //Make AlertDialog for adding a Folder invisible
@@ -66,8 +63,11 @@ class FoldersViewModel @Inject constructor(
                 //Set TextField state & close Dropdown
                 state = state.copy(
                     expandedDropdownItemListIndex = null,
-                    dialogFolderId = event.folder.id,
-                    dialogTextFieldText = event.folder.title,
+                    dialogFolder = Folder(
+                        id = event.folder.id,
+                        title = event.folder.title,
+                        createdAt = event.folder.createdAt,
+                    ),
                     isAddEditFolderDialogVisible = true,
                     dialogTitle = "Edit Folder"
                 )
@@ -78,7 +78,7 @@ class FoldersViewModel @Inject constructor(
                 //Make AlertDialog for adding a Folder disappear & clear TextField State
                 state = state.copy(
                     isAddEditFolderDialogVisible = false,
-                    dialogTextFieldText = ""
+                    dialogFolder = Folder.createWithDefaults(),
                 )
             }
             is FoldersEvent.EnteredFolderName -> {
@@ -86,7 +86,7 @@ class FoldersViewModel @Inject constructor(
 
                 //update the folderName State
                 state = state.copy(
-                    dialogTextFieldText = event.folderName
+                    dialogFolder = state.dialogFolder.copy(title = event.folderName)
                 )
             }
             is FoldersEvent.FolderClicked -> TODO()

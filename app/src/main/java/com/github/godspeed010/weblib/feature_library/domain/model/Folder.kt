@@ -13,4 +13,11 @@ data class Folder(
     val title: String,
     override val createdAt: Long = TimeUtil.currentTimeSeconds(),
     override val lastModified: Long = TimeUtil.currentTimeSeconds(),
-) : Item(createdAt, lastModified)
+) : Item(createdAt, lastModified) {
+
+    companion object {
+        fun createWithDefaults(
+            title: String = "",
+        ) = Folder(title = title)
+    }
+}

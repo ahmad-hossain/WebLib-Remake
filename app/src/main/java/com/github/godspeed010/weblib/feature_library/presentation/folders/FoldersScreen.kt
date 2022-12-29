@@ -83,7 +83,7 @@ fun FoldersScreen(
         if (state.isAddEditFolderDialogVisible) {
             AddEditFolderDialog(
                 title = state.dialogTitle,
-                folderName = state.dialogTextFieldText,
+                folderName = state.dialogFolder.title,
                 onTextChange = { folderName ->
                     viewModel.onEvent(FoldersEvent.EnteredFolderName(folderName))
                 },

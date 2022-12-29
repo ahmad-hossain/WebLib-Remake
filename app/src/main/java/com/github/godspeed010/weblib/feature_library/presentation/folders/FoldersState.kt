@@ -14,8 +14,7 @@ data class FoldersState(
     val isSearchSectionVisible: Boolean = false,
     val isAddEditFolderDialogVisible : Boolean = false,
     val dialogTitle: String = "",
-    val dialogTextFieldText: String = "",
-    val dialogFolderId: Int = 0,
+    val dialogFolder: Folder = Folder.createWithDefaults(),
     val expandedDropdownItemListIndex: Int? = null,
     val modalDrawerState: DrawerState = DrawerState(DrawerValue.Closed)
 )
