@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.NovelUseCases
+import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -36,20 +37,16 @@ class NovelsViewModel @Inject constructor(
                 //Add Novel
                 viewModelScope.launch(Dispatchers.IO) {
                     novelUseCases.addOrUpdateNovel(
-                        Novel(
+                        state.dialogNovel.copy(
                             folderId = folder.id,
-                            id = state.dialogNovelId,
-                            title = state.dialogNovelTitle,
-                            url = state.dialogNovelUrl
+                            lastModified = TimeUtil.currentTimeSeconds()
                         )
                     )
 
                     //Clear TextField states
                     state = state.copy(
                         dialogTitle = "",
-                        dialogNovelTitle = "",
-                        dialogNovelUrl = "",
-                        dialogNovelId = 0
+                        dialogNovel = Novel.createWithDefaults()
                     )
                 }
                 //Make AddEditNovelDialog Gone
@@ -70,8 +67,7 @@ class NovelsViewModel @Inject constructor(
                 //Make Dialog Gone
                 state = state.copy(
                     isAddEditNovelDialogVisible = false,
-                    dialogNovelTitle = "",
-                    dialogNovelUrl = ""
+                    dialogNovel = Novel.createWithDefaults()
                 )
             }
             is NovelsEvent.DeleteNovel -> {
@@ -86,9 +82,13 @@ class NovelsViewModel @Inject constructor(
                 state = state.copy(
                     dialogTitle = "Edit Novel",
                     expandedDropdownNovelListIndex = null,
-                    dialogNovelId = event.novel.id,
-                    dialogNovelTitle = event.novel.title,
-                    dialogNovelUrl = event.novel.url,
+                    dialogNovel = Novel(
+                        id = event.novel.id,
+                        title = event.novel.title,
+                        url = event.novel.url,
+                        folderId = folder.id,
+                        createdAt = event.novel.createdAt,
+                    ),
                     isAddEditNovelDialogVisible = true
                 )
             }
@@ -98,7 +98,7 @@ class NovelsViewModel @Inject constructor(
 
                 //update the novelName State
                 state = state.copy(
-                    dialogNovelTitle = event.novelTitle
+                    dialogNovel = state.dialogNovel.copy(title = event.novelTitle)
                 )
             }
             is NovelsEvent.EnteredNovelUrl -> {
@@ -106,7 +106,7 @@ class NovelsViewModel @Inject constructor(
 
                 //update the novelName State
                 state = state.copy(
-                    dialogNovelUrl = event.novelUrl
+                    dialogNovel = state.dialogNovel.copy(url = event.novelUrl)
                 )
             }
             is NovelsEvent.MoreOptionsClicked -> {

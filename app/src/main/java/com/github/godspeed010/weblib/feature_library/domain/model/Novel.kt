@@ -30,4 +30,13 @@ data class Novel(
     val folderId: Int,
     override val createdAt: Long = TimeUtil.currentTimeSeconds(),
     override val lastModified: Long = TimeUtil.currentTimeSeconds(),
-) : Item(createdAt, lastModified)
+) : Item(createdAt, lastModified) {
+
+    companion object {
+        fun createWithDefaults(
+            title: String = "",
+            url: String = "",
+            folderId: Int = 0,
+        ) = Novel(title = title, url = url, folderId = folderId)
+    }
+}
