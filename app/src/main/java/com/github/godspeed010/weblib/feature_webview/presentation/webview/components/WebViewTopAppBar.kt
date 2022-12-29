@@ -35,6 +35,7 @@ fun WebViewTopAppBar(
     isMoreOptionsDropdownEnabled: Boolean,
     onDropdownDismissRequest: () -> Unit,
     onDarkModeOptionClicked: () -> Unit,
+    isDarkModeEnabled: Boolean,
 ) {
     TopAppBar(
         modifier = modifier,
@@ -78,10 +79,18 @@ fun WebViewTopAppBar(
                     expanded = isMoreOptionsDropdownEnabled,
                     onDismissRequest = onDropdownDismissRequest) {
                     DropdownMenuItem(onClick = onDarkModeOptionClicked) {
-                        // TODO set icon and text dynamically based on current light/dark mode config.
-                        Icon(painter = painterResource(id = R.drawable.circle_right_half_full), contentDescription = null)
+                        val itemText: Int
+                        val itemIconId: Int
+                        if (isDarkModeEnabled) {
+                            itemText = R.string.light_mode
+                            itemIconId = R.drawable.circle_left_half_full
+                        } else {
+                            itemText = R.string.dark_mode
+                            itemIconId = R.drawable.circle_right_half_full
+                        }
+                        Icon(painter = painterResource(itemIconId), contentDescription = null)
                         Spacer(Modifier.width(8.dp))
-                        Text(stringResource(R.string.dark_mode))
+                        Text(stringResource(itemText))
                     }
                 }
             }
@@ -93,6 +102,6 @@ fun WebViewTopAppBar(
 @Composable
 fun PreviewWebViewTopAppBar() {
     WebViewTopAppBar(
-        Modifier, url = "Hello there", {}, {}, {}, {}, {}, true, {}, {}
+        Modifier, url = "Hello there", {}, {}, {}, {}, {}, true, {}, {}, true
     )
 }

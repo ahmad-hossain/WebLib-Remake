@@ -63,7 +63,11 @@ class WebViewViewModel @Inject constructor(
             is WebViewEvent.WebViewCreated -> {
                 state = state.copy(webViewSettings = event.settings)
                 state.webViewSettings?.javaScriptEnabled = true
-                // TODO enable dark mode if event.isDarkModeEnabled
+
+                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && state.webViewSettings != null) {
+                    WebSettingsCompat.setForceDark(state.webViewSettings!!, WebSettingsCompat.FORCE_DARK_ON)
+                    state = state.copy(isDarkModeEnabled = !state.isDarkModeEnabled)
+                }
             }
             is WebViewEvent.WebViewDisposed -> {
                 state = state.copy(webViewSettings = null)

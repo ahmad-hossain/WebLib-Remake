@@ -48,6 +48,7 @@ fun WebViewScreen(
             isMoreOptionsDropdownEnabled = state.isMoreOptionsDropdownEnabled,
             onDropdownDismissRequest = { viewModel.onEvent(WebViewEvent.MoreOptionsToggled) },
             onDarkModeOptionClicked = { viewModel.onEvent(WebViewEvent.ToggleDarkMode) },
+            isDarkModeEnabled = state.isDarkModeEnabled,
         )
 
         val loadingState = state.webViewState.loadingState
