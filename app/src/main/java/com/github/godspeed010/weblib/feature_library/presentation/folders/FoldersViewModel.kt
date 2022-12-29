@@ -48,6 +48,8 @@ class FoldersViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     folderUseCases.deleteFolder(event.folder)
                 }
+
+                state = state.copy(expandedDropdownItemListIndex = null)
             }
             is FoldersEvent.RestoreFolder -> TODO()
             is FoldersEvent.FabClicked -> {

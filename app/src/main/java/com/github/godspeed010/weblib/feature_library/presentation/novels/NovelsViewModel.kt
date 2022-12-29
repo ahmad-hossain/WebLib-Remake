@@ -76,6 +76,8 @@ class NovelsViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     novelUseCases.deleteNovel(event.novel)
                 }
+
+                state = state.copy(expandedDropdownNovelListIndex = null)
             }
             is NovelsEvent.EditNovelClicked -> {
                 //Set TextField state & close Dropdown
