@@ -15,10 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
@@ -26,8 +28,8 @@ import com.github.godspeed010.weblib.R
 @Composable
 fun WebViewTopAppBar(
     modifier: Modifier = Modifier,
-    url: String,
-    onUrlEntered: (String) -> Unit,
+    url: TextFieldValue,
+    onUrlEntered: (TextFieldValue) -> Unit,
     onUrlSubmitted: () -> Unit,
     onBackButtonClicked: () -> Unit,
     onRefreshClicked: () -> Unit,
@@ -36,6 +38,7 @@ fun WebViewTopAppBar(
     onDropdownDismissRequest: () -> Unit,
     onDarkModeOptionClicked: () -> Unit,
     isDarkModeEnabled: Boolean,
+    onUrlFocused: () -> Unit,
 ) {
     TopAppBar(
         modifier = modifier,
@@ -56,7 +59,8 @@ fun WebViewTopAppBar(
                 BasicTextField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
+                        .padding(horizontal = 8.dp)
+                        .onFocusChanged { if (it.isFocused) onUrlFocused() },
                     value = url,
                     onValueChange = onUrlEntered,
                     singleLine = true,
@@ -102,6 +106,6 @@ fun WebViewTopAppBar(
 @Composable
 fun PreviewWebViewTopAppBar() {
     WebViewTopAppBar(
-        Modifier, url = "Hello there", {}, {}, {}, {}, {}, true, {}, {}, true
+        Modifier, url = TextFieldValue("Hello there"), {}, {}, {}, {}, {}, true, {}, {}, true, {}
     )
 }

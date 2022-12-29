@@ -4,6 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.*
 import androidx.webkit.WebSettingsCompat
@@ -37,7 +39,19 @@ class WebViewViewModel @Inject constructor(
             is WebViewEvent.EnteredUrl -> {
                 Timber.d("EnteredUrl")
 
-                state = state.copy(addressBarText = event.url)
+                val addressBarTextStr = state.addressBarText.text
+
+                state = if (state.shouldSelectEntireUrl) {
+                    state.copy(
+                        addressBarText = TextFieldValue(
+                            text = addressBarTextStr,
+                            selection = TextRange(0, addressBarTextStr.length)
+                        ),
+                        shouldSelectEntireUrl = false
+                    )
+                } else {
+                    state.copy(addressBarText = event.url)
+                }
             }
             is WebViewEvent.SubmittedUrl -> handleSubmittedUrl()
             is WebViewEvent.ToggleDarkMode -> {
@@ -57,7 +71,7 @@ class WebViewViewModel @Inject constructor(
             is WebViewEvent.NewPageVisited -> {
                 Timber.d("NewPageVisited: ${event.url}")
 
-                state = state.copy(addressBarText = event.url)
+                state = state.copy(addressBarText = TextFieldValue(event.url))
             }
             is WebViewEvent.WebPageScrolled -> updateToolbarOffsetHeight(event)
             is WebViewEvent.WebViewCreated -> {
@@ -71,6 +85,9 @@ class WebViewViewModel @Inject constructor(
             }
             is WebViewEvent.WebViewDisposed -> {
                 state = state.copy(webViewSettings = null)
+            }
+            is WebViewEvent.UrlFocused -> {
+                state = state.copy(shouldSelectEntireUrl = true)
             }
         }
     }
@@ -87,9 +104,9 @@ class WebViewViewModel @Inject constructor(
      */
 
     private fun handleSubmittedUrl() {
-        Timber.d("SubmittedUrl: ${state.addressBarText}")
+        Timber.d("SubmittedUrl: ${state.addressBarText.text}")
 
-        var addressBarText = state.addressBarText
+        var addressBarText = state.addressBarText.text
 
         if (!addressBarText.isUrl()) {
             Timber.d("Entered text isn't url. Converting to Google search")
