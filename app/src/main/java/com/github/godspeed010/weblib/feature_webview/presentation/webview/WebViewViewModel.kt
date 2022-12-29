@@ -12,6 +12,7 @@ import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
+import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import com.github.godspeed010.weblib.feature_webview.util.*
 import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -128,7 +129,13 @@ class WebViewViewModel @Inject constructor(
         val currentUrl = state.webViewState.content.getCurrentUrl()
         currentUrl?.let {
             viewModelScope.launch(Dispatchers.IO) {
-                repository.updateNovel(novel.copy(url = it))
+                repository.updateNovel(
+                    novel.copy(
+                        url = it,
+                        createdAt = novel.createdAt,
+                        lastModified = TimeUtil.currentTimeSeconds()
+                    )
+                )
             }
         }
     }

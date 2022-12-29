@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -26,5 +27,7 @@ data class Novel(
     val id: Int = 0,
     val title: String,
     val url: String,
-    val folderId: Int
-) : Item()
+    val folderId: Int,
+    override val createdAt: Long = TimeUtil.currentTimeSeconds(),
+    override val lastModified: Long = TimeUtil.currentTimeSeconds(),
+) : Item(createdAt, lastModified)

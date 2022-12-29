@@ -92,7 +92,6 @@ class NovelsViewModel @Inject constructor(
                     isAddEditNovelDialogVisible = true
                 )
             }
-            is NovelsEvent.NovelClicked -> TODO()
             is NovelsEvent.RestoreNovel -> TODO()
             is NovelsEvent.EnteredNovelTitle -> {
                 Timber.d("EnteredNovelTitle")
