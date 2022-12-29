@@ -108,9 +108,6 @@ class FoldersViewModel @Inject constructor(
                     expandedDropdownItemListIndex = null
                 )
             }
-            is FoldersEvent.DeleteNovel -> TODO()
-            is FoldersEvent.EditNovelClicked -> TODO()
-            is FoldersEvent.MoveNovel -> TODO()
             is FoldersEvent.MenuClicked -> {
                 event.coroutineScope.launch {
                     state.modalDrawerState.open()

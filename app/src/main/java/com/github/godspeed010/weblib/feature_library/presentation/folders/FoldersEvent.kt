@@ -16,8 +16,4 @@ sealed class FoldersEvent {
     data class MoreOptionsClicked(val listIndex: Int) : FoldersEvent()
     object MoreOptionsDismissed : FoldersEvent()
     data class MenuClicked(val coroutineScope: CoroutineScope) : FoldersEvent()
-    
-    data class EditNovelClicked(val novel: Novel) : FoldersEvent()
-    data class DeleteNovel(val novel: Novel) : FoldersEvent()
-    data class MoveNovel(val novel: Novel) : FoldersEvent()
 }
