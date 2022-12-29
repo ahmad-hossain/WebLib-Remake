@@ -25,4 +25,5 @@
     <string name="novels">Novels</string>
     <string name="folders">Folders</string>
     <string name="search">Search</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

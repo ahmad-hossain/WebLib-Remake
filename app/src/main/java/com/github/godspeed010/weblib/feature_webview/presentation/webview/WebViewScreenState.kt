@@ -10,4 +10,5 @@ data class WebViewScreenState(
     val webViewState: WebViewState = WebViewState(WebContent.Url("")),
     val webViewNavigator: WebViewNavigator,
     val toolbarOffsetHeightPx: Float = 0f,
+    val isMoreOptionsDropdownEnabled: Boolean = false,
 )

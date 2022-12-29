@@ -43,7 +43,10 @@ fun WebViewScreen(
             onUrlSubmitted = { viewModel.onEvent(WebViewEvent.SubmittedUrl) },
             onBackButtonClicked = { navigator.popBackStack() },
             onRefreshClicked = { viewModel.onEvent(WebViewEvent.ReloadClicked) },
-            onMoreOptionsClicked = { viewModel.onEvent(WebViewEvent.MoreOptionsClicked) },
+            onMoreOptionsClicked = { viewModel.onEvent(WebViewEvent.MoreOptionsToggled) },
+            isMoreOptionsDropdownEnabled = state.isMoreOptionsDropdownEnabled,
+            onDropdownDismissRequest = { viewModel.onEvent(WebViewEvent.MoreOptionsToggled) },
+            onDarkModeOptionClicked = { viewModel.onEvent(WebViewEvent.ToggleDarkMode) },
         )
 
         val loadingState = state.webViewState.loadingState

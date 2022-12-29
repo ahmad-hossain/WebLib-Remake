@@ -150,4 +150,7 @@ dependencies {
 
     //Timber Logging
     implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    // Webkit for WebView
+    implementation 'androidx.webkit:webkit:1.5.0'
 }

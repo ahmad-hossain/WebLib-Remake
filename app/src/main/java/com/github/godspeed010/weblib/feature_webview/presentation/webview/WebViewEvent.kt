@@ -9,5 +9,5 @@ sealed class WebViewEvent {
     data class NewPageVisited(val url: String) : WebViewEvent()
     data class WebPageScrolled(val localDensity: Density, val x: Int, val y: Int, val oldX: Int, val oldY: Int) : WebViewEvent()
     object ReloadClicked : WebViewEvent()
-    object MoreOptionsClicked : WebViewEvent()
+    object MoreOptionsToggled : WebViewEvent()
 }

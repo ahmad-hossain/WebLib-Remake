@@ -43,7 +43,9 @@ class WebViewViewModel @Inject constructor(
                 Timber.d("ReloadClicked")
                 state.webViewNavigator.reload()
             }
-            is WebViewEvent.MoreOptionsClicked -> TODO()
+            is WebViewEvent.MoreOptionsToggled -> {
+                state = state.copy(isMoreOptionsDropdownEnabled = !state.isMoreOptionsDropdownEnabled)
+            }
             is WebViewEvent.NewPageVisited -> {
                 Timber.d("NewPageVisited: ${event.url}")
 
