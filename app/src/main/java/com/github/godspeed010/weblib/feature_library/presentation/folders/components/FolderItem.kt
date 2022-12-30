@@ -31,27 +31,6 @@ fun FolderItem(
     val edit = stringResource(id = R.string.edit)
     val delete = stringResource(id = R.string.delete)
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentWidth(Alignment.End)
-    ) {
-        DropdownMenu(
-            expanded = isDropdownExpanded,
-            onDismissRequest = onDismissDropdown
-        ) {
-            dropdownOptions.forEach { s ->
-                DropdownMenuItem(onClick = {
-                    when (s) {
-                        edit -> onEditClicked()
-                        delete -> onDeleteClicked()
-                    }
-                }) {
-                    Text(s)
-                }
-            }
-        }
-    }
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -70,11 +49,28 @@ fun FolderItem(
             modifier = Modifier.weight(1f),
             text = folder.title
         )
-        IconButton(onClick = onMoreClicked) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = "More"
-            )
+        Box {
+            DropdownMenu(
+                expanded = isDropdownExpanded,
+                onDismissRequest = onDismissDropdown
+            ) {
+                dropdownOptions.forEach { s ->
+                    DropdownMenuItem(onClick = {
+                        when (s) {
+                            edit -> onEditClicked()
+                            delete -> onDeleteClicked()
+                        }
+                    }) {
+                        Text(s)
+                    }
+                }
+            }
+            IconButton(onClick = onMoreClicked) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "More"
+                )
+            }
         }
     }
 }
