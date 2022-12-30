@@ -19,15 +19,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.core.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.core.model.Screen
-import com.github.godspeed010.weblib.destinations.NovelsScreenDestination
-import com.github.godspeed010.weblib.destinations.WebViewScreenDestination
-import com.github.godspeed010.weblib.feature_library.domain.model.Folder
-import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.AddEditFolderDialog
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.FolderItem
-import com.github.godspeed010.weblib.feature_library.presentation.novels.components.NovelItem
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.github.godspeed010.weblib.destinations.NovelsScreenDestination
 
 @Destination(start = true)
 @ExperimentalComposeUiApi
@@ -39,7 +35,6 @@ fun FoldersScreen(
 ) {
     val state = viewModel.state
     val folders by state.folders.observeAsState(emptyList())
-    val displayedList = if (state.searchQuery.isEmpty()) folders else state.filteredItems
     val scaffoldState = rememberScaffoldState(drawerState = state.modalDrawerState)
     val scope = rememberCoroutineScope()
 
@@ -98,32 +93,16 @@ fun FoldersScreen(
         LazyColumn(
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 10.dp, bottom = innerPadding.calculateBottomPadding())
         ) {
-            itemsIndexed(displayedList) { index, item ->
-                when (item) {
-                    is Folder -> {
-                        FolderItem(
-                            folder = item,
-                            isDropdownExpanded = (index == state.expandedDropdownItemListIndex),
-                            onFolderClicked = { navigator.navigate(NovelsScreenDestination(item)) },
-                            onMoreClicked = { viewModel.onEvent(FoldersEvent.MoreOptionsClicked(index)) },
-                            onDismissDropdown = { viewModel.onEvent(FoldersEvent.MoreOptionsDismissed) },
-                            onEditClicked = { viewModel.onEvent(FoldersEvent.EditFolderClicked(item)) },
-                            onDeleteClicked = { viewModel.onEvent(FoldersEvent.DeleteFolder(item)) }
-                        )
-                    }
-                    is Novel -> {
-                        NovelItem(
-                            novel = item,
-                            isDropdownExpanded = (index == state.expandedDropdownItemListIndex),
-                            onNovelClicked = { navigator.navigate(WebViewScreenDestination(item)) },
-                            onMoreClicked = { viewModel.onEvent(FoldersEvent.MoreOptionsClicked(index)) },
-                            onDismissDropdown = { viewModel.onEvent(FoldersEvent.MoreOptionsDismissed) },
-                            onEditClicked = { viewModel.onEvent(FoldersEvent.EditNovelClicked(item)) },
-                            onDeleteClicked = { viewModel.onEvent(FoldersEvent.DeleteNovel(item)) },
-                            onMoveClicked = { viewModel.onEvent(FoldersEvent.MoveNovel(item)) }
-                        )
-                    }
-                }
+            itemsIndexed(folders) { index, folder ->
+                FolderItem(
+                    folder = folder,
+                    isDropdownExpanded = (index == state.expandedDropdownItemListIndex),
+                    onFolderClicked = { navigator.navigate(NovelsScreenDestination(folder)) },
+                    onMoreClicked = { viewModel.onEvent(FoldersEvent.MoreOptionsClicked(index)) },
+                    onDismissDropdown = { viewModel.onEvent(FoldersEvent.MoreOptionsDismissed) },
+                    onEditClicked = { viewModel.onEvent(FoldersEvent.EditFolderClicked(folder)) },
+                    onDeleteClicked = { viewModel.onEvent(FoldersEvent.DeleteFolder(folder)) }
+                )
             }
         }
     }
