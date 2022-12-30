@@ -15,5 +15,4 @@ sealed class FoldersEvent {
     data class EnteredFolderName(val folderName: String) : FoldersEvent()
     data class MoreOptionsClicked(val listIndex: Int) : FoldersEvent()
     object MoreOptionsDismissed : FoldersEvent()
-    data class MenuClicked(val coroutineScope: CoroutineScope) : FoldersEvent()
 }

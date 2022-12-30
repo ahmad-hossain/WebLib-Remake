@@ -108,11 +108,6 @@ class FoldersViewModel @Inject constructor(
                     expandedDropdownItemListIndex = null
                 )
             }
-            is FoldersEvent.MenuClicked -> {
-                event.coroutineScope.launch {
-                    state.modalDrawerState.open()
-                }
-            }
         }
     }
 

@@ -1,11 +1,8 @@
 package com.github.godspeed010.weblib.feature_library.presentation.folders
 
-import androidx.compose.material.DrawerState
-import androidx.compose.material.DrawerValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
-import com.github.godspeed010.weblib.feature_library.domain.model.Item
 
 data class FoldersState(
     val folders: LiveData<List<Folder>> = MutableLiveData(),
@@ -13,5 +10,4 @@ data class FoldersState(
     val dialogTitle: String = "",
     val dialogFolder: Folder = Folder.createWithDefaults(),
     val expandedDropdownItemListIndex: Int? = null,
-    val modalDrawerState: DrawerState = DrawerState(DrawerValue.Closed)
 )

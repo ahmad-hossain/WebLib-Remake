@@ -7,11 +7,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -19,11 +17,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.core.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.core.model.Screen
+import com.github.godspeed010.weblib.destinations.NovelsScreenDestination
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.AddEditFolderDialog
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.FolderItem
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.github.godspeed010.weblib.destinations.NovelsScreenDestination
 
 @Destination(start = true)
 @ExperimentalComposeUiApi
@@ -35,24 +33,12 @@ fun FoldersScreen(
 ) {
     val state = viewModel.state
     val folders by state.folders.observeAsState(emptyList())
-    val scaffoldState = rememberScaffoldState(drawerState = state.modalDrawerState)
-    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.folders)) },
-                navigationIcon = {
-                IconButton(
-                    onClick = { viewModel.onEvent(FoldersEvent.MenuClicked(scope)) },
-                    content = {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Menu"
-                    )
-                })
-
-            })
+            TopAppBar(title = { Text(stringResource(R.string.folders)) })
         },
         bottomBar = {
             WebLibBottomAppBar(
@@ -60,7 +46,6 @@ fun FoldersScreen(
                 onClickSearch = { }
             )
         },
-        drawerContent = { /** TODO */ },
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
