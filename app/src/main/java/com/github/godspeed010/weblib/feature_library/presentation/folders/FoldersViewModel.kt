@@ -22,10 +22,10 @@ class FoldersViewModel @Inject constructor(
         private set
 
     fun onEvent(event: FoldersEvent) {
+        Timber.d("%s : %s", event::class.simpleName, event.toString())
+
         when (event) {
             is FoldersEvent.AddOrUpdateFolder -> {
-                Timber.d("AddFolder")
-
                 viewModelScope.launch(Dispatchers.IO) {
                     //Add Folder. If id is 0, will generate new id. Else, overrides Folder
                     folderUseCases.addOrUpdateFolder(
@@ -43,8 +43,6 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.DeleteFolder -> {
-                Timber.d("DeleteFolder")
-
                 viewModelScope.launch(Dispatchers.IO) {
                     folderUseCases.deleteFolder(event.folder)
                 }
@@ -53,8 +51,6 @@ class FoldersViewModel @Inject constructor(
             }
             is FoldersEvent.RestoreFolder -> TODO()
             is FoldersEvent.FabClicked -> {
-                Timber.d("AddFolderClicked")
-
                 //Make AlertDialog for adding a Folder visible
                 state = state.copy(
                     isAddEditFolderDialogVisible = true,
@@ -75,8 +71,6 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.CancelFolderDialog -> {
-                Timber.d("CancelFolderDialog")
-
                 //Make AlertDialog for adding a Folder disappear & clear TextField State
                 state = state.copy(
                     isAddEditFolderDialogVisible = false,
@@ -84,8 +78,6 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.EnteredFolderName -> {
-                Timber.d("EnteredFolderName")
-
                 //update the folderName State
                 state = state.copy(
                     dialogFolder = state.dialogFolder.copy(title = event.folderName)
@@ -93,16 +85,12 @@ class FoldersViewModel @Inject constructor(
             }
             is FoldersEvent.FolderClicked -> TODO()
             is FoldersEvent.MoreOptionsClicked -> {
-                Timber.d("More options clicked for Item index ${event.listIndex}")
-
                 //Expand Dropdown
                 state = state.copy(
                     expandedDropdownItemListIndex = event.listIndex
                 )
             }
             is FoldersEvent.MoreOptionsDismissed -> {
-                Timber.d("More options dismissed for Item index ${state.expandedDropdownItemListIndex}")
-
                 //Collapse Dropdown
                 state = state.copy(
                     expandedDropdownItemListIndex = null

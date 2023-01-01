@@ -30,10 +30,10 @@ class NovelsViewModel @Inject constructor(
         private set
 
     fun onEvent(event: NovelsEvent) {
+        Timber.d("%s : %s", event::class.simpleName, event.toString())
+
         when (event) {
             is NovelsEvent.AddOrUpdateNovel -> {
-                Timber.d("Add Novel")
-
                 //Add Novel
                 viewModelScope.launch(Dispatchers.IO) {
                     novelUseCases.addOrUpdateNovel(
@@ -55,8 +55,6 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.FabClicked -> {
-                Timber.d("AddNovelClicked")
-
                 //make AddEditNovelDialog visible
                 state = state.copy(
                     dialogTitle = "Add Novel",
@@ -71,8 +69,6 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.DeleteNovel -> {
-                Timber.d("DeleteNovel")
-
                 viewModelScope.launch(Dispatchers.IO) {
                     novelUseCases.deleteNovel(event.novel)
                 }
@@ -96,32 +92,24 @@ class NovelsViewModel @Inject constructor(
             }
             is NovelsEvent.RestoreNovel -> TODO()
             is NovelsEvent.EnteredNovelTitle -> {
-                Timber.d("EnteredNovelTitle")
-
                 //update the novelName State
                 state = state.copy(
                     dialogNovel = state.dialogNovel.copy(title = event.novelTitle)
                 )
             }
             is NovelsEvent.EnteredNovelUrl -> {
-                Timber.d("EnteredNovelUrl")
-
                 //update the novelName State
                 state = state.copy(
                     dialogNovel = state.dialogNovel.copy(url = event.novelUrl)
                 )
             }
             is NovelsEvent.MoreOptionsClicked -> {
-                Timber.d("More options clicked for Novel at index ${event.index}")
-
                 //Expand Dropdown
                 state = state.copy(
                     expandedDropdownNovelListIndex = event.index
                 )
             }
             is NovelsEvent.MoreOptionsDismissed -> {
-                Timber.d("More options dismissed for Novel at index ${state.expandedDropdownNovelListIndex}")
-
                 //Collapse Dropdown
                 state = state.copy(
                     expandedDropdownNovelListIndex = null

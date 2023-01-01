@@ -2,6 +2,9 @@
 *.apk
 *.ap_
 
+# release-build related files
+app/release/
+
 # files for the dex VM
 *.dex
 

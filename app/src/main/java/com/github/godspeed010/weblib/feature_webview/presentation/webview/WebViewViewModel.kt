@@ -36,10 +36,10 @@ class WebViewViewModel @Inject constructor(
         private set
 
     fun onEvent(event: WebViewEvent) {
+        Timber.d("%s : %s", event::class.simpleName, event.toString())
+
         when(event) {
             is WebViewEvent.EnteredUrl -> {
-                Timber.d("EnteredUrl")
-
                 val addressBarTextStr = state.addressBarText.text
 
                 state = if (state.shouldSelectEntireUrl) {
@@ -55,8 +55,6 @@ class WebViewViewModel @Inject constructor(
                 }
             }
             is WebViewEvent.SubmittedUrl -> {
-                Timber.d("SubmittedUrl: ${state.addressBarText.text}")
-
                 var addressBarText = state.addressBarText.text
 
                 if (!addressBarText.isUrl()) {
@@ -79,23 +77,20 @@ class WebViewViewModel @Inject constructor(
                 }
             }
             is WebViewEvent.ReloadClicked -> {
-                Timber.d("ReloadClicked")
                 state.webViewNavigator.reload()
             }
             is WebViewEvent.MoreOptionsToggled -> {
                 state = state.copy(isMoreOptionsDropdownEnabled = !state.isMoreOptionsDropdownEnabled)
             }
             is WebViewEvent.NewPageVisited -> {
-                Timber.d("NewPageVisited: ${event.url}")
-
                 state = state.copy(addressBarText = TextFieldValue(event.url))
             }
             is WebViewEvent.WebPageScrolled -> {
-                Timber.d("WebPageScrolled")
-
                 val toolbarHeightPx = with(event.localDensity) { AppBarHeight.roundToPx().toFloat() }
                 val deltaY = event.oldY - event.y
                 val newOffset = state.toolbarOffsetHeightPx + deltaY
+                Timber.d("Updated toolbar offset: toolbarOffsetHeightPx=$newOffset")
+
                 state = state.copy(
                     toolbarOffsetHeightPx = newOffset.coerceIn(-toolbarHeightPx, 0f)
                 )
@@ -106,7 +101,7 @@ class WebViewViewModel @Inject constructor(
 
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && state.webViewSettings != null) {
                     WebSettingsCompat.setForceDark(state.webViewSettings!!, WebSettingsCompat.FORCE_DARK_ON)
-                    state = state.copy(isDarkModeEnabled = !state.isDarkModeEnabled)
+                    state = state.copy(isDarkModeEnabled = true)
                 }
             }
             is WebViewEvent.WebViewDisposed -> {
