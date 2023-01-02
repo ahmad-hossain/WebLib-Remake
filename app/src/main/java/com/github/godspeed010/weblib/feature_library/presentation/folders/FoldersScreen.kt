@@ -43,7 +43,7 @@ fun FoldersScreen(
         bottomBar = {
             WebLibBottomAppBar(
                 currentScreen = Screen.Home,
-                onClickSearch = { }
+                onClickSettings = { }
             )
         },
         floatingActionButtonPosition = FabPosition.Center,

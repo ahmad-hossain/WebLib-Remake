@@ -7,7 +7,7 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -20,7 +20,7 @@ fun WebLibBottomAppBar(
     modifier: Modifier = Modifier,
     currentScreen: Screen,
     onClickHome: () -> Unit = {},
-    onClickSearch: () -> Unit = {}
+    onClickSettings: () -> Unit = {}
 ) {
     val navigationItems = arrayOf(
         NavItem(
@@ -30,10 +30,10 @@ fun WebLibBottomAppBar(
             iconContentDescriptionRes = R.string.cd_home,
         ),
         NavItem(
-            screen = Screen.Search,
-            onClickAction = onClickSearch,
-            icon = Icons.Outlined.Search,
-            iconContentDescriptionRes = R.string.cd_search,
+            screen = Screen.Settings,
+            onClickAction = onClickSettings,
+            icon = Icons.Outlined.Settings,
+            iconContentDescriptionRes = R.string.cd_settings,
         )
     )
 

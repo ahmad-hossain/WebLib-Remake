@@ -65,7 +65,7 @@ fun NovelsScreen(
             WebLibBottomAppBar(
                 currentScreen = Screen.Home,
                 onClickHome = { navigator.popBackStack() },
-                onClickSearch = { }
+                onClickSettings = { }
             )
         },
         floatingActionButtonPosition = FabPosition.Center,
