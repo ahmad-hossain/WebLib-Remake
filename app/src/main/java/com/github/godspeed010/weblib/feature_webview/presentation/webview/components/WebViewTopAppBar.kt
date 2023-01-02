@@ -33,7 +33,7 @@ fun WebViewTopAppBar(
     onUrlEntered: (TextFieldValue) -> Unit,
     onUrlSubmitted: () -> Unit,
     onBackButtonClicked: () -> Unit,
-    isWebviewLoading: Boolean,
+    isWebViewLoading: Boolean,
     onRefreshClicked: () -> Unit,
     onStopLoadingClicked: () -> Unit,
     onMoreOptionsClicked: () -> Unit,
@@ -75,7 +75,7 @@ fun WebViewTopAppBar(
             }
         },
         actions = {
-            val iconButtonProperties = if (isWebviewLoading) {
+            val iconButtonProperties = if (isWebViewLoading) {
                 Triple(onStopLoadingClicked, Icons.Default.Close, R.string.cd_stop_loading_page)
             } else {
                 Triple(onRefreshClicked, Icons.Default.Refresh, R.string.cd_refresh_page)

@@ -43,7 +43,7 @@ fun WebViewScreen(
             onUrlEntered = { viewModel.onEvent(WebViewEvent.EnteredUrl(it)) },
             onUrlSubmitted = { viewModel.onEvent(WebViewEvent.SubmittedUrl) },
             onBackButtonClicked = { navigator.popBackStack() },
-            isWebviewLoading = state.webViewState.isLoading,
+            isWebViewLoading = state.webViewState.isLoading,
             onRefreshClicked = { viewModel.onEvent(WebViewEvent.ReloadClicked) },
             onStopLoadingClicked = { viewModel.onEvent(WebViewEvent.StopLoadingClicked) },
             onMoreOptionsClicked = { viewModel.onEvent(WebViewEvent.MoreOptionsToggled) },
