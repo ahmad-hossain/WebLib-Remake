@@ -79,6 +79,9 @@ class WebViewViewModel @Inject constructor(
             is WebViewEvent.ReloadClicked -> {
                 state.webViewNavigator.reload()
             }
+            is WebViewEvent.StopLoadingClicked -> {
+                state.webViewNavigator.stopLoading()
+            }
             is WebViewEvent.MoreOptionsToggled -> {
                 state = state.copy(isMoreOptionsDropdownEnabled = !state.isMoreOptionsDropdownEnabled)
             }

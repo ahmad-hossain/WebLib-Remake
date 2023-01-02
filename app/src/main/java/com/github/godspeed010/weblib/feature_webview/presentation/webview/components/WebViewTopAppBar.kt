@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
@@ -32,7 +33,9 @@ fun WebViewTopAppBar(
     onUrlEntered: (TextFieldValue) -> Unit,
     onUrlSubmitted: () -> Unit,
     onBackButtonClicked: () -> Unit,
+    isWebviewLoading: Boolean,
     onRefreshClicked: () -> Unit,
+    onStopLoadingClicked: () -> Unit,
     onMoreOptionsClicked: () -> Unit,
     isMoreOptionsDropdownEnabled: Boolean,
     onDropdownDismissRequest: () -> Unit,
@@ -72,8 +75,13 @@ fun WebViewTopAppBar(
             }
         },
         actions = {
-            IconButton(onClick = onRefreshClicked) {
-                Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.cd_refresh_page))
+            val iconButtonProperties = if (isWebviewLoading) {
+                Triple(onStopLoadingClicked, Icons.Default.Close, R.string.cd_stop_loading_page)
+            } else {
+                Triple(onRefreshClicked, Icons.Default.Refresh, R.string.cd_refresh_page)
+            }
+            IconButton(onClick = iconButtonProperties.first) {
+                Icon(imageVector = iconButtonProperties.second, contentDescription = stringResource(id = iconButtonProperties.third))
             }
             Box {
                 IconButton(onClick = onMoreOptionsClicked) {
@@ -106,6 +114,6 @@ fun WebViewTopAppBar(
 @Composable
 fun PreviewWebViewTopAppBar() {
     WebViewTopAppBar(
-        Modifier, url = TextFieldValue("Hello there"), {}, {}, {}, {}, {}, true, {}, {}, true, {}
+        Modifier, url = TextFieldValue("Hello there"), {}, {}, {}, true, {}, {}, {}, true, {}, {}, true, {}
     )
 }

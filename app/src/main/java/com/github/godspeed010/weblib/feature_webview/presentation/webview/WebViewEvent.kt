@@ -11,6 +11,7 @@ sealed class WebViewEvent {
     data class NewPageVisited(val url: String) : WebViewEvent()
     data class WebPageScrolled(val localDensity: Density, val x: Int, val y: Int, val oldX: Int, val oldY: Int) : WebViewEvent()
     object ReloadClicked : WebViewEvent()
+    object StopLoadingClicked : WebViewEvent()
     object MoreOptionsToggled : WebViewEvent()
     data class WebViewCreated(val settings: WebSettings, val isDeviceDarkModeEnabled: Boolean) : WebViewEvent()
     object WebViewDisposed : WebViewEvent()
