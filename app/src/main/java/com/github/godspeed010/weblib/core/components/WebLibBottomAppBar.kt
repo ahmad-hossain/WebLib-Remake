@@ -10,6 +10,9 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.core.model.Screen
 
 @Composable
@@ -19,29 +22,45 @@ fun WebLibBottomAppBar(
     onClickHome: () -> Unit = {},
     onClickSearch: () -> Unit = {}
 ) {
+    val navigationItems = arrayOf(
+        NavItem(
+            screen = Screen.Home,
+            onClickAction = onClickHome,
+            icon = Icons.Outlined.Home,
+            iconContentDescriptionRes = R.string.cd_home,
+        ),
+        NavItem(
+            screen = Screen.Search,
+            onClickAction = onClickSearch,
+            icon = Icons.Outlined.Search,
+            iconContentDescriptionRes = R.string.cd_search,
+        )
+    )
+
     BottomAppBar(
         modifier = modifier,
         cutoutShape = CircleShape
     ) {
         BottomNavigation {
-            BottomNavigationItem(
-                selected = Screen.Home == currentScreen,
-                onClick = onClickHome,
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Home, contentDescription = "Home"
-                    )
-                }
-            )
-            BottomNavigationItem(
-                selected = Screen.Search == currentScreen,
-                onClick = onClickSearch,
-                icon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Search, contentDescription = "Search"
-                    )
-                }
-            )
+            navigationItems.forEach { navItem ->
+                BottomNavigationItem(
+                    selected = navItem.screen == currentScreen,
+                    onClick = navItem.onClickAction,
+                    icon = {
+                        Icon(
+                            imageVector = navItem.icon,
+                            contentDescription = stringResource(navItem.iconContentDescriptionRes)
+                        )
+                    }
+                )
+            }
         }
     }
 }
+
+data class NavItem(
+    val screen: Screen,
+    val onClickAction: () -> Unit,
+    val icon: ImageVector,
+    val iconContentDescriptionRes: Int,
+)

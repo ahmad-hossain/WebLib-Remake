@@ -22,10 +22,11 @@
     <string name="cd_refresh_page">Refresh Page</string>
     <string name="cd_stop_loading_page">Stop Loading Page</string>
     <string name="cd_more_options">More Options</string>
+    <string name="cd_home">Home</string>
+    <string name="cd_search">Search</string>
 
     <string name="novels">Novels</string>
     <string name="folders">Folders</string>
-    <string name="search">Search</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="light_mode">Light Mode</string>
 </resources>
