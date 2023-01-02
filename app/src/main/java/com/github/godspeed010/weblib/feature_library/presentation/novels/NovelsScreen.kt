@@ -83,7 +83,7 @@ fun NovelsScreen(
             )
         }
         LazyColumn(
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 10.dp, bottom = innerPadding.calculateBottomPadding())
+            contentPadding = PaddingValues(top = 8.dp, bottom = innerPadding.calculateBottomPadding())
         ) {
             itemsIndexed(novels) { index, novel ->
                 NovelItem(
