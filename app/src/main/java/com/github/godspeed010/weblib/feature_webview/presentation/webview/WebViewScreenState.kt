@@ -1,6 +1,6 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
-import android.webkit.WebSettings
+import android.webkit.WebView
 import androidx.compose.ui.text.input.TextFieldValue
 import com.github.godspeed010.weblib.feature_webview.util.WebContent
 import com.github.godspeed010.weblib.feature_webview.util.WebViewNavigator
@@ -13,6 +13,7 @@ data class WebViewScreenState(
     val webViewNavigator: WebViewNavigator,
     val toolbarOffsetHeightPx: Float = 0f,
     val isMoreOptionsDropdownEnabled: Boolean = false,
-    val webViewSettings: WebSettings? = null,
+    val webView: WebView? = null,
     val shouldSelectEntireUrl: Boolean = false,
+    val isLoadingDialogVisible: Boolean = false,
 )

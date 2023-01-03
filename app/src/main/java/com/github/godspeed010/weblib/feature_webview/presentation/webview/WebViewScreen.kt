@@ -9,10 +9,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.BasicColumn
+import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.LoadingDialog
 import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.WebViewTopAppBar
 import com.github.godspeed010.weblib.feature_webview.util.CustomWebViewClient
 import com.github.godspeed010.weblib.feature_webview.util.LoadingState
@@ -35,6 +38,11 @@ fun WebViewScreen(
     val state = viewModel.state
     val localDensity = LocalDensity.current
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
+
+    LoadingDialog(
+        isVisible = state.isLoadingDialogVisible,
+        bodyText = stringResource(R.string.loading_saved_scroll_progress)
+    )
 
     BasicColumn {
         WebViewTopAppBar(
@@ -67,7 +75,7 @@ fun WebViewScreen(
             modifier = Modifier
                 .offset { IntOffset(0, state.toolbarOffsetHeightPx.roundToInt()) },
             state = state.webViewState,
-            onCreated = { viewModel.onEvent(WebViewEvent.WebViewCreated(it.settings, isSystemInDarkTheme)) },
+            onCreated = { viewModel.onEvent(WebViewEvent.WebViewCreated(it, isSystemInDarkTheme)) },
             onDispose = { viewModel.onEvent(WebViewEvent.WebViewDisposed) },
             navigator = state.webViewNavigator,
             client = remember {

@@ -84,6 +84,7 @@ class NovelsViewModel @Inject constructor(
                         id = event.novel.id,
                         title = event.novel.title,
                         url = event.novel.url,
+                        scrollProgression = event.novel.scrollProgression,
                         folderId = folder.id,
                         createdAt = event.novel.createdAt,
                     ),

@@ -69,7 +69,7 @@ fun NovelItem(
 @Composable
 fun NovelItemPreview() {
     NovelItem(
-        novel = Novel(title = "Testing", url = "", folderId = 0),
+        novel = Novel(title = "Testing", url = "", scrollProgression = 0f, folderId = 0),
         isDropdownExpanded = true,
         onNovelClicked = {},
         onMoreClicked = {},

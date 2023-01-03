@@ -27,6 +27,7 @@ data class Novel(
     val id: Int = 0,
     val title: String,
     val url: String,
+    val scrollProgression: Float,
     val folderId: Int,
     override val createdAt: Long = TimeUtil.currentTimeSeconds(),
     override val lastModified: Long = TimeUtil.currentTimeSeconds(),
@@ -36,7 +37,8 @@ data class Novel(
         fun createWithDefaults(
             title: String = "",
             url: String = "",
+            scrollProgression: Float = 0f,
             folderId: Int = 0,
-        ) = Novel(title = title, url = url, folderId = folderId)
+        ) = Novel(title = title, url = url, scrollProgression = scrollProgression, folderId = folderId)
     }
 }

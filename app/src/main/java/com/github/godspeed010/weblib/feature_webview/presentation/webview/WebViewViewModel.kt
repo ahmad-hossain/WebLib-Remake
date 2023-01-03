@@ -18,6 +18,7 @@ import com.github.godspeed010.weblib.feature_webview.util.*
 import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -72,9 +73,9 @@ class WebViewViewModel @Inject constructor(
                 )
             }
             is WebViewEvent.ToggleDarkMode -> {
-                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && state.webViewSettings != null) {
+                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
                     val setting = if (state.isWvDarkModeEnabled) WebSettingsCompat.FORCE_DARK_OFF else WebSettingsCompat.FORCE_DARK_ON
-                    WebSettingsCompat.setForceDark(state.webViewSettings?: return, setting)
+                    WebSettingsCompat.setForceDark(state.webView?.settings ?: return, setting)
                     state = state.copy(isWvDarkModeEnabled = !state.isWvDarkModeEnabled)
                 }
             }
@@ -101,16 +102,28 @@ class WebViewViewModel @Inject constructor(
                 )
             }
             is WebViewEvent.WebViewCreated -> {
-                state = state.copy(webViewSettings = event.settings)
-                state.webViewSettings?.javaScriptEnabled = true
+                state = state.copy(webView = event.webView)
+                state.webView?.settings?.javaScriptEnabled = true
+
+                if (novel.scrollProgression != 0f && state.webViewState.errorsForCurrentRequest.isEmpty()) {
+                    state = state.copy(isLoadingDialogVisible = true)
+                    viewModelScope.launch(Dispatchers.Main) {
+                        delay(2 * 1000)
+                        val scrollY = state.webView?.calculateScrollYFromProgression(novel.scrollProgression)
+                        if (scrollY != null) {
+                            state.webView?.scrollTo(0, scrollY)
+                        }
+                        state = state.copy(isLoadingDialogVisible = false)
+                    }
+                }
 
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && (event.isDeviceDarkModeEnabled || state.isWvDarkModeEnabled)) {
-                    WebSettingsCompat.setForceDark(state.webViewSettings ?: return, WebSettingsCompat.FORCE_DARK_ON)
+                    WebSettingsCompat.setForceDark(state.webView?.settings ?: return, WebSettingsCompat.FORCE_DARK_ON)
                     state = state.copy(isWvDarkModeEnabled = true)
                 }
             }
             is WebViewEvent.WebViewDisposed -> {
-                state = state.copy(webViewSettings = null)
+                state = state.copy(webView = null)
             }
             is WebViewEvent.UrlFocused -> {
                 state = state.copy(shouldSelectEntireUrl = true)
@@ -126,12 +139,18 @@ class WebViewViewModel @Inject constructor(
     }
 
     private fun updateNovel() {
+        val wvScrollProgression =
+            state.webView?.verticalScrollProgression ?: novel.scrollProgression
+        val currScrollProgression =
+            if (state.webViewState.errorsForCurrentRequest.isEmpty()) wvScrollProgression else novel.scrollProgression
         val currentUrl = state.webViewState.content.getCurrentUrl()
+
         currentUrl?.let {
             viewModelScope.launch(Dispatchers.IO) {
                 repository.updateNovel(
                     novel.copy(
                         url = it,
+                        scrollProgression = currScrollProgression,
                         createdAt = novel.createdAt,
                         lastModified = TimeUtil.currentTimeSeconds()
                     )
