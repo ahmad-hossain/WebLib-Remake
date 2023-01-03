@@ -15,8 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.R
-import com.github.godspeed010.weblib.core.components.WebLibBottomAppBar
-import com.github.godspeed010.weblib.core.model.Screen
+import com.github.godspeed010.weblib.common.components.WebLibBottomAppBar
+import com.github.godspeed010.weblib.common.model.Screen
 import com.github.godspeed010.weblib.destinations.NovelsScreenDestination
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.AddEditFolderDialog
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.FolderItem

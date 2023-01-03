@@ -1,4 +1,4 @@
-package com.github.godspeed010.weblib.di
+package com.github.godspeed010.weblib.common.di
 
 import android.app.Application
 import androidx.room.Room

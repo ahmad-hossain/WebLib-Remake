@@ -13,7 +13,7 @@ import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
-import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
+import com.github.godspeed010.weblib.feature_webview.domain.use_case.WebViewUseCases
 import com.github.godspeed010.weblib.feature_webview.util.*
 import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +28,7 @@ private val AppBarHeight = 56.dp
 @HiltViewModel
 class WebViewViewModel @Inject constructor(
     private val repository: LibraryRepository,
+    private val webViewUseCases: WebViewUseCases,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(), DefaultLifecycleObserver {
 
@@ -135,28 +136,7 @@ class WebViewViewModel @Inject constructor(
         super.onStop(owner)
         Timber.d("WebViewViewModel onStop")
 
-        updateNovel()
-    }
-
-    private fun updateNovel() {
-        val wvScrollProgression =
-            state.webView?.verticalScrollProgression ?: novel.scrollProgression
-        val currScrollProgression =
-            if (state.webViewState.errorsForCurrentRequest.isEmpty()) wvScrollProgression else novel.scrollProgression
-        val currentUrl = state.webViewState.content.getCurrentUrl()
-
-        currentUrl?.let {
-            viewModelScope.launch(Dispatchers.IO) {
-                repository.updateNovel(
-                    novel.copy(
-                        url = it,
-                        scrollProgression = currScrollProgression,
-                        createdAt = novel.createdAt,
-                        lastModified = TimeUtil.currentTimeSeconds()
-                    )
-                )
-            }
-        }
+        viewModelScope.launch { webViewUseCases.updateNovel(state, novel) }
     }
 
     init {

@@ -1,4 +1,4 @@
-package com.github.godspeed010.weblib.core.components
+package com.github.godspeed010.weblib.common.components
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.BottomAppBar
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import com.github.godspeed010.weblib.R
-import com.github.godspeed010.weblib.core.model.Screen
+import com.github.godspeed010.weblib.common.model.Screen
 
 @Composable
 fun WebLibBottomAppBar(
