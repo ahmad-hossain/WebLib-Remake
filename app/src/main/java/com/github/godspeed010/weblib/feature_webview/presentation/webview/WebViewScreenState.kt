@@ -8,7 +8,7 @@ import com.github.godspeed010.weblib.feature_webview.util.WebViewState
 
 data class WebViewScreenState(
     val addressBarText: TextFieldValue = TextFieldValue(text = ""),
-    val isDarkModeEnabled: Boolean = false,
+    val isWvDarkModeEnabled: Boolean = false,
     val webViewState: WebViewState = WebViewState(WebContent.Url("")),
     val webViewNavigator: WebViewNavigator,
     val toolbarOffsetHeightPx: Float = 0f,

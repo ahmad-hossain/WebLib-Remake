@@ -1,5 +1,6 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -35,6 +36,7 @@ class WebViewViewModel @Inject constructor(
     var state by mutableStateOf(WebViewScreenState(webViewNavigator = WebViewNavigator(viewModelScope)))
         private set
 
+    @SuppressLint("SetJavaScriptEnabled")
     fun onEvent(event: WebViewEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
 
@@ -71,9 +73,9 @@ class WebViewViewModel @Inject constructor(
             }
             is WebViewEvent.ToggleDarkMode -> {
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && state.webViewSettings != null) {
-                    val setting = if (state.isDarkModeEnabled) WebSettingsCompat.FORCE_DARK_OFF else WebSettingsCompat.FORCE_DARK_ON
-                    WebSettingsCompat.setForceDark(state.webViewSettings!!, setting)
-                    state = state.copy(isDarkModeEnabled = !state.isDarkModeEnabled)
+                    val setting = if (state.isWvDarkModeEnabled) WebSettingsCompat.FORCE_DARK_OFF else WebSettingsCompat.FORCE_DARK_ON
+                    WebSettingsCompat.setForceDark(state.webViewSettings?: return, setting)
+                    state = state.copy(isWvDarkModeEnabled = !state.isWvDarkModeEnabled)
                 }
             }
             is WebViewEvent.ReloadClicked -> {
@@ -102,9 +104,9 @@ class WebViewViewModel @Inject constructor(
                 state = state.copy(webViewSettings = event.settings)
                 state.webViewSettings?.javaScriptEnabled = true
 
-                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && state.webViewSettings != null) {
-                    WebSettingsCompat.setForceDark(state.webViewSettings!!, WebSettingsCompat.FORCE_DARK_ON)
-                    state = state.copy(isDarkModeEnabled = true)
+                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && (event.isDeviceDarkModeEnabled || state.isWvDarkModeEnabled)) {
+                    WebSettingsCompat.setForceDark(state.webViewSettings ?: return, WebSettingsCompat.FORCE_DARK_ON)
+                    state = state.copy(isWvDarkModeEnabled = true)
                 }
             }
             is WebViewEvent.WebViewDisposed -> {
