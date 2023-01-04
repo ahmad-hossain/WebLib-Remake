@@ -12,7 +12,6 @@ import androidx.lifecycle.*
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
-import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
 import com.github.godspeed010.weblib.feature_webview.domain.use_case.WebViewUseCases
 import com.github.godspeed010.weblib.feature_webview.util.*
 import com.github.godspeed010.weblib.navArgs
@@ -27,7 +26,6 @@ private val AppBarHeight = 56.dp
 
 @HiltViewModel
 class WebViewViewModel @Inject constructor(
-    private val repository: LibraryRepository,
     private val webViewUseCases: WebViewUseCases,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(), DefaultLifecycleObserver {
@@ -74,11 +72,12 @@ class WebViewViewModel @Inject constructor(
                 )
             }
             is WebViewEvent.ToggleDarkMode -> {
-                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-                    val setting = if (state.isWvDarkModeEnabled) WebSettingsCompat.FORCE_DARK_OFF else WebSettingsCompat.FORCE_DARK_ON
-                    WebSettingsCompat.setForceDark(state.webView?.settings ?: return, setting)
-                    state = state.copy(isWvDarkModeEnabled = !state.isWvDarkModeEnabled)
-                }
+                val isForceDarkSupported = WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)
+                if (!isForceDarkSupported) return
+
+                val forceDarkSetting = if (state.isWvDarkModeEnabled) WebSettingsCompat.FORCE_DARK_OFF else WebSettingsCompat.FORCE_DARK_ON
+                WebSettingsCompat.setForceDark(state.webView?.settings ?: return, forceDarkSetting)
+                state = state.copy(isWvDarkModeEnabled = !state.isWvDarkModeEnabled)
             }
             is WebViewEvent.ReloadClicked -> {
                 state.webViewNavigator.reload()
@@ -103,25 +102,40 @@ class WebViewViewModel @Inject constructor(
                 )
             }
             is WebViewEvent.WebViewCreated -> {
-                state = state.copy(webView = event.webView)
-                state.webView?.settings?.javaScriptEnabled = true
+                fun restoreLastScrollProgression() {
+                    if (novel.scrollProgression == 0f || state.webViewState.errorsForCurrentRequest.isNotEmpty()) return
 
-                if (novel.scrollProgression != 0f && state.webViewState.errorsForCurrentRequest.isEmpty()) {
                     state = state.copy(isLoadingDialogVisible = true)
+
                     viewModelScope.launch(Dispatchers.Main) {
                         delay(2 * 1000)
                         val scrollY = state.webView?.calculateScrollYFromProgression(novel.scrollProgression)
                         if (scrollY != null) {
                             state.webView?.scrollTo(0, scrollY)
                         }
+
                         state = state.copy(isLoadingDialogVisible = false)
                     }
                 }
 
-                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK) && (event.isDeviceDarkModeEnabled || state.isWvDarkModeEnabled)) {
-                    WebSettingsCompat.setForceDark(state.webView?.settings ?: return, WebSettingsCompat.FORCE_DARK_ON)
+                @SuppressLint("RequiresFeature")
+                fun setupWebViewUiMode() {
+                    val isForceDarkSupported = WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)
+                    val shouldForceDarkMode = event.isDeviceDarkModeEnabled || state.isWvDarkModeEnabled
+                    if (!(isForceDarkSupported && shouldForceDarkMode)) return
+
+                    WebSettingsCompat.setForceDark(
+                        state.webView?.settings ?: return,
+                        WebSettingsCompat.FORCE_DARK_ON
+                    )
                     state = state.copy(isWvDarkModeEnabled = true)
                 }
+
+                state = state.copy(webView = event.webView)
+                state.webView?.settings?.javaScriptEnabled = true
+
+                restoreLastScrollProgression()
+                setupWebViewUiMode()
             }
             is WebViewEvent.WebViewDisposed -> {
                 state = state.copy(webView = null)

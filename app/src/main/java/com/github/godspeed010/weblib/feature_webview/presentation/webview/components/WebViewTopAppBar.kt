@@ -75,11 +75,10 @@ fun WebViewTopAppBar(
             }
         },
         actions = {
-            val iconButtonProperties = if (isWebViewLoading) {
-                Triple(onStopLoadingClicked, Icons.Default.Close, R.string.cd_stop_loading_page)
-            } else {
+            val iconButtonProperties = if (isWebViewLoading)
+                Triple(onStopLoadingClicked, Icons.Default.Close, R.string.cd_stop_loading_page) else
                 Triple(onRefreshClicked, Icons.Default.Refresh, R.string.cd_refresh_page)
-            }
+
             IconButton(onClick = iconButtonProperties.first) {
                 Icon(imageVector = iconButtonProperties.second, contentDescription = stringResource(id = iconButtonProperties.third))
             }
