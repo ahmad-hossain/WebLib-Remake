@@ -16,4 +16,5 @@ sealed class WebViewEvent {
     data class WebViewCreated(val webView: WebView, val isDeviceDarkModeEnabled: Boolean) : WebViewEvent()
     object WebViewDisposed : WebViewEvent()
     object UrlFocused : WebViewEvent()
+    object BackButtonLongPressed : WebViewEvent()
 }

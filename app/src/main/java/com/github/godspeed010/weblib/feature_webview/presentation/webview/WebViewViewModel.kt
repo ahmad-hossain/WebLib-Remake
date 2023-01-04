@@ -143,6 +143,9 @@ class WebViewViewModel @Inject constructor(
             is WebViewEvent.UrlFocused -> {
                 state = state.copy(shouldSelectEntireUrl = true)
             }
+            is WebViewEvent.BackButtonLongPressed -> {
+                TODO()
+            }
         }
     }
 

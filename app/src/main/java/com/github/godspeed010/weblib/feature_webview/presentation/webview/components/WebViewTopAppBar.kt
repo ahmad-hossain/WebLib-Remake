@@ -33,6 +33,7 @@ fun WebViewTopAppBar(
     onUrlEntered: (TextFieldValue) -> Unit,
     onUrlSubmitted: () -> Unit,
     onBackButtonClicked: () -> Unit,
+    onBackButtonLongClicked: () -> Unit,
     isWebViewLoading: Boolean,
     onRefreshClicked: () -> Unit,
     onStopLoadingClicked: () -> Unit,
@@ -46,8 +47,14 @@ fun WebViewTopAppBar(
     TopAppBar(
         modifier = modifier,
         navigationIcon = {
-            IconButton(onClick = onBackButtonClicked) {
-                Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.cd_go_back))
+            CustomIconButton(
+                onLongClick = onBackButtonLongClicked,
+                onClick = onBackButtonClicked
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = stringResource(R.string.cd_go_back)
+                )
             }
         },
         title = {
@@ -113,6 +120,20 @@ fun WebViewTopAppBar(
 @Composable
 fun PreviewWebViewTopAppBar() {
     WebViewTopAppBar(
-        Modifier, url = TextFieldValue("Hello there"), {}, {}, {}, true, {}, {}, {}, true, {}, {}, true, {}
+        Modifier,
+        url = TextFieldValue(text = "Hello there"),
+        onUrlEntered = {},
+        onUrlSubmitted = {},
+        onBackButtonClicked = {},
+        onBackButtonLongClicked = {},
+        isWebViewLoading = true,
+        onRefreshClicked = {},
+        onStopLoadingClicked = {},
+        onMoreOptionsClicked = {},
+        isMoreOptionsDropdownEnabled = true,
+        onDropdownDismissRequest = {},
+        onDarkModeOptionClicked = {},
+        isDarkModeEnabled = true,
+        onUrlFocused = {}
     )
 }
