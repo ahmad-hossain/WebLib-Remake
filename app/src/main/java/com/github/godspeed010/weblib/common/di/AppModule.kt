@@ -35,25 +35,4 @@ object AppModule {
             LibraryDatabase.DATABASE_NAME
         ).build()
     }
-
-    @Provides
-    @Singleton
-    fun provideFolderUseCases(repository: LibraryRepository) : FolderUseCases {
-        return FolderUseCases(
-            AddOrUpdateFolder(repository),
-            GetFolders(repository),
-            DeleteFolder(repository)
-        )
-    }
-
-    @Provides
-    @Singleton
-    fun provideNovelUseCases(repository: LibraryRepository) : NovelUseCases {
-        return NovelUseCases(
-            GetNovels(repository),
-            AddOrUpdateNovel(repository),
-            GetFolderWithNovels(repository),
-            DeleteNovel(repository)
-        )
-    }
 }
