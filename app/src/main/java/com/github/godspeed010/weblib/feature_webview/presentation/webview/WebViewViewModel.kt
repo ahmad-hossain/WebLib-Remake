@@ -1,7 +1,6 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
 import android.annotation.SuppressLint
-import android.webkit.WebHistoryItem
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.*
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
+import com.github.godspeed010.weblib.feature_library.common.use_case.ValidatedUrl
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_webview.domain.use_case.WebViewUseCases
 import com.github.godspeed010.weblib.feature_webview.util.*
@@ -28,6 +28,7 @@ private val AppBarHeight = 56.dp
 @HiltViewModel
 class WebViewViewModel @Inject constructor(
     private val webViewUseCases: WebViewUseCases,
+    private val validatedUrlUseCase: ValidatedUrl,
     savedStateHandle: SavedStateHandle
 ) : ViewModel(), DefaultLifecycleObserver {
 
@@ -58,19 +59,9 @@ class WebViewViewModel @Inject constructor(
                 }
             }
             is WebViewEvent.SubmittedUrl -> {
-                var addressBarText = state.addressBarText.text
-
-                if (!addressBarText.isUrl()) {
-                    Timber.d("Entered text isn't url. Converting to Google search")
-                    addressBarText = addressBarText.asGoogleSearch()
-                } else {
-                    addressBarText = addressBarText.makeHttpsIfNeeded()
-                }
-
-                Timber.d("Loading url: $addressBarText")
-                state = state.copy(
-                    webViewState = WebViewState(WebContent.Url(addressBarText))
-                )
+                val validatedUrl = validatedUrlUseCase(state.addressBarText.text)
+                Timber.d("Loading url: $validatedUrl")
+                state = state.copy(webViewState = WebViewState(WebContent.Url(validatedUrl)))
             }
             is WebViewEvent.ToggleDarkMode -> {
                 val isForceDarkSupported = WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)
