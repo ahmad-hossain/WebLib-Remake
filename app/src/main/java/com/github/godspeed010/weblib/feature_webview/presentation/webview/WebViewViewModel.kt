@@ -1,6 +1,7 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
 import android.annotation.SuppressLint
+import android.webkit.WebHistoryItem
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -144,7 +145,18 @@ class WebViewViewModel @Inject constructor(
                 state = state.copy(shouldSelectEntireUrl = true)
             }
             is WebViewEvent.BackButtonLongPressed -> {
-                TODO()
+                val history = state.webView?.copyBackForwardList() ?: return
+                val historyItems = (0 until history.size - 1)
+                    .reversed()
+                    .map { history.getItemAtIndex(it) }
+                state = state.copy(isHistoryDropdownExpanded = true, historyItems = historyItems)
+            }
+            is WebViewEvent.HistoryDropdownDismissRequest -> {
+                state = state.copy(isHistoryDropdownExpanded = false)
+            }
+            is WebViewEvent.HistoryItemClicked -> {
+                val url = state.historyItems[event.listIndex].url
+                state = state.copy(isHistoryDropdownExpanded = false, webViewState = WebViewState(WebContent.Url(url)))
             }
         }
     }

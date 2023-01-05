@@ -1,5 +1,6 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview.components
 
+import android.webkit.WebHistoryItem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
@@ -39,22 +41,42 @@ fun WebViewTopAppBar(
     onStopLoadingClicked: () -> Unit,
     onMoreOptionsClicked: () -> Unit,
     isMoreOptionsDropdownEnabled: Boolean,
-    onDropdownDismissRequest: () -> Unit,
+    onMoreOptionsDropdownDismissRequest: () -> Unit,
     onDarkModeOptionClicked: () -> Unit,
     isDarkModeEnabled: Boolean,
     onUrlFocused: () -> Unit,
+    historyItems: List<WebHistoryItem>,
+    isHistoryDropdownExpanded: Boolean,
+    onHistoryDropdownDismissRequest: () -> Unit,
+    onClickHistoryItem: (Int) -> Unit,
 ) {
     TopAppBar(
         modifier = modifier,
         navigationIcon = {
-            CustomIconButton(
-                onLongClick = onBackButtonLongClicked,
-                onClick = onBackButtonClicked
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = stringResource(R.string.cd_go_back)
-                )
+            Box {
+                CustomIconButton(
+                    onLongClick = onBackButtonLongClicked,
+                    onClick = onBackButtonClicked
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = stringResource(R.string.cd_go_back)
+                    )
+                }
+                DropdownMenu(
+                    expanded = isHistoryDropdownExpanded,
+                    onDismissRequest = onHistoryDropdownDismissRequest,
+                ) {
+                    historyItems.forEachIndexed { index, s ->
+                        DropdownMenuItem(onClick = { onClickHistoryItem(index) }) {
+                            Text(
+                                text = s.title,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
+                    }
+                }
             }
         },
         title = {
@@ -95,7 +117,7 @@ fun WebViewTopAppBar(
                 }
                 DropdownMenu(
                     expanded = isMoreOptionsDropdownEnabled,
-                    onDismissRequest = onDropdownDismissRequest) {
+                    onDismissRequest = onMoreOptionsDropdownDismissRequest) {
                     DropdownMenuItem(onClick = onDarkModeOptionClicked) {
                         val itemText: Int
                         val itemIconId: Int
@@ -131,9 +153,13 @@ fun PreviewWebViewTopAppBar() {
         onStopLoadingClicked = {},
         onMoreOptionsClicked = {},
         isMoreOptionsDropdownEnabled = true,
-        onDropdownDismissRequest = {},
+        onMoreOptionsDropdownDismissRequest = {},
         onDarkModeOptionClicked = {},
         isDarkModeEnabled = true,
-        onUrlFocused = {}
+        onUrlFocused = {},
+        historyItems = listOf(),
+        isHistoryDropdownExpanded = false,
+        onHistoryDropdownDismissRequest = {},
+        onClickHistoryItem = {},
     )
 }

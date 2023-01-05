@@ -1,5 +1,6 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
+import android.webkit.WebHistoryItem
 import android.webkit.WebView
 import androidx.compose.ui.text.input.TextFieldValue
 import com.github.godspeed010.weblib.feature_webview.util.WebContent
@@ -16,4 +17,6 @@ data class WebViewScreenState(
     val webView: WebView? = null,
     val shouldSelectEntireUrl: Boolean = false,
     val isLoadingDialogVisible: Boolean = false,
+    val isHistoryDropdownExpanded: Boolean = false,
+    val historyItems: List<WebHistoryItem> = listOf(),
 )

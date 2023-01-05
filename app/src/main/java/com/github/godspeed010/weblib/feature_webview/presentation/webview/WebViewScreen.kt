@@ -7,7 +7,9 @@ import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
@@ -35,9 +37,10 @@ fun WebViewScreen(
     navigator: DestinationsNavigator,
     viewModel: WebViewViewModel = hiltViewModel()
 ) {
+    viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
     val state = viewModel.state
     val localDensity = LocalDensity.current
-    viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
+    val haptic = LocalHapticFeedback.current
 
     LoadingDialog(
         isVisible = state.isLoadingDialogVisible,
@@ -51,16 +54,23 @@ fun WebViewScreen(
             onUrlEntered = { viewModel.onEvent(WebViewEvent.EnteredUrl(it)) },
             onUrlSubmitted = { viewModel.onEvent(WebViewEvent.SubmittedUrl) },
             onBackButtonClicked = { navigator.popBackStack() },
-            onBackButtonLongClicked = { viewModel.onEvent(WebViewEvent.BackButtonLongPressed) },
+            onBackButtonLongClicked = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                viewModel.onEvent(WebViewEvent.BackButtonLongPressed)
+            },
             isWebViewLoading = state.webViewState.isLoading,
             onRefreshClicked = { viewModel.onEvent(WebViewEvent.ReloadClicked) },
             onStopLoadingClicked = { viewModel.onEvent(WebViewEvent.StopLoadingClicked) },
             onMoreOptionsClicked = { viewModel.onEvent(WebViewEvent.MoreOptionsToggled) },
             isMoreOptionsDropdownEnabled = state.isMoreOptionsDropdownEnabled,
-            onDropdownDismissRequest = { viewModel.onEvent(WebViewEvent.MoreOptionsToggled) },
+            onMoreOptionsDropdownDismissRequest = { viewModel.onEvent(WebViewEvent.MoreOptionsToggled) },
             onDarkModeOptionClicked = { viewModel.onEvent(WebViewEvent.ToggleDarkMode) },
             isDarkModeEnabled = state.isWvDarkModeEnabled,
-            onUrlFocused = { viewModel.onEvent(WebViewEvent.UrlFocused) }
+            onUrlFocused = { viewModel.onEvent(WebViewEvent.UrlFocused) },
+            historyItems = state.historyItems,
+            isHistoryDropdownExpanded = state.isHistoryDropdownExpanded,
+            onHistoryDropdownDismissRequest = { viewModel.onEvent(WebViewEvent.HistoryDropdownDismissRequest) },
+            onClickHistoryItem = { viewModel.onEvent(WebViewEvent.HistoryItemClicked(it)) }
         )
 
         val loadingState = state.webViewState.loadingState
