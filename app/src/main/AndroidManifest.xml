@@ -14,6 +14,7 @@
         android:theme="@style/Theme.WebLib">
         <activity
             android:name="com.github.godspeed010.weblib.MainActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/Theme.WebLib.NoActionBar"
             android:exported="true">
             <intent-filter>
