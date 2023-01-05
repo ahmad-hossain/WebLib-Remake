@@ -6,21 +6,21 @@ import timber.log.Timber
 fun String.isUrl(): Boolean = Patterns.WEB_URL.matcher(this).matches()
 
 fun String.makeHttpsIfNeeded(): String {
-    var result = this
+    val urlStartsWithHttp = this.startsWith("http:")
+    val urlStartsWithHttps = this.startsWith("https:")
 
-    val urlStartsWithHttp = result.startsWith("http:")
-    val urlStartsWithHttps = result.startsWith("https:")
+    if (urlStartsWithHttps) return this
 
-    if (urlStartsWithHttp) {
+    val correctedUrl = if (urlStartsWithHttp) {
         Timber.d("Replacing 'http' with 'https'")
-        result = result.replaceFirst(oldValue = "http", newValue = "https", ignoreCase = true)
+        this.replaceFirst(oldValue = "http", newValue = "https", ignoreCase = true)
     }
-    else if (!urlStartsWithHttp and !urlStartsWithHttps) {
+    else {
         Timber.d("Prepending 'https://' to res")
-        result = "https://$result"
+        "https://$this"
     }
 
-    return result
+    return correctedUrl
 }
 
 fun String.asGoogleSearch() = "https://www.google.com/search?q=$this"
