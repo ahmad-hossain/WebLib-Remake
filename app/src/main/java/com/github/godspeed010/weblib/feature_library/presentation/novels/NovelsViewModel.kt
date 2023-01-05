@@ -7,6 +7,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.godspeed010.weblib.feature_library.common.use_case.ValidatedUrl
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.NovelUseCases
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NovelsViewModel @Inject constructor(
     private val novelUseCases: NovelUseCases,
+    private val validatedUrlUseCase: ValidatedUrl,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     @OptIn(ExperimentalComposeUiApi::class)
@@ -39,6 +41,7 @@ class NovelsViewModel @Inject constructor(
                     novelUseCases.addOrUpdateNovel(
                         state.dialogNovel.copy(
                             folderId = folder.id,
+                            url = validatedUrlUseCase(state.dialogNovel.url),
                             lastModified = TimeUtil.currentTimeSeconds()
                         )
                     )
