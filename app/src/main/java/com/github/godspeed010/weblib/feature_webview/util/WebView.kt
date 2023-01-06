@@ -193,6 +193,10 @@ open class AccompanistWebViewClient : WebViewClient() {
         isReload: Boolean
     ) {
         super.doUpdateVisitedHistory(view, url, isReload)
+
+        // Reset state when WebView gets new url
+        state.currentPageHasError = false
+
         // WebView will often update the current url itself.
         // This happens in situations like redirects and navigating through
         // history. We capture this change and update our state holder url.
@@ -213,6 +217,10 @@ open class AccompanistWebViewClient : WebViewClient() {
         error: WebResourceError?
     ) {
         super.onReceivedError(view, request, error)
+
+        if (request?.url.toString() == view?.url) {
+            state.currentPageHasError = true
+        }
 
         if (error != null) {
             state.errorsForCurrentRequest.add(WebViewError(request, error))
@@ -346,6 +354,12 @@ class WebViewState(webContent: WebContent) {
      * For more fine grained control use the OnError callback of the WebView.
      */
     val errorsForCurrentRequest: SnapshotStateList<WebViewError> = mutableStateListOf()
+
+    /**
+     * Whether the current page/url for the WebView has an error
+     */
+    var currentPageHasError: Boolean by mutableStateOf(false)
+        internal set
 }
 
 /**
