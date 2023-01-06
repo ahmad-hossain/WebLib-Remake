@@ -101,7 +101,8 @@ fun WebViewTopAppBar(
                     .height(SmallTopAppBarHeight)
                     .padding(vertical = 8.dp)
                     .clip(CircleShape)
-                    .background(Color.White),
+                    .background(Color.White)
+                    .border(width = 1.dp, color = Color.Black, CircleShape),
                 contentAlignment = Alignment.CenterStart
             ) {
                 BasicTextField(
