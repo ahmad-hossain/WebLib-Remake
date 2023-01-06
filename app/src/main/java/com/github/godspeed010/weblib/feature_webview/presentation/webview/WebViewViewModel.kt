@@ -95,7 +95,7 @@ class WebViewViewModel @Inject constructor(
             }
             is WebViewEvent.WebViewCreated -> {
                 fun restoreLastScrollProgression() {
-                    if (novel.scrollProgression == 0f || state.webViewState.errorsForCurrentRequest.isNotEmpty()) return
+                    if (novel.scrollProgression == 0f || state.webViewState.currentPageHasError) return
 
                     state = state.copy(isLoadingDialogVisible = true)
 

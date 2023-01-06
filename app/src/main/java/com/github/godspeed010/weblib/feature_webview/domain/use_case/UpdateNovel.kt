@@ -21,7 +21,7 @@ class UpdateNovel @Inject constructor(
         val wvScrollProgression =
             state.webView?.verticalScrollProgression ?: novel.scrollProgression
         val currScrollProgression =
-            if (state.webViewState.errorsForCurrentRequest.isEmpty()) wvScrollProgression else novel.scrollProgression
+            if (!state.webViewState.currentPageHasError) wvScrollProgression else novel.scrollProgression
 
         withContext(Dispatchers.IO) {
             repository.updateNovel(
