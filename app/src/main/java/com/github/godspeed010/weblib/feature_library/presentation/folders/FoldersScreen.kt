@@ -22,10 +22,12 @@ import com.github.godspeed010.weblib.destinations.NovelsScreenDestination
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.AddEditFolderDialog
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.FolderItem
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
-@Destination(start = true)
+@Destination
+@RootNavGraph(start = true)
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable
