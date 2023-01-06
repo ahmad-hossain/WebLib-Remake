@@ -1,5 +1,8 @@
 package com.github.godspeed010.weblib.feature_library.presentation.novels
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.BookmarkAdd
+import androidx.compose.material.icons.outlined.DriveFileRenameOutline
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,6 +10,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.common.use_case.ValidatedUrl
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
@@ -48,7 +52,6 @@ class NovelsViewModel @Inject constructor(
 
                     //Clear TextField states
                     state = state.copy(
-                        dialogTitle = "",
                         dialogNovel = Novel.createWithDefaults()
                     )
                 }
@@ -60,7 +63,8 @@ class NovelsViewModel @Inject constructor(
             is NovelsEvent.FabClicked -> {
                 //make AddEditNovelDialog visible
                 state = state.copy(
-                    dialogTitle = "Add Novel",
+                    dialogTitleRes = R.string.dialog_add_novel,
+                    dialogIcon = Icons.Outlined.BookmarkAdd,
                     isAddEditNovelDialogVisible = true
                 )
             }
@@ -81,7 +85,8 @@ class NovelsViewModel @Inject constructor(
             is NovelsEvent.EditNovelClicked -> {
                 //Set TextField state & close Dropdown
                 state = state.copy(
-                    dialogTitle = "Edit Novel",
+                    dialogTitleRes = R.string.dialog_edit_novel,
+                    dialogIcon = Icons.Outlined.DriveFileRenameOutline,
                     expandedDropdownNovelListIndex = null,
                     dialogNovel = Novel(
                         id = event.novel.id,

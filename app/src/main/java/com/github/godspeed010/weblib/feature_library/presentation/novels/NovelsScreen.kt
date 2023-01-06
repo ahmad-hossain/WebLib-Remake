@@ -1,17 +1,18 @@
 package com.github.godspeed010.weblib.feature_library.presentation.novels
 
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.common.components.WebLibBottomAppBar
@@ -28,6 +29,7 @@ data class NovelsScreenNavArgs(
     val folder: Folder
 )
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @ExperimentalComposeUiApi
 @Destination(navArgsDelegate = NovelsScreenNavArgs::class)
 @Composable
@@ -44,10 +46,7 @@ fun NovelsScreen(
     )
     val novels = folderWithNovels.value.novels
 
-    val scaffoldState = rememberScaffoldState()
-
     Scaffold(
-        scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.novels)) },
@@ -68,8 +67,7 @@ fun NovelsScreen(
                 onClickSettings = { }
             )
         },
-        floatingActionButtonPosition = FabPosition.Center,
-        isFloatingActionButtonDocked = true,
+        floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -84,7 +82,8 @@ fun NovelsScreen(
     ) { innerPadding ->
         if (state.isAddEditNovelDialogVisible) {
             AddEditNovelDialog(
-                title = state.dialogTitle,
+                icon = state.dialogIcon,
+                title = stringResource(id = state.dialogTitleRes),
                 novelTitle = state.dialogNovel.title,
                 novelUrl = state.dialogNovel.url,
                 onNovelTitleChanged = { viewModel.onEvent(NovelsEvent.EnteredNovelTitle(it)) },
@@ -94,7 +93,8 @@ fun NovelsScreen(
             )
         }
         LazyColumn(
-            contentPadding = PaddingValues(top = 8.dp, bottom = innerPadding.calculateBottomPadding())
+            modifier = Modifier.consumeWindowInsets(innerPadding),
+            contentPadding = innerPadding
         ) {
             itemsIndexed(novels) { index, novel ->
                 NovelItem(

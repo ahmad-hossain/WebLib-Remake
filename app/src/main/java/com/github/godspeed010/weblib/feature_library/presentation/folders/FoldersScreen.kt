@@ -1,18 +1,19 @@
 package com.github.godspeed010.weblib.feature_library.presentation.folders
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.common.components.WebLibBottomAppBar
@@ -23,6 +24,7 @@ import com.github.godspeed010.weblib.feature_library.presentation.folders.compon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Destination(start = true)
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
@@ -33,12 +35,10 @@ fun FoldersScreen(
 ) {
     val state = viewModel.state
     val folders by state.folders.observeAsState(emptyList())
-    val scaffoldState = rememberScaffoldState()
 
     Scaffold(
-        scaffoldState = scaffoldState,
         topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.folders)) })
+            CenterAlignedTopAppBar(title = { Text(stringResource(R.string.folders)) })
         },
         bottomBar = {
             WebLibBottomAppBar(
@@ -46,13 +46,9 @@ fun FoldersScreen(
                 onClickSettings = { }
             )
         },
-        floatingActionButtonPosition = FabPosition.Center,
-        isFloatingActionButtonDocked = true,
+        floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.onEvent(FoldersEvent.FabClicked)
-                }) {
+            FloatingActionButton(onClick = { viewModel.onEvent(FoldersEvent.FabClicked)}) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     "Add Folder"
@@ -62,7 +58,8 @@ fun FoldersScreen(
     ) { innerPadding ->
         if (state.isAddEditFolderDialogVisible) {
             AddEditFolderDialog(
-                title = state.dialogTitle,
+                icon = state.dialogIcon,
+                title = stringResource(id = state.dialogTitleRes),
                 folderName = state.dialogFolder.title,
                 onTextChange = { folderName ->
                     viewModel.onEvent(FoldersEvent.EnteredFolderName(folderName))
@@ -76,7 +73,8 @@ fun FoldersScreen(
             )
         }
         LazyColumn(
-            contentPadding = PaddingValues(top = 8.dp, bottom = innerPadding.calculateBottomPadding())
+            modifier = Modifier.consumeWindowInsets(innerPadding),
+            contentPadding = innerPadding
         ) {
             itemsIndexed(folders) { index, folder ->
                 FolderItem(

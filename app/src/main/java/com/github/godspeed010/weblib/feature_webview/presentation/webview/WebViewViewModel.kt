@@ -7,13 +7,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.*
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import com.github.godspeed010.weblib.feature_library.common.use_case.ValidatedUrl
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_webview.domain.use_case.WebViewUseCases
+import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.SmallTopAppBarHeight
 import com.github.godspeed010.weblib.feature_webview.util.*
 import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +22,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-
-private val AppBarHeight = 56.dp
 
 @HiltViewModel
 class WebViewViewModel @Inject constructor(
@@ -84,7 +82,7 @@ class WebViewViewModel @Inject constructor(
                 state = state.copy(addressBarText = TextFieldValue(event.url))
             }
             is WebViewEvent.WebPageScrolled -> {
-                val toolbarHeightPx = with(event.localDensity) { AppBarHeight.roundToPx().toFloat() }
+                val toolbarHeightPx = with(event.localDensity) { SmallTopAppBarHeight.roundToPx().toFloat() }
                 val deltaY = event.oldY - event.y
                 val newOffset = state.toolbarOffsetHeightPx + deltaY
                 Timber.d("Updated toolbar offset: toolbarOffsetHeightPx=$newOffset")

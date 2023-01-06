@@ -1,13 +1,11 @@
 package com.github.godspeed010.weblib.common.components
 
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.BottomAppBar
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -22,6 +20,7 @@ fun WebLibBottomAppBar(
     onClickHome: () -> Unit = {},
     onClickSettings: () -> Unit = {}
 ) {
+    /** List of all BottomAppBar screens in the same order shown in [Screen] */
     val navigationItems = arrayOf(
         NavItem(
             screen = Screen.Home,
@@ -37,23 +36,21 @@ fun WebLibBottomAppBar(
         )
     )
 
-    BottomAppBar(
+    TabRow(
         modifier = modifier,
-        cutoutShape = CircleShape
+        selectedTabIndex = currentScreen.ordinal
     ) {
-        BottomNavigation {
-            navigationItems.forEach { navItem ->
-                BottomNavigationItem(
-                    selected = navItem.screen == currentScreen,
-                    onClick = navItem.onClickAction,
-                    icon = {
-                        Icon(
-                            imageVector = navItem.icon,
-                            contentDescription = stringResource(navItem.iconContentDescriptionRes)
-                        )
-                    }
-                )
-            }
+        navigationItems.forEachIndexed { index, navItem ->
+            Tab(
+                selected = currentScreen.ordinal == index,
+                onClick = navItem.onClickAction,
+                icon = {
+                    Icon(
+                        navItem.icon,
+                        contentDescription = stringResource(id = navItem.iconContentDescriptionRes)
+                    )
+                }
+            )
         }
     }
 }

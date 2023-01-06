@@ -1,10 +1,14 @@
 package com.github.godspeed010.weblib.feature_library.presentation.folders
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CreateNewFolder
+import androidx.compose.material.icons.outlined.DriveFileRenameOutline
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.FolderUseCases
 import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
@@ -33,7 +37,6 @@ class FoldersViewModel @Inject constructor(
                     )
                     //Clear TextField state & reset dialogFolderId
                     state = state.copy(
-                        dialogTitle = "",
                         dialogFolder = Folder.createWithDefaults(),
                     )
                 }
@@ -54,7 +57,8 @@ class FoldersViewModel @Inject constructor(
                 //Make AlertDialog for adding a Folder visible
                 state = state.copy(
                     isAddEditFolderDialogVisible = true,
-                    dialogTitle = "Add Folder"
+                    dialogTitleRes = R.string.dialog_add_folder,
+                    dialogIcon = Icons.Outlined.CreateNewFolder,
                 )
             }
             is FoldersEvent.EditFolderClicked -> {
@@ -67,7 +71,8 @@ class FoldersViewModel @Inject constructor(
                         createdAt = event.folder.createdAt,
                     ),
                     isAddEditFolderDialogVisible = true,
-                    dialogTitle = "Edit Folder"
+                    dialogTitleRes = R.string.dialog_edit_folder,
+                    dialogIcon = Icons.Outlined.DriveFileRenameOutline,
                 )
             }
             is FoldersEvent.CancelFolderDialog -> {

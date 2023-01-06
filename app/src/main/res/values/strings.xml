@@ -24,6 +24,14 @@
     <string name="cd_more_options">More Options</string>
     <string name="cd_home">Home</string>
     <string name="cd_settings">Settings</string>
+    <string name="cd_paste">Paste</string>
+
+    <string name="dialog_save">Save</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_add_folder">Add Folder</string>
+    <string name="dialog_edit_folder">Edit Folder</string>
+    <string name="dialog_add_novel">Add Novel</string>
+    <string name="dialog_edit_novel">Edit Novel</string>
 
     <string name="novels">Novels</string>
     <string name="folders">Folders</string>

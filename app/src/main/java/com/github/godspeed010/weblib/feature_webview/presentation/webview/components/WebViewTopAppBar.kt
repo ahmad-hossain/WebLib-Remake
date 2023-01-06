@@ -2,17 +2,21 @@ package com.github.godspeed010.weblib.feature_webview.presentation.webview.compo
 
 import android.webkit.WebHistoryItem
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -31,7 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
 
-@OptIn(ExperimentalComposeUiApi::class)
+val SmallTopAppBarHeight = 64.dp
+
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WebViewTopAppBar(
     modifier: Modifier = Modifier,
@@ -72,13 +78,16 @@ fun WebViewTopAppBar(
                     onDismissRequest = onHistoryDropdownDismissRequest,
                 ) {
                     historyItems.forEachIndexed { index, s ->
-                        DropdownMenuItem(onClick = { onClickHistoryItem(index) }) {
-                            Text(
-                                text = s.title,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = s.title,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            },
+                            onClick = { onClickHistoryItem(index) }
+                        )
                     }
                 }
             }
@@ -89,16 +98,16 @@ fun WebViewTopAppBar(
 
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .height(SmallTopAppBarHeight)
                     .padding(vertical = 8.dp)
-                    .clip(RoundedCornerShape(6.dp))
+                    .clip(CircleShape)
                     .background(Color.White),
                 contentAlignment = Alignment.CenterStart
             ) {
                 BasicTextField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 4.dp)
                         .onFocusChanged { if (it.isFocused) onUrlFocused() },
                     value = url,
                     onValueChange = onUrlEntered,
@@ -129,20 +138,20 @@ fun WebViewTopAppBar(
                 DropdownMenu(
                     expanded = isMoreOptionsDropdownEnabled,
                     onDismissRequest = onMoreOptionsDropdownDismissRequest) {
-                    DropdownMenuItem(onClick = onDarkModeOptionClicked) {
-                        val itemText: Int
-                        val itemIconId: Int
-                        if (isDarkModeEnabled) {
-                            itemText = R.string.light_mode
-                            itemIconId = R.drawable.circle_left_half_full
-                        } else {
-                            itemText = R.string.dark_mode
-                            itemIconId = R.drawable.circle_right_half_full
-                        }
-                        Icon(painter = painterResource(itemIconId), contentDescription = null)
-                        Spacer(Modifier.width(8.dp))
-                        Text(stringResource(itemText))
-                    }
+                    val uiModeDropdownItemData = if (isDarkModeEnabled)
+                        Pair(R.drawable.circle_left_half_full, R.string.light_mode) else
+                        Pair(R.drawable.circle_right_half_full, R.string.dark_mode)
+
+                    DropdownMenuItem(
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(uiModeDropdownItemData.first),
+                                contentDescription = null
+                            )
+                        },
+                        text = { Text(stringResource(uiModeDropdownItemData.second)) },
+                        onClick = onDarkModeOptionClicked
+                    )
                 }
             }
         }

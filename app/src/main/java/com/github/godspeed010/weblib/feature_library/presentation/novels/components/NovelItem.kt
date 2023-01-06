@@ -1,11 +1,12 @@
 package com.github.godspeed010.weblib.feature_library.presentation.novels.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
@@ -15,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NovelItem(
     novel: Novel,
@@ -37,9 +38,9 @@ fun NovelItem(
         modifier = modifier
             .clickable { onNovelClicked() }
             .padding(vertical = 8.dp),
-        text = { Text(text = novel.title) },
-        icon = { Icon(imageVector = Icons.Outlined.BookmarkBorder, contentDescription = "Novel") },
-        trailing = {
+        headlineText = { Text(text = novel.title) },
+        leadingContent = { Icon(imageVector = Icons.Outlined.BookmarkBorder, contentDescription = "Novel") },
+        trailingContent = {
             Box {
                 IconButton(onClick = onMoreClicked) {
                     Icon(
@@ -50,15 +51,16 @@ fun NovelItem(
                     expanded = isDropdownExpanded, onDismissRequest = onDismissDropdown
                 ) {
                     dropdownOptions.forEach { s ->
-                        DropdownMenuItem(onClick = {
-                            when (s) {
-                                move -> onMoveClicked()
-                                edit -> onEditClicked()
-                                delete -> onDeleteClicked()
+                        DropdownMenuItem(
+                            text = { Text(s) },
+                            onClick = {
+                                when (s) {
+                                    move -> onMoveClicked()
+                                    edit -> onEditClicked()
+                                    delete -> onDeleteClicked()
+                                }
                             }
-                        }) {
-                            Text(s)
-                        }
+                        )
                     }
                 }
             }
