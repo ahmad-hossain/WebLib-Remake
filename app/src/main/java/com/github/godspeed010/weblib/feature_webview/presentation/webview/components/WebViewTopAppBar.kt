@@ -15,10 +15,13 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -28,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun WebViewTopAppBar(
     modifier: Modifier = Modifier,
@@ -80,6 +84,9 @@ fun WebViewTopAppBar(
             }
         },
         title = {
+            val keyboardController = LocalSoftwareKeyboardController.current
+            val focusManager = LocalFocusManager.current
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -98,7 +105,11 @@ fun WebViewTopAppBar(
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(
-                        onDone = { onUrlSubmitted() }
+                        onDone = {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            onUrlSubmitted()
+                        }
                     ),
                 )
             }
