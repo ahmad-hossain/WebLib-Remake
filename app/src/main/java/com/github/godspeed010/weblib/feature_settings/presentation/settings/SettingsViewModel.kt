@@ -11,14 +11,21 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor() : ViewModel() {
 
-//    var state by mutableStateOf(SettingsState())
-//        private set
+    var state by mutableStateOf(SettingsState())
+        private set
 
     fun onEvent(event: SettingsEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
 
-//        when (event) {
-//
-//        }
+        when (event) {
+            is SettingsEvent.SignInClicked -> TODO()
+            is SettingsEvent.SignOutClicked -> TODO()
+            is SettingsEvent.ToggleAutoCloudBackup -> TODO()
+            is SettingsEvent.ToggleNovelsUseWebsiteTitle -> TODO()
+        }
+    }
+
+    init {
+        TODO("Get settings from datastore")
     }
 }

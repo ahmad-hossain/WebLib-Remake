@@ -43,7 +43,7 @@ fun FoldersScreen(
         bottomBar = {
             WebLibBottomAppBar(
                 currentScreen = Screen.Home,
-                onClickSettings = { }
+                onClickSettings = { navigator.navigate(SettingsScreenDestination) }
             )
         },
         snackbarHost = { SnackbarHost(hostState = state.snackbarHostState) },

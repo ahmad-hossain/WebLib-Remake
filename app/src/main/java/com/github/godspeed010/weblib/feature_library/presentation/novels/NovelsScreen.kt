@@ -19,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.common.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.common.model.Screen
+import com.github.godspeed010.weblib.destinations.SettingsScreenDestination
 import com.github.godspeed010.weblib.destinations.WebViewScreenDestination
 import com.github.godspeed010.weblib.feature_library.common.Constants
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
@@ -73,7 +74,7 @@ fun NovelsScreen(
             WebLibBottomAppBar(
                 currentScreen = Screen.Home,
                 onClickHome = { navigator.popBackStack() },
-                onClickSettings = { }
+                onClickSettings = { navigator.navigate(SettingsScreenDestination) }
             )
         }, snackbarHost = { SnackbarHost(hostState = state.snackbarHostState) },
         floatingActionButtonPosition = FabPosition.End,

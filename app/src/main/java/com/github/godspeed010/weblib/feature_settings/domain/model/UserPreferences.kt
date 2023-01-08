@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserPreferences(
-    val isCloudBackupEnabled: Boolean = false,
+    val isAutoCloudBackupEnabled: Boolean = false,
     val novelsUseWebsiteTitle: Boolean = false,
 )
