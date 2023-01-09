@@ -44,10 +44,12 @@ fun SettingsScreen(
             )
         },
         content = { innerPadding ->
-            Column(
-                modifier = Modifier.padding(innerPadding),
-            ) {
-                SettingsSectionHeadline(text = stringResource(R.string.authentication))
+            Column(modifier = Modifier.padding(innerPadding)) {
+
+                SettingsSectionHeadline(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    text = stringResource(R.string.authentication)
+                )
 
                 if (state.isAuthed) {
                     // TODO Sign OUT
@@ -74,6 +76,7 @@ fun SettingsScreen(
                     isChecked = state.settings.novelsUseWebsiteTitle,
                     onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleNovelsUseWebsiteTitle(it)) }
                 )
+
             }
         }
     )
