@@ -5,4 +5,5 @@ import com.github.godspeed010.weblib.feature_settings.domain.model.UserPreferenc
 data class SettingsState(
     val settings: UserPreferences = UserPreferences(),
     val isAuthed: Boolean = false,
+    val authEmail: String = "",
 )

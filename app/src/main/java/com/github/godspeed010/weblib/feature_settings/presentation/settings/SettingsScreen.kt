@@ -1,12 +1,11 @@
 package com.github.godspeed010.weblib.feature_settings.presentation.settings
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -52,7 +51,24 @@ fun SettingsScreen(
                 )
 
                 if (state.isAuthed) {
-                    // TODO Sign OUT
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .align(Alignment.CenterHorizontally),
+                        text = state.authEmail
+                    )
+
+                    Spacer(Modifier.height(8.dp))
+
+                    OutlinedButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        onClick = { viewModel.onEvent(SettingsEvent.SignOutClicked) }
+                    ) {
+                        Text(stringResource(R.string.sign_out))
+                    }
                 } else {
                     GoogleSignInButton(
                         modifier = Modifier.padding(horizontal = 16.dp),

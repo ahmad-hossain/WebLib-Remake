@@ -16,6 +16,7 @@ fun SettingItem(
     onSwitchChecked: (Boolean) -> Unit
 ) {
     ListItem(
+        modifier = modifier,
         headlineText = { Text(text) },
         trailingContent = {
             Switch(
