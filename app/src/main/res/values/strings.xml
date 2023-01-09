@@ -41,4 +41,10 @@
     <string name="light_mode">Light Mode</string>
     <string name="loading_saved_scroll_progress">Loading Saved Scroll Progress</string>
     <string name="no_folders">ERROR: No Folders to Move to</string>
+    <string name="sign_in">Sign In</string>
+    <string name="settings">Settings</string>
+    <string name="authentication">Authentication</string>
+    <string name="auto_cloud_backup">Auto Cloud Backup</string>
+    <string name="novels_use_website_title">Novels use Website Title</string>
+    <string name="misc">Misc</string>
 </resources>
