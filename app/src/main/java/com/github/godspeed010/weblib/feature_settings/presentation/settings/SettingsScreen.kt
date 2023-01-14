@@ -28,10 +28,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun SettingsScreen(
     navigator: DestinationsNavigator,
-    viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state
-
     Scaffold(
         topBar = {
             TopAppBar(title = { Text(stringResource(R.string.settings)) })
@@ -44,56 +41,65 @@ fun SettingsScreen(
         },
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
-
-                SettingsSectionHeadline(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    text = stringResource(R.string.authentication)
-                )
-
-                if (state.isAuthed) {
-                    Text(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .align(Alignment.CenterHorizontally),
-                        text = state.authEmail
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    OutlinedButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = { viewModel.onEvent(SettingsEvent.SignOutClicked) }
-                    ) {
-                        Text(stringResource(R.string.sign_out))
-                    }
-                } else {
-                    GoogleSignInButton(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        onClick = { viewModel.onEvent(SettingsEvent.SignInClicked) }
-                    )
-                }
-
-                Spacer(Modifier.height(16.dp))
-                Divider()
-                Spacer(Modifier.height(16.dp))
-
-                SettingsSectionHeadline(text = stringResource(R.string.misc))
-
-                SettingItem(
-                    text = stringResource(R.string.auto_cloud_backup),
-                    isChecked = state.settings.isAutoCloudBackupEnabled,
-                    onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleAutoCloudBackup(it)) }
-                )
-                SettingItem(
-                    text = stringResource(R.string.novels_use_website_title),
-                    isChecked = state.settings.novelsUseWebsiteTitle,
-                    onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleNovelsUseWebsiteTitle(it)) }
-                )
-
+                AuthSection()
+                Divider(modifier = Modifier.padding(vertical = 16.dp))
+                MiscSection()
             }
         }
     )
+}
+
+@Composable
+fun ColumnScope.AuthSection(viewModel: SettingsViewModel = hiltViewModel()) {
+    val state = viewModel.state
+
+    SettingsSectionHeadline(
+        modifier = Modifier.padding(bottom = 16.dp),
+        text = stringResource(R.string.authentication)
+    )
+
+    if (state.isAuthed) {
+        Text(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .align(Alignment.CenterHorizontally),
+            text = state.authEmail
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        OutlinedButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            shape = RoundedCornerShape(8.dp),
+            onClick = { viewModel.onEvent(SettingsEvent.SignOutClicked) }
+        ) {
+            Text(stringResource(R.string.sign_out))
+        }
+    } else {
+        GoogleSignInButton(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            onClick = { viewModel.onEvent(SettingsEvent.SignInClicked) }
+        )
+    }
+}
+
+@Composable
+fun MiscSection(viewModel: SettingsViewModel = hiltViewModel()) {
+    val state = viewModel.state
+
+    SettingsSectionHeadline(text = stringResource(R.string.misc))
+
+    SettingItem(
+        text = stringResource(R.string.auto_cloud_backup),
+        isChecked = state.settings.isAutoCloudBackupEnabled,
+        onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleAutoCloudBackup(it)) }
+    )
+    SettingItem(
+        text = stringResource(R.string.novels_use_website_title),
+        isChecked = state.settings.novelsUseWebsiteTitle,
+        onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleNovelsUseWebsiteTitle(it)) }
+    )
+
 }
