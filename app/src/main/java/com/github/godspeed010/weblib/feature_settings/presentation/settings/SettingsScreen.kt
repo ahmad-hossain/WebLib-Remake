@@ -1,5 +1,6 @@
 package com.github.godspeed010.weblib.feature_settings.presentation.settings
 
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,7 +35,15 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun SettingsScreen(
     navigator: DestinationsNavigator,
+    viewModel: SettingsViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(title = { Text(stringResource(R.string.settings)) })

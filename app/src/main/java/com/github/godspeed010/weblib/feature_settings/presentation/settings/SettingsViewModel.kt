@@ -34,6 +34,9 @@ class SettingsViewModel @Inject constructor(
     var state by mutableStateOf(SettingsState())
         private set
 
+    private val _toastMessage = MutableSharedFlow<String>()
+    val toastMessage: SharedFlow<String> = _toastMessage.asSharedFlow()
+
     private var getDataStoreSettingsJob: Job? = null
 
     fun onEvent(event: SettingsEvent) {
@@ -44,7 +47,10 @@ class SettingsViewModel @Inject constructor(
                 authRepo.oneTapSignInWithGoogle().collect {
                     when (it) {
                         is Response.Success -> state = state.copy(oneTapState = it.data)
-                        is Response.Failure -> TODO()
+                        is Response.Failure -> {
+                            Timber.e(it.e, "SignInClicked Response.Failure")
+                            _toastMessage.emit("Error: ${it.e.message}")
+                        }
                         else -> {}
                     }
                 }
@@ -83,13 +89,17 @@ class SettingsViewModel @Inject constructor(
                                         authEmail = Firebase.auth.currentUser?.email ?: "",
                                     )
                                 }
-                                is Response.Failure -> TODO()
+                                is Response.Failure -> {
+                                    Timber.e(it.e, "OnTapIntentResult Response.Failure")
+                                    _toastMessage.emit("Error: ${it.e.message}")
+                                }
                                 else -> {}
                             }
                         }
                     }
                 } catch (it: ApiException) {
-                    Timber.e(it)
+                    viewModelScope.launch { _toastMessage.emit("Error: ${it.message}") }
+                    Timber.e(it, "OneTapIntentResult ApiException")
                 }
             }
         }
