@@ -1,13 +1,21 @@
 package com.github.godspeed010.weblib.feature_settings.presentation.settings
 
+import android.app.Activity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.godspeed010.weblib.feature_settings.domain.model.Response
 import com.github.godspeed010.weblib.feature_settings.domain.model.UserPreferences
+import com.github.godspeed010.weblib.feature_settings.domain.repository.AuthRepository
 import com.github.godspeed010.weblib.feature_settings.domain.repository.SettingsRepository
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -19,7 +27,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
-    dataStore: DataStore<UserPreferences>
+    dataStore: DataStore<UserPreferences>,
+    private val authRepo: AuthRepository,
+    private val oneTapClient: SignInClient,
 ) : ViewModel() {
 
     var state by mutableStateOf(SettingsState())
@@ -31,8 +41,16 @@ class SettingsViewModel @Inject constructor(
         Timber.d("%s : %s", event::class.simpleName, event.toString())
 
         when (event) {
-            is SettingsEvent.SignInClicked -> TODO()
-            is SettingsEvent.SignOutClicked -> TODO()
+            is SettingsEvent.SignInClicked -> viewModelScope.launch {
+                authRepo.oneTapSignInWithGoogle().collect {
+                    state = state.copy(oneTapState = it)
+                }
+            }
+            is SettingsEvent.SignOutClicked -> {
+                oneTapClient.signOut()
+                Firebase.auth.signOut()
+                state = state.copy(isAuthed = false)
+            }
             is SettingsEvent.ToggleAutoCloudBackup -> {
                 val data = state.settings.copy(isAutoCloudBackupEnabled = event.newValue)
                 viewModelScope.launch {
@@ -45,10 +63,43 @@ class SettingsViewModel @Inject constructor(
                     settingsRepository.updateDatastore(data)
                 }
             }
+            is SettingsEvent.OneTapIntentResult -> {
+                if (event.result.resultCode == Activity.RESULT_OK) {
+                    try {
+                        val credentials = oneTapClient.getSignInCredentialFromIntent(event.result.data)
+                        val googleIdToken = credentials.googleIdToken
+                        val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
+
+                        viewModelScope.launch {
+                            authRepo.firebaseSignInWithGoogle(googleCredentials).collect {
+                                // TODO handle Failure, Loading
+                                when (it) {
+                                    is Response.Failure -> {}
+                                    is Response.Loading -> {}
+                                    is Response.Success -> {
+                                        state = state.copy(
+                                            isAuthed = true,
+                                            authEmail = Firebase.auth.currentUser?.email ?: "",
+                                        )
+                                    }
+                                    is Response.NotStarted -> {}
+                                }
+                            }
+                        }
+                    } catch (it: ApiException) {
+                        Timber.e(it)
+                    }
+                }
+            }
         }
     }
 
     init {
+        state = state.copy(
+            isAuthed = authRepo.isUserAuthenticatedInFirebase,
+            authEmail = Firebase.auth.currentUser?.email ?: "",
+        )
+
         getDataStoreSettingsJob?.cancel()
         getDataStoreSettingsJob = dataStore.data.onEach {
             state = state.copy(settings = it)

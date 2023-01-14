@@ -1,10 +1,14 @@
 package com.github.godspeed010.weblib.feature_settings.presentation.settings
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -15,6 +19,7 @@ import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.common.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.common.model.Screen
 import com.github.godspeed010.weblib.destinations.FoldersScreenDestination
+import com.github.godspeed010.weblib.feature_settings.domain.model.Response
 import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.GoogleSignInButton
 import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.SettingItem
 import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.SettingsSectionHeadline
@@ -52,6 +57,23 @@ fun SettingsScreen(
 @Composable
 fun ColumnScope.AuthSection(viewModel: SettingsViewModel = hiltViewModel()) {
     val state = viewModel.state
+
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+        viewModel.onEvent(SettingsEvent.OneTapIntentResult(result))
+    }
+
+    LaunchedEffect(state.oneTapState) {
+        when (state.oneTapState) {
+            is Response.Failure -> {}
+            is Response.Loading -> {}
+            is Response.Success -> {
+                val intent = IntentSenderRequest.Builder(state.oneTapState.data.pendingIntent.intentSender).build()
+                launcher.launch(intent)
+            }
+            is Response.NotStarted -> {}
+        }
+    }
+
 
     SettingsSectionHeadline(
         modifier = Modifier.padding(bottom = 16.dp),
