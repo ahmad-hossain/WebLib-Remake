@@ -19,14 +19,14 @@ import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.common.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.common.model.Screen
 import com.github.godspeed010.weblib.destinations.FoldersScreenDestination
-import com.github.godspeed010.weblib.feature_settings.domain.model.Response
 import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.GoogleSignInButton
 import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.SettingItem
 import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.SettingsSectionHeadline
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
     ExperimentalFoundationApi::class
 )
 @Destination
@@ -58,22 +58,19 @@ fun SettingsScreen(
 fun ColumnScope.AuthSection(viewModel: SettingsViewModel = hiltViewModel()) {
     val state = viewModel.state
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-        viewModel.onEvent(SettingsEvent.OneTapIntentResult(result))
-    }
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            viewModel.onEvent(SettingsEvent.OneTapIntentResult(result))
+        }
 
     LaunchedEffect(state.oneTapState) {
-        when (state.oneTapState) {
-            is Response.Failure -> {}
-            is Response.Loading -> {}
-            is Response.Success -> {
-                val intent = IntentSenderRequest.Builder(state.oneTapState.data.pendingIntent.intentSender).build()
-                launcher.launch(intent)
-            }
-            is Response.NotStarted -> {}
+        state.oneTapState?.let {
+            val intent = IntentSenderRequest
+                .Builder(state.oneTapState.pendingIntent.intentSender)
+                .build()
+            launcher.launch(intent)
         }
     }
-
 
     SettingsSectionHeadline(
         modifier = Modifier.padding(bottom = 16.dp),

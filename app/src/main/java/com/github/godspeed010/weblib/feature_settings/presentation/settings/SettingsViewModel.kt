@@ -18,8 +18,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -43,7 +42,11 @@ class SettingsViewModel @Inject constructor(
         when (event) {
             is SettingsEvent.SignInClicked -> viewModelScope.launch {
                 authRepo.oneTapSignInWithGoogle().collect {
-                    state = state.copy(oneTapState = it)
+                    when (it) {
+                        is Response.Success -> state = state.copy(oneTapState = it.data)
+                        is Response.Failure -> TODO()
+                        else -> {}
+                    }
                 }
             }
             is SettingsEvent.SignOutClicked -> {
@@ -64,31 +67,29 @@ class SettingsViewModel @Inject constructor(
                 }
             }
             is SettingsEvent.OneTapIntentResult -> {
-                if (event.result.resultCode == Activity.RESULT_OK) {
-                    try {
-                        val credentials = oneTapClient.getSignInCredentialFromIntent(event.result.data)
-                        val googleIdToken = credentials.googleIdToken
-                        val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
+                if (event.result.resultCode != Activity.RESULT_OK) return
 
-                        viewModelScope.launch {
-                            authRepo.firebaseSignInWithGoogle(googleCredentials).collect {
-                                // TODO handle Failure, Loading
-                                when (it) {
-                                    is Response.Failure -> {}
-                                    is Response.Loading -> {}
-                                    is Response.Success -> {
-                                        state = state.copy(
-                                            isAuthed = true,
-                                            authEmail = Firebase.auth.currentUser?.email ?: "",
-                                        )
-                                    }
-                                    is Response.NotStarted -> {}
+                try {
+                    val credentials = oneTapClient.getSignInCredentialFromIntent(event.result.data)
+                    val googleIdToken = credentials.googleIdToken
+                    val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
+
+                    viewModelScope.launch {
+                        authRepo.firebaseSignInWithGoogle(googleCredentials).collect {
+                            when (it) {
+                                is Response.Success -> {
+                                    state = state.copy(
+                                        isAuthed = true,
+                                        authEmail = Firebase.auth.currentUser?.email ?: "",
+                                    )
                                 }
+                                is Response.Failure -> TODO()
+                                else -> {}
                             }
                         }
-                    } catch (it: ApiException) {
-                        Timber.e(it)
                     }
+                } catch (it: ApiException) {
+                    Timber.e(it)
                 }
             }
         }
