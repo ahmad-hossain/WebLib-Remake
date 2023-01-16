@@ -130,5 +130,10 @@ fun MiscSection(viewModel: SettingsViewModel = hiltViewModel()) {
         isChecked = state.settings.novelsUseWebsiteTitle,
         onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleNovelsUseWebsiteTitle(it)) }
     )
+    SettingItem(
+        text = stringResource(R.string.web_browser_adblock),
+        isChecked = state.settings.isWebViewAdblockEnabled,
+        onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleWebViewAdblock(it)) }
+    )
 
 }

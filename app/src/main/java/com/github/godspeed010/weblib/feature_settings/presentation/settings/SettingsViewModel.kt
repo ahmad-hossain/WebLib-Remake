@@ -72,6 +72,12 @@ class SettingsViewModel @Inject constructor(
                     settingsRepository.updateDatastore(data)
                 }
             }
+            is SettingsEvent.ToggleWebViewAdblock -> {
+                val data = state.settings.copy(isWebViewAdblockEnabled = event.newValue)
+                viewModelScope.launch {
+                    settingsRepository.updateDatastore(data)
+                }
+            }
             is SettingsEvent.OneTapIntentResult -> {
                 if (event.result.resultCode != Activity.RESULT_OK) return
 

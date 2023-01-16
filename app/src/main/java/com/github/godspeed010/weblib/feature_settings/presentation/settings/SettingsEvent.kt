@@ -7,5 +7,6 @@ sealed class SettingsEvent {
     object SignOutClicked : SettingsEvent()
     data class ToggleAutoCloudBackup(val newValue: Boolean) : SettingsEvent()
     data class ToggleNovelsUseWebsiteTitle(val newValue: Boolean) : SettingsEvent()
+    data class ToggleWebViewAdblock(val newValue: Boolean) : SettingsEvent()
     data class OneTapIntentResult(val result: ActivityResult) : SettingsEvent()
 }
