@@ -1,7 +1,6 @@
 package com.github.godspeed010.weblib.feature_library.domain.repository
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.model.relations.FolderWithNovel

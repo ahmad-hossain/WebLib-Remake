@@ -1,8 +1,6 @@
 package com.github.godspeed010.weblib.feature_library.presentation.folders
 
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
-import com.github.godspeed010.weblib.feature_library.domain.model.Novel
-import kotlinx.coroutines.CoroutineScope
 
 sealed class FoldersEvent {
     object AddOrUpdateFolder : FoldersEvent()
