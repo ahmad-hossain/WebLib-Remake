@@ -2,7 +2,6 @@ package com.github.godspeed010.weblib.feature_settings.presentation.settings
 
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -42,9 +41,18 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+
+    val oneTapResultLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            viewModel.onEvent(SettingsEvent.OneTapIntentResult(result))
+        }
+
     LaunchedEffect(Unit) {
-        viewModel.toastMessage.collect {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        viewModel.uiEvent.collect {
+            when (it) {
+                is SettingsUiEvent.Toast -> Toast.makeText(context, it.s, Toast.LENGTH_SHORT).show()
+                is SettingsUiEvent.LaunchOneTapIntent -> oneTapResultLauncher.launch(it.intent)
+            }
         }
     }
 
@@ -71,20 +79,6 @@ fun SettingsScreen(
 @Composable
 fun ColumnScope.AuthSection(viewModel: SettingsViewModel = hiltViewModel()) {
     val state = viewModel.state
-
-    val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            viewModel.onEvent(SettingsEvent.OneTapIntentResult(result))
-        }
-
-    LaunchedEffect(state.oneTapState) {
-        state.oneTapState?.let {
-            val intent = IntentSenderRequest
-                .Builder(state.oneTapState.pendingIntent.intentSender)
-                .build()
-            launcher.launch(intent)
-        }
-    }
 
     SettingsSectionHeadline(
         modifier = Modifier.padding(bottom = 16.dp),

@@ -1,6 +1,7 @@
 package com.github.godspeed010.weblib.feature_settings.presentation.settings
 
 import android.app.Activity
+import androidx.activity.result.IntentSenderRequest
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -34,8 +35,8 @@ class SettingsViewModel @Inject constructor(
     var state by mutableStateOf(SettingsState())
         private set
 
-    private val _toastMessage = MutableSharedFlow<String>()
-    val toastMessage: SharedFlow<String> = _toastMessage.asSharedFlow()
+    private val _uiEvent = MutableSharedFlow<SettingsUiEvent>()
+    val uiEvent: SharedFlow<SettingsUiEvent> = _uiEvent.asSharedFlow()
 
     private var getDataStoreSettingsJob: Job? = null
 
@@ -46,10 +47,18 @@ class SettingsViewModel @Inject constructor(
             is SettingsEvent.SignInClicked -> viewModelScope.launch {
                 authRepo.oneTapSignInWithGoogle().collect {
                     when (it) {
-                        is Response.Success -> state = state.copy(oneTapState = it.data)
+                        is Response.Success -> {
+                            state = state.copy(oneTapState = it.data)
+
+                            val oneTapState = state.oneTapState ?: return@collect
+                            val intent = IntentSenderRequest
+                                .Builder(oneTapState.pendingIntent.intentSender)
+                                .build()
+                            _uiEvent.emit(SettingsUiEvent.LaunchOneTapIntent(intent))
+                        }
                         is Response.Failure -> {
                             Timber.e(it.e, "SignInClicked Response.Failure")
-                            _toastMessage.emit("Error: ${it.e.message}")
+                            _uiEvent.emit(SettingsUiEvent.Toast("Error: ${it.e.message}"))
                         }
                         else -> {}
                     }
@@ -97,14 +106,14 @@ class SettingsViewModel @Inject constructor(
                                 }
                                 is Response.Failure -> {
                                     Timber.e(it.e, "OnTapIntentResult Response.Failure")
-                                    _toastMessage.emit("Error: ${it.e.message}")
+                                    _uiEvent.emit(SettingsUiEvent.Toast("Error: ${it.e.message}"))
                                 }
                                 else -> {}
                             }
                         }
                     }
                 } catch (it: ApiException) {
-                    viewModelScope.launch { _toastMessage.emit("Error: ${it.message}") }
+                    viewModelScope.launch { _uiEvent.emit(SettingsUiEvent.Toast("Error: ${it.message}")) }
                     Timber.e(it, "OneTapIntentResult ApiException")
                 }
             }
