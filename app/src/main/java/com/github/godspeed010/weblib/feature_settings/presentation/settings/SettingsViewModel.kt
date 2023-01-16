@@ -16,6 +16,7 @@ import com.github.godspeed010.weblib.feature_settings.domain.model.Response
 import com.github.godspeed010.weblib.feature_settings.domain.model.UserPreferences
 import com.github.godspeed010.weblib.feature_settings.domain.repository.AuthRepository
 import com.github.godspeed010.weblib.feature_settings.domain.repository.SettingsRepository
+import com.github.godspeed010.weblib.feature_settings.domain.use_case.ValidSqlLiteDb
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
@@ -37,6 +39,7 @@ class SettingsViewModel @Inject constructor(
     private val oneTapClient: SignInClient,
     private val app: Application,
     private val libraryRepo: LibraryRepository,
+    private val validSqlLiteDbUseCase: ValidSqlLiteDb
 ) : ViewModel() {
 
     var state by mutableStateOf(SettingsState())
@@ -133,7 +136,17 @@ class SettingsViewModel @Inject constructor(
                     _uiEvent.emit(SettingsUiEvent.LaunchCreateDocumentIntent(intent))
                 }
             }
-            is SettingsEvent.ImportDataClicked -> TODO()
+            is SettingsEvent.ImportDataClicked -> {
+                val dbMimeTypes = arrayOf("application/vnd.sqlite3", "application/octet-stream")
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "*/*"
+                    putExtra(Intent.EXTRA_MIME_TYPES, dbMimeTypes)
+                }
+                viewModelScope.launch {
+                    _uiEvent.emit(SettingsUiEvent.LaunchOpenDocumentIntent(intent))
+                }
+            }
             is SettingsEvent.OnCreateDocumentActivityResult -> {
                 if (event.result.resultCode != Activity.RESULT_OK) return
                 val userChosenUri = event.result.data?.data
@@ -153,6 +166,17 @@ class SettingsViewModel @Inject constructor(
                     inputStream.close()
                     outputStream.close()
                 }
+            }
+            is SettingsEvent.OnOpenDocumentActivityResult -> {
+                if (event.result.resultCode != Activity.RESULT_OK) return
+                val uri = event.result.data?.data
+                if (!validSqlLiteDbUseCase.isValid(uri)) {
+                    Timber.d("OnOpenDocumentActivityResult: Invalid sqlite db")
+                    viewModelScope.launch { _uiEvent.emit(SettingsUiEvent.Toast("Error: Invalid file")) }
+                    return
+                }
+
+                // TODO: replace local db file
             }
         }
     }

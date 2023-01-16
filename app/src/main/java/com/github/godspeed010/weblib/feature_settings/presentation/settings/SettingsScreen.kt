@@ -52,12 +52,18 @@ fun SettingsScreen(
             viewModel.onEvent(SettingsEvent.OnCreateDocumentActivityResult(it))
         }
 
+    val openDocumentActivityResultLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            viewModel.onEvent(SettingsEvent.OnOpenDocumentActivityResult(it))
+        }
+
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect {
             when (it) {
                 is SettingsUiEvent.Toast -> Toast.makeText(context, it.s, Toast.LENGTH_SHORT).show()
                 is SettingsUiEvent.LaunchOneTapIntent -> oneTapResultLauncher.launch(it.intent)
                 is SettingsUiEvent.LaunchCreateDocumentIntent -> createDocumentActivityResultLauncher.launch(it.intent)
+                is SettingsUiEvent.LaunchOpenDocumentIntent -> openDocumentActivityResultLauncher.launch(it.intent)
             }
         }
     }
