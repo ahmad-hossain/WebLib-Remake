@@ -9,4 +9,6 @@ sealed class SettingsEvent {
     data class ToggleNovelsUseWebsiteTitle(val newValue: Boolean) : SettingsEvent()
     data class ToggleWebViewAdblock(val newValue: Boolean) : SettingsEvent()
     data class OneTapIntentResult(val result: ActivityResult) : SettingsEvent()
+    object ExportDataClicked : SettingsEvent()
+    object ImportDataClicked : SettingsEvent()
 }

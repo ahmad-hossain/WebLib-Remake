@@ -5,8 +5,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -114,6 +118,7 @@ fun ColumnScope.AuthSection(viewModel: SettingsViewModel = hiltViewModel()) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MiscSection(viewModel: SettingsViewModel = hiltViewModel()) {
     val state = viewModel.state
@@ -134,6 +139,19 @@ fun MiscSection(viewModel: SettingsViewModel = hiltViewModel()) {
         text = stringResource(R.string.web_browser_adblock),
         isChecked = state.settings.isWebViewAdblockEnabled,
         onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleWebViewAdblock(it)) }
+    )
+    ListItem(
+        modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.ExportDataClicked) },
+        leadingContent = { Icon(Icons.Default.Upload, contentDescription = null) },
+        headlineText = { Text(stringResource(R.string.headline_export_data)) },
+        supportingText = { Text(stringResource(R.string.supporting_export_data)) },
+
+    )
+    ListItem(
+        modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.ImportDataClicked) },
+        leadingContent = { Icon(Icons.Default.Download, contentDescription = null) },
+        headlineText = { Text(stringResource(R.string.headline_import_data)) },
+        supportingText = { Text(stringResource(R.string.supporting_import_data)) },
     )
 
 }

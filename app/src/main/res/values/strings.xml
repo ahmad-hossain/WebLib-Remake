@@ -49,4 +49,8 @@
     <string name="misc">Misc</string>
     <string name="sign_out">Sign Out</string>
     <string name="web_browser_adblock">Web Browser Adblock</string>
+    <string name="headline_export_data">Export data</string>
+    <string name="supporting_export_data">Export library data to a file</string>
+    <string name="headline_import_data">Import data</string>
+    <string name="supporting_import_data">Import library data from a file</string>
 </resources>

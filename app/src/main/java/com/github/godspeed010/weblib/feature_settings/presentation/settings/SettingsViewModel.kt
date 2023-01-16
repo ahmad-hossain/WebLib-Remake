@@ -108,6 +108,8 @@ class SettingsViewModel @Inject constructor(
                     Timber.e(it, "OneTapIntentResult ApiException")
                 }
             }
+            is SettingsEvent.ExportDataClicked -> TODO()
+            is SettingsEvent.ImportDataClicked -> TODO()
         }
     }
 
