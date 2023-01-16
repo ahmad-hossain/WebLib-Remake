@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingItem(
+fun SettingSwitchItem(
     modifier: Modifier = Modifier,
     text: String,
     isChecked: Boolean,

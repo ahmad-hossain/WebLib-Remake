@@ -22,7 +22,7 @@ import com.github.godspeed010.weblib.common.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.common.model.Screen
 import com.github.godspeed010.weblib.destinations.FoldersScreenDestination
 import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.GoogleSignInButton
-import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.SettingItem
+import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.SettingSwitchItem
 import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.SettingsSectionHeadline
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -120,17 +120,17 @@ fun MiscSection(viewModel: SettingsViewModel = hiltViewModel()) {
 
     SettingsSectionHeadline(text = stringResource(R.string.misc))
 
-    SettingItem(
+    SettingSwitchItem(
         text = stringResource(R.string.auto_cloud_backup),
         isChecked = state.settings.isAutoCloudBackupEnabled,
         onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleAutoCloudBackup(it)) }
     )
-    SettingItem(
+    SettingSwitchItem(
         text = stringResource(R.string.novels_use_website_title),
         isChecked = state.settings.novelsUseWebsiteTitle,
         onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleNovelsUseWebsiteTitle(it)) }
     )
-    SettingItem(
+    SettingSwitchItem(
         text = stringResource(R.string.web_browser_adblock),
         isChecked = state.settings.isWebViewAdblockEnabled,
         onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleWebViewAdblock(it)) }
