@@ -34,4 +34,6 @@ interface LibraryRepository {
     suspend fun insertOrUpdateFolder(folder: Folder)
 
     suspend fun moveNovel(novel: Novel, to: Folder)
+
+    suspend fun checkpoint()
 }

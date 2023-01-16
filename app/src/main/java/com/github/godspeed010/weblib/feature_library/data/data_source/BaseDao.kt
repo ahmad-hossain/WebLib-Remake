@@ -1,6 +1,7 @@
 package com.github.godspeed010.weblib.feature_library.data.data_source
 
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 
 interface BaseDao<T> {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -17,4 +18,7 @@ interface BaseDao<T> {
         val id = insert(entity)
         if (id == -1L) update(entity)
     }
+
+    @RawQuery
+    fun checkpoint(supportSQLiteQuery: SupportSQLiteQuery): Int
 }

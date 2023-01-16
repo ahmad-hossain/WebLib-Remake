@@ -11,4 +11,5 @@ sealed class SettingsEvent {
     data class OneTapIntentResult(val result: ActivityResult) : SettingsEvent()
     object ExportDataClicked : SettingsEvent()
     object ImportDataClicked : SettingsEvent()
+    data class OnCreateDocumentActivityResult(val result: ActivityResult) : SettingsEvent()
 }

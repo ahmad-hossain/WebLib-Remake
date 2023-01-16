@@ -1,6 +1,8 @@
 package com.github.godspeed010.weblib.feature_settings.presentation.settings
 
 import android.app.Activity
+import android.app.Application
+import android.content.Intent
 import androidx.activity.result.IntentSenderRequest
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,6 +10,8 @@ import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.godspeed010.weblib.feature_library.data.data_source.LibraryDatabase
+import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
 import com.github.godspeed010.weblib.feature_settings.domain.model.Response
 import com.github.godspeed010.weblib.feature_settings.domain.model.UserPreferences
 import com.github.godspeed010.weblib.feature_settings.domain.repository.AuthRepository
@@ -18,6 +22,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -30,6 +35,8 @@ class SettingsViewModel @Inject constructor(
     dataStore: DataStore<UserPreferences>,
     private val authRepo: AuthRepository,
     private val oneTapClient: SignInClient,
+    private val app: Application,
+    private val libraryRepo: LibraryRepository,
 ) : ViewModel() {
 
     var state by mutableStateOf(SettingsState())
@@ -117,8 +124,36 @@ class SettingsViewModel @Inject constructor(
                     Timber.e(it, "OneTapIntentResult ApiException")
                 }
             }
-            is SettingsEvent.ExportDataClicked -> TODO()
+            is SettingsEvent.ExportDataClicked -> {
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    type = "*/*"
+                    putExtra(Intent.EXTRA_TITLE, "weblib_backup.db")
+                }
+                viewModelScope.launch {
+                    _uiEvent.emit(SettingsUiEvent.LaunchCreateDocumentIntent(intent))
+                }
+            }
             is SettingsEvent.ImportDataClicked -> TODO()
+            is SettingsEvent.OnCreateDocumentActivityResult -> {
+                if (event.result.resultCode != Activity.RESULT_OK) return
+                val userChosenUri = event.result.data?.data
+                if (userChosenUri == null) {
+                    viewModelScope.launch { _uiEvent.emit(SettingsUiEvent.Toast("Error: Uri is null")) }
+                    return
+                }
+
+                viewModelScope.launch(Dispatchers.IO) {
+                    libraryRepo.checkpoint()
+
+                    val inputStream = app.getDatabasePath(LibraryDatabase.DATABASE_NAME).inputStream()
+                    val outputStream = app.contentResolver.openOutputStream(userChosenUri) ?: return@launch
+
+                    inputStream.copyTo(outputStream)
+
+                    inputStream.close()
+                    outputStream.close()
+                }
+            }
         }
     }
 

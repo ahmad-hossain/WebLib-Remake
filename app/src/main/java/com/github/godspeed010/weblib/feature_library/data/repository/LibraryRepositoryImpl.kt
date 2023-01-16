@@ -1,6 +1,7 @@
 package com.github.godspeed010.weblib.feature_library.data.repository
 
 import androidx.lifecycle.LiveData
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.github.godspeed010.weblib.feature_library.data.data_source.FolderDao
 import com.github.godspeed010.weblib.feature_library.data.data_source.NovelDao
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
@@ -66,5 +67,11 @@ class LibraryRepositoryImpl(
     override suspend fun moveNovel(novel: Novel, to: Folder) {
         deleteNovel(novel)
         insertNovel(novel.copy(folderId = to.id))
+    }
+
+    override suspend fun checkpoint() {
+        val checkpointQuery = "pragma wal_checkpoint(full)"
+        folderDao.checkpoint(SimpleSQLiteQuery(checkpointQuery))
+        novelDao.checkpoint(SimpleSQLiteQuery(checkpointQuery))
     }
 }

@@ -47,11 +47,17 @@ fun SettingsScreen(
             viewModel.onEvent(SettingsEvent.OneTapIntentResult(result))
         }
 
+    val createDocumentActivityResultLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            viewModel.onEvent(SettingsEvent.OnCreateDocumentActivityResult(it))
+        }
+
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect {
             when (it) {
                 is SettingsUiEvent.Toast -> Toast.makeText(context, it.s, Toast.LENGTH_SHORT).show()
                 is SettingsUiEvent.LaunchOneTapIntent -> oneTapResultLauncher.launch(it.intent)
+                is SettingsUiEvent.LaunchCreateDocumentIntent -> createDocumentActivityResultLauncher.launch(it.intent)
             }
         }
     }
