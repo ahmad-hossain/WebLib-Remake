@@ -1,7 +1,6 @@
 package com.github.godspeed010.weblib.feature_library.presentation.novels
 
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -13,11 +12,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.common.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.common.model.Screen
 import com.github.godspeed010.weblib.destinations.WebViewScreenDestination
+import com.github.godspeed010.weblib.feature_library.common.Constants
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.relations.FolderWithNovel
 import com.github.godspeed010.weblib.feature_library.presentation.novels.components.AddEditNovelDialog
@@ -80,6 +81,13 @@ fun NovelsScreen(
             }
         }
     ) { innerPadding ->
+        val contentPadding = PaddingValues(
+            start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
+            end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
+            top = innerPadding.calculateTopPadding(),
+            bottom = innerPadding.calculateBottomPadding() + Constants.ListItemHeight
+        )
+
         if (state.isAddEditNovelDialogVisible) {
             AddEditNovelDialog(
                 icon = state.dialogIcon,
@@ -93,8 +101,8 @@ fun NovelsScreen(
             )
         }
         LazyColumn(
-            modifier = Modifier.consumeWindowInsets(innerPadding),
-            contentPadding = innerPadding
+            modifier = Modifier.consumeWindowInsets(contentPadding),
+            contentPadding = contentPadding
         ) {
             itemsIndexed(novels) { index, novel ->
                 NovelItem(
