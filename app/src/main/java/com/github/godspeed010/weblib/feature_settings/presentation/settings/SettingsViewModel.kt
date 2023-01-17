@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.system.exitProcess
 
 
 @HiltViewModel
@@ -39,7 +40,8 @@ class SettingsViewModel @Inject constructor(
     private val oneTapClient: SignInClient,
     private val app: Application,
     private val libraryRepo: LibraryRepository,
-    private val validSqlLiteDbUseCase: ValidSqlLiteDb
+    private val validSqlLiteDbUseCase: ValidSqlLiteDb,
+    private val db: LibraryDatabase,
 ) : ViewModel() {
 
     var state by mutableStateOf(SettingsState())
@@ -169,14 +171,28 @@ class SettingsViewModel @Inject constructor(
             }
             is SettingsEvent.OnOpenDocumentActivityResult -> {
                 if (event.result.resultCode != Activity.RESULT_OK) return
-                val uri = event.result.data?.data
-                if (!validSqlLiteDbUseCase.isValid(uri)) {
+                val dbUri = event.result.data?.data ?: return
+                if (!validSqlLiteDbUseCase.isValid(dbUri)) {
                     Timber.d("OnOpenDocumentActivityResult: Invalid sqlite db")
                     viewModelScope.launch { _uiEvent.emit(SettingsUiEvent.Toast("Error: Invalid file")) }
                     return
                 }
 
-                // TODO: replace local db file
+                viewModelScope.launch(Dispatchers.IO) {
+                    db.close()
+
+                    val inputStream = app.contentResolver.openInputStream(dbUri) ?: return@launch
+                    val outputStream = app.getDatabasePath(LibraryDatabase.DATABASE_NAME).outputStream()
+
+                    inputStream.copyTo(outputStream)
+                    inputStream.close()
+                    outputStream.close()
+
+                    val intent = app.packageManager.getLaunchIntentForPackage(app.packageName)
+                    intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    app.startActivity(intent)
+                    exitProcess(0)
+                }
             }
         }
     }
