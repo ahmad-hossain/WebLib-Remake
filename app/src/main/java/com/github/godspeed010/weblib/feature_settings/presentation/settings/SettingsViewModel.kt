@@ -83,21 +83,15 @@ class SettingsViewModel @Inject constructor(
             }
             is SettingsEvent.ToggleAutoCloudBackup -> {
                 val data = state.settings.copy(isAutoCloudBackupEnabled = event.newValue)
-                viewModelScope.launch {
-                    settingsRepository.updateDatastore(data)
-                }
+                updateDataStore(data)
             }
             is SettingsEvent.ToggleNovelsUseWebsiteTitle -> {
                 val data = state.settings.copy(novelsUseWebsiteTitle = event.newValue)
-                viewModelScope.launch {
-                    settingsRepository.updateDatastore(data)
-                }
+                updateDataStore(data)
             }
             is SettingsEvent.ToggleWebViewAdblock -> {
                 val data = state.settings.copy(isWebViewAdblockEnabled = event.newValue)
-                viewModelScope.launch {
-                    settingsRepository.updateDatastore(data)
-                }
+                updateDataStore(data)
             }
             is SettingsEvent.OneTapIntentResult -> {
                 if (event.result.resultCode != Activity.RESULT_OK) return
@@ -195,6 +189,10 @@ class SettingsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun updateDataStore(newData: UserPreferences) {
+        viewModelScope.launch { settingsRepository.updateDatastore(newData) }
     }
 
     init {
