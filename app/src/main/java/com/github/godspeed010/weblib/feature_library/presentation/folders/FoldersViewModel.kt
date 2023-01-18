@@ -88,7 +88,6 @@ class FoldersViewModel @Inject constructor(
                     dialogFolder = state.dialogFolder.copy(title = event.folderName)
                 )
             }
-            is FoldersEvent.FolderClicked -> TODO()
             is FoldersEvent.MoreOptionsClicked -> {
                 //Expand Dropdown
                 state = state.copy(

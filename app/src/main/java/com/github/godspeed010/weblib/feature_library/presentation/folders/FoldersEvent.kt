@@ -5,7 +5,6 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 sealed class FoldersEvent {
     object AddOrUpdateFolder : FoldersEvent()
     data class DeleteFolder(val folder: Folder) : FoldersEvent()
-    object FolderClicked : FoldersEvent()
     object RestoreFolder : FoldersEvent()
     object FabClicked : FoldersEvent()
     data class EditFolderClicked(val folder: Folder) : FoldersEvent()
