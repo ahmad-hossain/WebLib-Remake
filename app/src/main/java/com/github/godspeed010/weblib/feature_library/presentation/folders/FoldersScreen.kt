@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -49,6 +50,9 @@ fun FoldersScreen(
                 onClickSettings = { }
             )
         },
+        snackbarHost = {
+            SnackbarHost(hostState = state.snackbarHostState)
+        },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             FloatingActionButton(onClick = { viewModel.onEvent(FoldersEvent.FabClicked)}) {
@@ -87,15 +91,17 @@ fun FoldersScreen(
             contentPadding = contentPadding
         ) {
             itemsIndexed(folders) { index, folder ->
-                FolderItem(
-                    folder = folder,
-                    isDropdownExpanded = (index == state.expandedDropdownItemListIndex),
-                    onFolderClicked = { navigator.navigate(NovelsScreenDestination(folder)) },
-                    onMoreClicked = { viewModel.onEvent(FoldersEvent.MoreOptionsClicked(index)) },
-                    onDismissDropdown = { viewModel.onEvent(FoldersEvent.MoreOptionsDismissed) },
-                    onEditClicked = { viewModel.onEvent(FoldersEvent.EditFolderClicked(folder)) },
-                    onDeleteClicked = { viewModel.onEvent(FoldersEvent.DeleteFolder(folder)) }
-                )
+                if (folder.id != state.hiddenFolderId) {
+                    FolderItem(
+                        folder = folder,
+                        isDropdownExpanded = (index == state.expandedDropdownItemListIndex),
+                        onFolderClicked = { navigator.navigate(NovelsScreenDestination(folder)) },
+                        onMoreClicked = { viewModel.onEvent(FoldersEvent.MoreOptionsClicked(index)) },
+                        onDismissDropdown = { viewModel.onEvent(FoldersEvent.MoreOptionsDismissed) },
+                        onEditClicked = { viewModel.onEvent(FoldersEvent.EditFolderClicked(folder)) },
+                        onDeleteClicked = { viewModel.onEvent(FoldersEvent.DeleteFolder(folder)) }
+                    )
+                }
             }
         }
     }

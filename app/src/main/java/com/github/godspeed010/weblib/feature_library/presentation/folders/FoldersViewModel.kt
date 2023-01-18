@@ -3,6 +3,7 @@ package com.github.godspeed010.weblib.feature_library.presentation.folders
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CreateNewFolder
 import androidx.compose.material.icons.outlined.DriveFileRenameOutline
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,6 +16,7 @@ import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -46,13 +48,28 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.DeleteFolder -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    folderUseCases.deleteFolder(event.folder)
-                }
+                state = state.copy(
+                    hiddenFolderId = event.folder.id,
+                    expandedDropdownItemListIndex = null
+                )
 
-                state = state.copy(expandedDropdownItemListIndex = null)
+                viewModelScope.launch(Dispatchers.Main) {
+                    val snackbarResult = state.snackbarHostState.showSnackbar(
+                        message = "Deleted Folder",
+                        actionLabel = "Undo"
+                    )
+
+                    when (snackbarResult) {
+                        SnackbarResult.Dismissed -> {
+                            withContext(Dispatchers.IO) {
+                                folderUseCases.deleteFolder(event.folder)
+                                state = state.copy(hiddenFolderId = null)
+                            }
+                        }
+                        SnackbarResult.ActionPerformed -> state = state.copy(hiddenFolderId = null)
+                    }
+                }
             }
-            is FoldersEvent.RestoreFolder -> TODO()
             is FoldersEvent.FabClicked -> {
                 //Make AlertDialog for adding a Folder visible
                 state = state.copy(

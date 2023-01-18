@@ -2,6 +2,7 @@ package com.github.godspeed010.weblib.feature_library.presentation.folders
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CreateNewFolder
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,4 +16,6 @@ data class FoldersState(
     val dialogIcon: ImageVector = Icons.Outlined.CreateNewFolder,
     val dialogFolder: Folder = Folder.createWithDefaults(),
     val expandedDropdownItemListIndex: Int? = null,
+    val snackbarHostState: SnackbarHostState = SnackbarHostState(),
+    val hiddenFolderId: Int? = null,
 )
