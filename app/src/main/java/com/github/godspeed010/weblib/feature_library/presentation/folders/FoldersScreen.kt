@@ -50,9 +50,7 @@ fun FoldersScreen(
                 onClickSettings = { }
             )
         },
-        snackbarHost = {
-            SnackbarHost(hostState = state.snackbarHostState)
-        },
+        snackbarHost = { SnackbarHost(hostState = state.snackbarHostState) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             FloatingActionButton(onClick = { viewModel.onEvent(FoldersEvent.FabClicked)}) {

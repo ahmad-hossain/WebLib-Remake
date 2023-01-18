@@ -67,7 +67,7 @@ fun NovelsScreen(
                 onClickHome = { navigator.popBackStack() },
                 onClickSettings = { }
             )
-        },
+        }, snackbarHost = { SnackbarHost(hostState = state.snackbarHostState) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             FloatingActionButton(
@@ -105,16 +105,18 @@ fun NovelsScreen(
             contentPadding = contentPadding
         ) {
             itemsIndexed(novels) { index, novel ->
-                NovelItem(
-                    novel = novel,
-                    isDropdownExpanded =  (index == state.expandedDropdownNovelListIndex),
-                    onNovelClicked = { navigator.navigate(WebViewScreenDestination(novel)) },
-                    onMoreClicked = { viewModel.onEvent(NovelsEvent.MoreOptionsClicked(index)) },
-                    onDismissDropdown = { viewModel.onEvent(NovelsEvent.MoreOptionsDismissed) },
-                    onEditClicked = { viewModel.onEvent(NovelsEvent.EditNovelClicked(novel)) },
-                    onDeleteClicked = { viewModel.onEvent(NovelsEvent.DeleteNovel(novel)) },
-                    onMoveClicked = { viewModel.onEvent(NovelsEvent.MoveNovel(novel)) }
-                )
+                if (novel.id != state.hiddenNovelId) {
+                    NovelItem(
+                        novel = novel,
+                        isDropdownExpanded =  (index == state.expandedDropdownNovelListIndex),
+                        onNovelClicked = { navigator.navigate(WebViewScreenDestination(novel)) },
+                        onMoreClicked = { viewModel.onEvent(NovelsEvent.MoreOptionsClicked(index)) },
+                        onDismissDropdown = { viewModel.onEvent(NovelsEvent.MoreOptionsDismissed) },
+                        onEditClicked = { viewModel.onEvent(NovelsEvent.EditNovelClicked(novel)) },
+                        onDeleteClicked = { viewModel.onEvent(NovelsEvent.DeleteNovel(novel)) },
+                        onMoveClicked = { viewModel.onEvent(NovelsEvent.MoveNovel(novel)) }
+                    )
+                }
             }
         }
     }

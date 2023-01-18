@@ -3,6 +3,8 @@ package com.github.godspeed010.weblib.feature_library.presentation.novels
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BookmarkAdd
 import androidx.compose.material.icons.outlined.DriveFileRenameOutline
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -20,6 +22,7 @@ import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -76,11 +79,27 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.DeleteNovel -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    novelUseCases.deleteNovel(event.novel)
-                }
+                state = state.copy(
+                    hiddenNovelId = event.novel.id,
+                    expandedDropdownNovelListIndex = null
+                )
+                viewModelScope.launch(Dispatchers.Main) {
+                    val snackbarResult = state.snackbarHostState.showSnackbar(
+                        message = "Deleted Novel",
+                        actionLabel = "Undo",
+                        duration = SnackbarDuration.Short
+                    )
 
-                state = state.copy(expandedDropdownNovelListIndex = null)
+                    when (snackbarResult) {
+                        SnackbarResult.Dismissed -> {
+                            withContext(Dispatchers.IO) {
+                                novelUseCases.deleteNovel(event.novel)
+                                state = state.copy(hiddenNovelId = null)
+                            }
+                        }
+                        SnackbarResult.ActionPerformed -> state = state.copy(hiddenNovelId = null)
+                    }
+                }
             }
             is NovelsEvent.EditNovelClicked -> {
                 //Set TextField state & close Dropdown
@@ -99,7 +118,6 @@ class NovelsViewModel @Inject constructor(
                     isAddEditNovelDialogVisible = true
                 )
             }
-            is NovelsEvent.RestoreNovel -> TODO()
             is NovelsEvent.EnteredNovelTitle -> {
                 //update the novelName State
                 state = state.copy(

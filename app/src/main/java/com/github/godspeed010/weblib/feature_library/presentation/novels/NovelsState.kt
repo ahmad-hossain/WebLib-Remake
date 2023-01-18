@@ -2,6 +2,7 @@ package com.github.godspeed010.weblib.feature_library.presentation.novels
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BookmarkAdd
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,4 +17,6 @@ data class NovelsState(
     val dialogIcon: ImageVector = Icons.Outlined.BookmarkAdd,
     val dialogNovel: Novel = Novel.createWithDefaults(),
     val expandedDropdownNovelListIndex: Int? = null,
+    val snackbarHostState: SnackbarHostState = SnackbarHostState(),
+    val hiddenNovelId: Int? = null,
 )

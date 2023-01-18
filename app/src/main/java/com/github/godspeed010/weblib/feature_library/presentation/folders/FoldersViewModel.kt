@@ -3,6 +3,7 @@ package com.github.godspeed010.weblib.feature_library.presentation.folders
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CreateNewFolder
 import androidx.compose.material.icons.outlined.DriveFileRenameOutline
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,7 +57,8 @@ class FoldersViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.Main) {
                     val snackbarResult = state.snackbarHostState.showSnackbar(
                         message = "Deleted Folder",
-                        actionLabel = "Undo"
+                        actionLabel = "Undo",
+                        duration = SnackbarDuration.Short
                     )
 
                     when (snackbarResult) {
