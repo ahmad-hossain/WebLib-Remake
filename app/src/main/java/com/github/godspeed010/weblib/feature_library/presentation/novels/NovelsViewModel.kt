@@ -16,7 +16,7 @@ import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.common.use_case.ValidatedUrl
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
-import com.github.godspeed010.weblib.feature_library.domain.use_case.novel.NovelUseCases
+import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
 import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NovelsViewModel @Inject constructor(
-    private val novelUseCases: NovelUseCases,
+    private val libraryRepo: LibraryRepository,
     private val validatedUrlUseCase: ValidatedUrl,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -45,7 +45,7 @@ class NovelsViewModel @Inject constructor(
             is NovelsEvent.AddOrUpdateNovel -> {
                 //Add Novel
                 viewModelScope.launch(Dispatchers.IO) {
-                    novelUseCases.addOrUpdateNovel(
+                    libraryRepo.insertOrUpdateNovel(
                         state.dialogNovel.copy(
                             folderId = folder.id,
                             url = validatedUrlUseCase(state.dialogNovel.url),
@@ -93,7 +93,7 @@ class NovelsViewModel @Inject constructor(
                     when (snackbarResult) {
                         SnackbarResult.Dismissed -> {
                             withContext(Dispatchers.IO) {
-                                novelUseCases.deleteNovel(event.novel)
+                                libraryRepo.deleteNovel(event.novel)
                                 state = state.copy(hiddenNovelId = null)
                             }
                         }
@@ -151,7 +151,7 @@ class NovelsViewModel @Inject constructor(
             Timber.d("Opened Folder: ${folder.title}")
 
             state = state.copy(
-                folderWithNovels = novelUseCases.getFolderWithNovels(folder.id)
+                folderWithNovels = libraryRepo.getFolderWithNovels(folder.id)
             )
         }
     }

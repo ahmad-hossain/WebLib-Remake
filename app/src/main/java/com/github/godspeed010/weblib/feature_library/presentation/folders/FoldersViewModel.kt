@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
-import com.github.godspeed010.weblib.feature_library.domain.use_case.folder.FolderUseCases
+import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
 import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FoldersViewModel @Inject constructor(
-    private val folderUseCases: FolderUseCases
+    private val libraryRepo: LibraryRepository,
 ) : ViewModel() {
     var state by mutableStateOf(FoldersState())
         private set
@@ -35,7 +35,7 @@ class FoldersViewModel @Inject constructor(
             is FoldersEvent.AddOrUpdateFolder -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     //Add Folder. If id is 0, will generate new id. Else, overrides Folder
-                    folderUseCases.addOrUpdateFolder(
+                    libraryRepo.insertOrUpdateFolder(
                         state.dialogFolder.copy(lastModified = TimeUtil.currentTimeSeconds())
                     )
                     //Clear TextField state & reset dialogFolderId
@@ -64,7 +64,7 @@ class FoldersViewModel @Inject constructor(
                     when (snackbarResult) {
                         SnackbarResult.Dismissed -> {
                             withContext(Dispatchers.IO) {
-                                folderUseCases.deleteFolder(event.folder)
+                                libraryRepo.deleteFolder(event.folder)
                                 state = state.copy(hiddenFolderId = null)
                             }
                         }
@@ -124,7 +124,7 @@ class FoldersViewModel @Inject constructor(
 
     init {
         state = state.copy(
-            folders = folderUseCases.getFolders()
+            folders = libraryRepo.getFolders()
         )
     }
 }
