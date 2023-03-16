@@ -24,18 +24,16 @@
                 android:id="@+id/et_address_bar"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:padding="7dp"
+                android:paddingHorizontal="8dp"
                 android:layout_gravity="left"
                 android:singleLine="true"
                 android:selectAllOnFocus="true"
                 android:background="@drawable/shape_rounded_edittext"
-                android:textColor="@color/black"
-                android:textColorHint="@color/grey"
                 android:hint="@string/hint_address_bar" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
-    
+
     <com.github.godspeed010.weblib.feature_webview.util.NestedWebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
@@ -50,7 +48,7 @@
         android:background="#000000"
         android:clickable="true"
         android:focusable="true"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ProgressBar
             android:id="@+id/progressBar"
