@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -20,6 +21,7 @@ import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.databinding.LayoutWebViewBinding
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.LoadingDialog
+import com.github.godspeed010.weblib.feature_webview.util.CustomWebViewClient
 import com.github.godspeed010.weblib.feature_webview.util.setCursorDrawableColorFilter
 import com.github.godspeed010.weblib.observeLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
@@ -43,14 +45,27 @@ fun WebViewScreen(
 
     val colorScheme = MaterialTheme.colorScheme
     Box {
+        DisposableEffect(Unit) {
+            onDispose { viewModel.onEvent(WebViewEvent.WebViewDisposed) }
+        }
+
         LoadingDialog(
             isVisible = state.isLoadingDialogVisible,
             bodyText = stringResource(id = R.string.loading_saved_scroll_progress)
         )
-        AndroidViewBinding(LayoutWebViewBinding::inflate) {
-            applyMaterialTheme(colorScheme)
-            setupListeners(navigator, viewModel)
-        }
+        AndroidViewBinding(
+            factory = { layoutInflater, parent, attachToParent ->
+                val binding = LayoutWebViewBinding.inflate(layoutInflater, parent, attachToParent)
+                binding.setupListeners(navigator, viewModel)
+                binding.webview.webViewClient =
+                    CustomWebViewClient(onNewPageVisited = { viewModel.onEvent(WebViewEvent.NewPageVisited(it)) })
+
+                binding
+            },
+            update = {
+                applyMaterialTheme(colorScheme)
+            }
+        )
     }
 }
 
