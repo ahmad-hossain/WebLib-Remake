@@ -82,7 +82,7 @@ fun SettingsScreen(
             Column(modifier = Modifier.padding(innerPadding)) {
                 AuthSection()
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
-                MiscSection()
+                LibrarySection()
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
                 LocalBackupSection()
             }
@@ -133,10 +133,10 @@ fun ColumnScope.AuthSection(viewModel: SettingsViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun MiscSection(viewModel: SettingsViewModel = hiltViewModel()) {
+fun LibrarySection(viewModel: SettingsViewModel = hiltViewModel()) {
     val state = viewModel.state
 
-    SettingsSectionHeadline(text = stringResource(R.string.misc))
+    SettingsSectionHeadline(text = stringResource(R.string.library))
 
     SettingSwitchItem(
         text = stringResource(R.string.novels_use_website_title),

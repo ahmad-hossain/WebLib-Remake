@@ -45,7 +45,7 @@
     <string name="settings">Settings</string>
     <string name="auto_cloud_backup">Auto Cloud Backup</string>
     <string name="novels_use_website_title">Novels use Website Title</string>
-    <string name="misc">Misc</string>
+    <string name="library">Library</string>
     <string name="sign_out">Sign Out</string>
     <string name="web_browser_adblock">Web Browser Adblock</string>
     <string name="headline_export_data">Export data</string>
