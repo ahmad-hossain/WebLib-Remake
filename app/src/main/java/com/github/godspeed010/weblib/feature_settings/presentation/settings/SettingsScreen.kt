@@ -83,6 +83,8 @@ fun SettingsScreen(
                 AuthSection()
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
                 MiscSection()
+                Divider(modifier = Modifier.padding(vertical = 16.dp))
+                LocalBackupSection()
             }
         }
     )
@@ -94,7 +96,7 @@ fun ColumnScope.AuthSection(viewModel: SettingsViewModel = hiltViewModel()) {
 
     SettingsSectionHeadline(
         modifier = Modifier.padding(bottom = 16.dp),
-        text = stringResource(R.string.authentication)
+        text = stringResource(R.string.cloud_backup)
     )
 
     if (state.isAuthed) {
@@ -122,20 +124,20 @@ fun ColumnScope.AuthSection(viewModel: SettingsViewModel = hiltViewModel()) {
             onClick = { viewModel.onEvent(SettingsEvent.SignInClicked) }
         )
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MiscSection(viewModel: SettingsViewModel = hiltViewModel()) {
-    val state = viewModel.state
-
-    SettingsSectionHeadline(text = stringResource(R.string.misc))
 
     SettingSwitchItem(
         text = stringResource(R.string.auto_cloud_backup),
         isChecked = state.settings.isAutoCloudBackupEnabled,
         onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleAutoCloudBackup(it)) }
     )
+}
+
+@Composable
+fun MiscSection(viewModel: SettingsViewModel = hiltViewModel()) {
+    val state = viewModel.state
+
+    SettingsSectionHeadline(text = stringResource(R.string.misc))
+
     SettingSwitchItem(
         text = stringResource(R.string.novels_use_website_title),
         isChecked = state.settings.novelsUseWebsiteTitle,
@@ -146,12 +148,18 @@ fun MiscSection(viewModel: SettingsViewModel = hiltViewModel()) {
         isChecked = state.settings.isWebViewAdblockEnabled,
         onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleWebViewAdblock(it)) }
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LocalBackupSection(viewModel: SettingsViewModel = hiltViewModel()) {
+    SettingsSectionHeadline(text = stringResource(R.string.local_backup))
+
     ListItem(
         modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.ExportDataClicked) },
         leadingContent = { Icon(Icons.Default.Upload, contentDescription = null) },
         headlineText = { Text(stringResource(R.string.headline_export_data)) },
         supportingText = { Text(stringResource(R.string.supporting_export_data)) },
-
     )
     ListItem(
         modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.ImportDataClicked) },
@@ -159,5 +167,4 @@ fun MiscSection(viewModel: SettingsViewModel = hiltViewModel()) {
         headlineText = { Text(stringResource(R.string.headline_import_data)) },
         supportingText = { Text(stringResource(R.string.supporting_import_data)) },
     )
-
 }
