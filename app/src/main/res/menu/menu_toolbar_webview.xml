@@ -10,14 +10,11 @@
         android:icon="@drawable/ic_refresh"/>
 
     <item
+        android:id="@+id/more_options"
         android:title="More"
         android:icon="@drawable/ic_more_vert"
         app:showAsAction="always">
         <menu>
-            <item
-                android:id="@+id/share"
-                android:title="Share"
-                android:icon="@drawable/ic_refresh" />
             <item
                 android:id="@+id/dark_mode"
                 android:title="@string/dark_mode"
