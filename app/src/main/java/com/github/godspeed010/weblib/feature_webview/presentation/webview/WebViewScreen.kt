@@ -1,8 +1,9 @@
 package com.github.godspeed010.weblib.feature_webview.presentation.webview
 
+import android.annotation.SuppressLint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.webkit.WebViewClient
+import android.os.Build
 import android.widget.EditText
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -15,9 +16,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.databinding.LayoutWebViewBinding
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
+import com.github.godspeed010.weblib.feature_webview.util.setCursorDrawableColorFilter
 import com.github.godspeed010.weblib.observeLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+
 
 data class WebViewScreenNavArgs(
     val novel: Novel
@@ -74,6 +77,14 @@ private fun LayoutWebViewBinding.applyMaterialTheme(colorScheme: ColorScheme) {
 
     // Address Bar Text
     addressBar.setTextColor(colorScheme.onSurface.toArgb())
+
+    // Address Bar Cursor
+    val primaryColorFilter = PorterDuffColorFilter(colorScheme.primary.toArgb(), PorterDuff.Mode.SRC_IN)
+    @SuppressLint("NewApi") // Api Check Handled
+    when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        true -> addressBar.textCursorDrawable?.colorFilter = primaryColorFilter
+        false -> addressBar.setCursorDrawableColorFilter(primaryColorFilter)
+    }
 
     // Toolbar Container
     webviewToolbar.setBackgroundColor(colorScheme.surface.toArgb())
