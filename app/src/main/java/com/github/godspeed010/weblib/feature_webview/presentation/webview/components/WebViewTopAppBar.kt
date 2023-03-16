@@ -140,8 +140,8 @@ fun WebViewTopAppBar(
                     expanded = isMoreOptionsDropdownEnabled,
                     onDismissRequest = onMoreOptionsDropdownDismissRequest) {
                     val uiModeDropdownItemData = if (isDarkModeEnabled)
-                        Pair(R.drawable.circle_left_half_full, R.string.light_mode) else
-                        Pair(R.drawable.circle_right_half_full, R.string.dark_mode)
+                        Pair(R.drawable.ic_brightness_3, R.string.light_mode) else
+                        Pair(R.drawable.ic_brightness_3, R.string.dark_mode)
 
                     DropdownMenuItem(
                         leadingIcon = {

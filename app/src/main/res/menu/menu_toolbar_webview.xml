@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/refresh"
+        android:title="Reload"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_refresh"/>
+
+    <item
+        android:title="More"
+        android:icon="@drawable/ic_more_vert"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/share"
+                android:title="Share"
+                android:icon="@drawable/ic_refresh" />
+            <item
+                android:id="@+id/dark_mode"
+                android:title="@string/dark_mode"
+                android:icon="@drawable/ic_brightness_3"
+                android:checkable="true" />
+        </menu>
+    </item>
+</menu>
