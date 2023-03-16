@@ -81,10 +81,6 @@ class SettingsViewModel @Inject constructor(
                 Firebase.auth.signOut()
                 state = state.copy(isAuthed = false)
             }
-            is SettingsEvent.ToggleAutoCloudBackup -> {
-                val data = state.settings.copy(isAutoCloudBackupEnabled = event.newValue)
-                updateDataStore(data)
-            }
             is SettingsEvent.ToggleNovelsUseWebsiteTitle -> {
                 val data = state.settings.copy(novelsUseWebsiteTitle = event.newValue)
                 updateDataStore(data)

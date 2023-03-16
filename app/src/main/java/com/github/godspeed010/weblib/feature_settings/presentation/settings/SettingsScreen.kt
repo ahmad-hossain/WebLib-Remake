@@ -124,12 +124,6 @@ fun ColumnScope.AuthSection(viewModel: SettingsViewModel = hiltViewModel()) {
             onClick = { viewModel.onEvent(SettingsEvent.SignInClicked) }
         )
     }
-
-    SettingSwitchItem(
-        text = stringResource(R.string.auto_cloud_backup),
-        isChecked = state.settings.isAutoCloudBackupEnabled,
-        onSwitchChecked = { viewModel.onEvent(SettingsEvent.ToggleAutoCloudBackup(it)) }
-    )
 }
 
 @Composable
