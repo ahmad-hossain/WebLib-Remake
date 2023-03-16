@@ -6,6 +6,7 @@ import android.graphics.PorterDuffColorFilter
 import android.os.Build
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -44,6 +45,7 @@ fun WebViewScreen(
     val state = viewModel.state
 
     val colorScheme = MaterialTheme.colorScheme
+    val isSystemInDarkTheme = isSystemInDarkTheme()
     Box {
         DisposableEffect(Unit) {
             onDispose { viewModel.onEvent(WebViewEvent.WebViewDisposed) }
@@ -57,8 +59,10 @@ fun WebViewScreen(
             factory = { layoutInflater, parent, attachToParent ->
                 val binding = LayoutWebViewBinding.inflate(layoutInflater, parent, attachToParent)
                 binding.setupListeners(navigator, viewModel)
-                binding.webview.webViewClient =
-                    CustomWebViewClient(onNewPageVisited = { viewModel.onEvent(WebViewEvent.NewPageVisited(it)) })
+                binding.webview.webViewClient = CustomWebViewClient(
+                    onNewPageVisited = { viewModel.onEvent(WebViewEvent.NewPageVisited(it)) }
+                )
+                viewModel.onEvent(WebViewEvent.WebViewCreated(binding.webview, isSystemInDarkTheme))
 
                 binding
             },
