@@ -5,17 +5,21 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Build
 import android.widget.EditText
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.databinding.LayoutWebViewBinding
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
+import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.LoadingDialog
+import com.github.godspeed010.weblib.feature_webview.util.CustomWebViewClient
 import com.github.godspeed010.weblib.feature_webview.util.setCursorDrawableColorFilter
 import com.github.godspeed010.weblib.observeLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
@@ -26,6 +30,7 @@ data class WebViewScreenNavArgs(
     val novel: Novel
 )
 
+@SuppressLint("SetJavaScriptEnabled")
 @Destination(navArgsDelegate = WebViewScreenNavArgs::class)
 @Composable
 fun WebViewScreen(
@@ -36,10 +41,16 @@ fun WebViewScreen(
     val state = viewModel.state
 
     val colorScheme = MaterialTheme.colorScheme
-    AndroidViewBinding(LayoutWebViewBinding::inflate) {
-        applyMaterialTheme(colorScheme)
-        webview.settings.javaScriptEnabled = true
-        webview.loadUrl("https://www.google.com")
+    Box {
+        LoadingDialog(
+            isVisible = state.isLoadingDialogVisible,
+            bodyText = stringResource(id = R.string.loading_saved_scroll_progress)
+        )
+        AndroidViewBinding(LayoutWebViewBinding::inflate) {
+            applyMaterialTheme(colorScheme)
+            webview.settings.javaScriptEnabled = true
+            webview.webViewClient = CustomWebViewClient(onNewPageVisited = { viewModel.onEvent(WebViewEvent.NewPageVisited(it)) })
+        }
     }
 }
 
