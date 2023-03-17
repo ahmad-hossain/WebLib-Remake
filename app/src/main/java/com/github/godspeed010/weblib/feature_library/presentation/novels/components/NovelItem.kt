@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +37,7 @@ fun NovelItem(
 
     ListItem(
         modifier = modifier
+            .clip(MaterialTheme.shapes.medium)
             .clickable { onNovelClicked() }
             .padding(vertical = 8.dp),
         headlineText = { Text(text = novel.title) },

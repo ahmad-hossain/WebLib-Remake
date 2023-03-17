@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +34,7 @@ fun FolderItem(
 
     ListItem(
         modifier = modifier
+            .clip(MaterialTheme.shapes.medium)
             .clickable { onFolderClicked() }
             .padding(vertical = 8.dp),
         headlineText = { Text(text = folder.title) },
