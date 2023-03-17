@@ -16,10 +16,8 @@
         app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/dark_mode"
-                android:title="@string/dark_mode"
-                android:icon="@drawable/ic_brightness_3"
-                android:checkable="true" />
+                android:id="@+id/ui_mode"
+                android:title="" />
         </menu>
     </item>
 </menu>

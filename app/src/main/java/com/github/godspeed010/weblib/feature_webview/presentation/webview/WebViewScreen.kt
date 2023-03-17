@@ -31,7 +31,6 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.*
 
-
 data class WebViewScreenNavArgs(
     val novel: Novel
 )
@@ -91,6 +90,7 @@ fun WebViewScreen(
                 binding
             },
             update = {
+                updateUiModeMenuItem(state.isWvDarkModeEnabled)
                 applyMaterialTheme(colorScheme)
                 client.state = state.webViewState
                 client.navigator = state.webViewNavigator
@@ -175,6 +175,26 @@ private fun LayoutWebViewBinding.updateProgressIndicator(loadingState: LoadingSt
     }
 }
 
+private fun LayoutWebViewBinding.updateUiModeMenuItem(isWvDarkModeEnabled: Boolean) {
+    val subMenu = webviewToolbar.menu.findItem(R.id.more_options).subMenu
+    val uiModeMenuItem = subMenu?.findItem(R.id.ui_mode)
+    val ctx = root.context
+    val (newTitle, newIcon) = when (isWvDarkModeEnabled) {
+        true -> Pair(
+            ctx.getString(R.string.light_mode),
+            ContextCompat.getDrawable(ctx, R.drawable.ic_sun)
+        )
+        false -> Pair(
+            ctx.getString(R.string.dark_mode),
+            ContextCompat.getDrawable(ctx, R.drawable.ic_brightness_3)
+        )
+    }
+    uiModeMenuItem?.apply {
+        title = newTitle
+        icon = newIcon
+    }
+}
+
 private fun LayoutWebViewBinding.setupListeners(
     navigator: DestinationsNavigator,
     viewModel: WebViewViewModel
@@ -206,13 +226,13 @@ private fun LayoutWebViewBinding.setupListeners(
     val menu = webviewToolbar.menu
     val refresh = menu.findItem(R.id.refresh)
     val moreOptions = menu.findItem(R.id.more_options)
-    val darkMode = moreOptions.subMenu?.findItem(R.id.dark_mode)
+    val uiMode = moreOptions.subMenu?.findItem(R.id.ui_mode)
 
     refresh.setOnMenuItemClickListener {
         viewModel.onEvent(WebViewEvent.ReloadClicked)
         true
     }
-    darkMode?.setOnMenuItemClickListener {
+    uiMode?.setOnMenuItemClickListener {
         viewModel.onEvent(WebViewEvent.ToggleDarkMode)
         true
     }
