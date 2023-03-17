@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
@@ -92,7 +93,8 @@ fun AddEditNovelDialog(
                         }
                     },
                     keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Uri
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
