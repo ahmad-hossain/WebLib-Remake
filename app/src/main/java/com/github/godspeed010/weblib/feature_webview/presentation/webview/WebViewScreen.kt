@@ -92,28 +92,11 @@ fun WebViewScreen(
             },
             update = {
                 applyMaterialTheme(colorScheme)
-
                 client.state = state.webViewState
                 client.navigator = state.webViewNavigator
                 chromeClient.state = state.webViewState
-                when (val content = state.webViewState.content) {
-                    is WebContent.Url -> {
-                        val url = content.url
-
-                        if (url.isNotEmpty() && url != webview.url) {
-                            webview.loadUrl(url, content.additionalHttpHeaders.toMutableMap())
-                        }
-                    }
-                    else -> {}
-                }
-
-                val loadingState = state.webViewState.loadingState
-                if (loadingState is LoadingState.Loading) {
-                    progressIndicator.visibility = View.VISIBLE
-                    progressIndicator.setProgressCompat((loadingState.progress * 100).toInt(), true)
-                } else {
-                    progressIndicator.visibility = View.GONE
-                }
+                loadUrlIfChanged(state.webViewState.content)
+                updateProgressIndicator(state.webViewState.loadingState)
             }
         )
     }
@@ -168,6 +151,28 @@ private fun LayoutWebViewBinding.applyMaterialTheme(colorScheme: ColorScheme) {
     // Progress Indicator
     progressIndicator.setIndicatorColor(colorScheme.primary.toArgb())
     progressIndicator.trackColor = colorScheme.surfaceVariant.toArgb()
+}
+
+private fun LayoutWebViewBinding.loadUrlIfChanged(content: WebContent) {
+    when (content) {
+        is WebContent.Url -> {
+            val url = content.url
+
+            if (url.isNotEmpty() && url != webview.url) {
+                webview.loadUrl(url, content.additionalHttpHeaders.toMutableMap())
+            }
+        }
+        else -> {}
+    }
+}
+
+private fun LayoutWebViewBinding.updateProgressIndicator(loadingState: LoadingState) {
+    if (loadingState is LoadingState.Loading) {
+        progressIndicator.visibility = View.VISIBLE
+        progressIndicator.setProgressCompat((loadingState.progress * 100).toInt(), true)
+    } else {
+        progressIndicator.visibility = View.GONE
+    }
 }
 
 private fun LayoutWebViewBinding.setupListeners(
