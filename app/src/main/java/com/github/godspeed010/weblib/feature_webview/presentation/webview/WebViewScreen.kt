@@ -97,6 +97,7 @@ fun WebViewScreen(
                 chromeClient.state = state.webViewState
                 loadUrlIfChanged(state.webViewState.content)
                 updateProgressIndicator(state.webViewState.loadingState)
+                updateRefreshButton(state.webViewState.isLoading)
             }
         )
     }
@@ -175,6 +176,16 @@ private fun LayoutWebViewBinding.updateProgressIndicator(loadingState: LoadingSt
     }
 }
 
+fun LayoutWebViewBinding.updateRefreshButton(loading: Boolean) {
+    val (newIcon, newTitle) =
+        if (loading) Pair(R.drawable.ic_close, R.string.cancel)
+        else Pair(R.drawable.ic_refresh, R.string.reload)
+    webviewToolbar.menu.findItem(R.id.reload_or_cancel).apply {
+        title = root.context.getString(newTitle)
+        icon = ContextCompat.getDrawable(root.context, newIcon)
+    }
+}
+
 private fun LayoutWebViewBinding.updateUiModeMenuItem(isWvDarkModeEnabled: Boolean) {
     val subMenu = webviewToolbar.menu.findItem(R.id.more_options).subMenu
     val uiModeMenuItem = subMenu?.findItem(R.id.ui_mode)
@@ -224,12 +235,12 @@ private fun LayoutWebViewBinding.setupListeners(
     }
 
     val menu = webviewToolbar.menu
-    val refresh = menu.findItem(R.id.refresh)
+    val reloadOrCancel = menu.findItem(R.id.reload_or_cancel)
     val moreOptions = menu.findItem(R.id.more_options)
     val uiMode = moreOptions.subMenu?.findItem(R.id.ui_mode)
 
-    refresh.setOnMenuItemClickListener {
-        viewModel.onEvent(WebViewEvent.ReloadClicked)
+    reloadOrCancel.setOnMenuItemClickListener {
+        viewModel.onEvent(WebViewEvent.ReloadOrCancelClicked)
         true
     }
     uiMode?.setOnMenuItemClickListener {

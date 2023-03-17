@@ -56,11 +56,11 @@ class WebViewViewModel @Inject constructor(
                 WebSettingsCompat.setForceDark(state.webView?.settings ?: return, forceDarkSetting)
                 state = state.copy(isWvDarkModeEnabled = !state.isWvDarkModeEnabled)
             }
-            is WebViewEvent.ReloadClicked -> {
-                state.webViewNavigator.reload()
-            }
-            is WebViewEvent.StopLoadingClicked -> {
-                state.webViewNavigator.stopLoading()
+            is WebViewEvent.ReloadOrCancelClicked -> {
+                if (state.webViewState.isLoading)
+                    state.webViewNavigator.stopLoading()
+                else
+                    state.webViewNavigator.reload()
             }
             is WebViewEvent.NewPageVisited -> {
                 viewModelScope.launch {
