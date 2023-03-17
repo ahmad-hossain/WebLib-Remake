@@ -2,7 +2,10 @@ package com.github.godspeed010.weblib.feature_library.presentation.folders.compo
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -14,9 +17,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.window.DialogProperties
 import com.github.godspeed010.weblib.R
+import com.github.godspeed010.weblib.feature_library.common.components.FixedWidthOutlinedTextField
 
-@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalComposeUiApi
 @Composable
 fun AddEditFolderDialog(
@@ -29,6 +33,7 @@ fun AddEditFolderDialog(
     onConfirmDialog: () -> Unit
 ) {
     AlertDialog(
+        properties = DialogProperties(usePlatformDefaultWidth = false),
         modifier = modifier,
         onDismissRequest = onDismissDialog,
         confirmButton = { TextButton(onClick = onConfirmDialog) { Text(stringResource(R.string.dialog_save)) } },
@@ -42,7 +47,7 @@ fun AddEditFolderDialog(
             }
             val keyboardController = LocalSoftwareKeyboardController.current
 
-            OutlinedTextField(
+            FixedWidthOutlinedTextField(
                 modifier = Modifier.focusRequester(focusRequester),
                 value = folderName,
                 label = { Text(stringResource(R.string.hint_title)) },
