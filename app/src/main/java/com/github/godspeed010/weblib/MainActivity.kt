@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -21,7 +22,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WebLibTheme {
-                DestinationsNavHost(navGraph = NavGraphs.root)
+                Surface {
+                    DestinationsNavHost(navGraph = NavGraphs.root)
+                }
             }
         }
     }
