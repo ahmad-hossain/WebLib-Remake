@@ -11,7 +11,6 @@ import androidx.webkit.WebViewFeature
 import com.github.godspeed010.weblib.feature_library.common.use_case.ValidatedUrl
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_webview.domain.use_case.WebViewUseCases
-import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.SmallTopAppBarHeight
 import com.github.godspeed010.weblib.feature_webview.util.*
 import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -70,16 +69,6 @@ class WebViewViewModel @Inject constructor(
                 viewModelScope.launch {
                     _addressBarText.emit(event.url)
                 }
-            }
-            is WebViewEvent.WebPageScrolled -> {
-                val toolbarHeightPx = with(event.localDensity) { SmallTopAppBarHeight.roundToPx().toFloat() }
-                val deltaY = event.oldY - event.y
-                val newOffset = state.toolbarOffsetHeightPx + deltaY
-                Timber.d("Updated toolbar offset: toolbarOffsetHeightPx=$newOffset")
-
-                state = state.copy(
-                    toolbarOffsetHeightPx = newOffset.coerceIn(-toolbarHeightPx, 0f)
-                )
             }
             is WebViewEvent.WebViewCreated -> {
                 fun restoreLastScrollProgression() {
