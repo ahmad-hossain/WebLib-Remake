@@ -6,12 +6,15 @@ import android.graphics.PorterDuffColorFilter
 import android.os.Build
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -23,6 +26,7 @@ import com.github.godspeed010.weblib.databinding.LayoutWebViewBinding
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.LoadingDialog
 import com.github.godspeed010.weblib.feature_webview.util.CustomWebViewClient
+import com.github.godspeed010.weblib.feature_webview.util.WebContent
 import com.github.godspeed010.weblib.feature_webview.util.setCursorDrawableColorFilter
 import com.github.godspeed010.weblib.observeLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
@@ -44,30 +48,55 @@ fun WebViewScreen(
     viewModel.observeLifecycle(LocalLifecycleOwner.current.lifecycle)
     val state = viewModel.state
 
+    BackHandler(state.webViewNavigator.canGoBack) {
+//            viewModel.onEvent(WebViewEvent.BackButtonPressed) // todo webview.goback
+    }
+    DisposableEffect(Unit) {
+        onDispose { viewModel.onEvent(WebViewEvent.WebViewDisposed) }
+    }
+
     val colorScheme = MaterialTheme.colorScheme
     val isSystemInDarkTheme = isSystemInDarkTheme()
     Box {
-        DisposableEffect(Unit) {
-            onDispose { viewModel.onEvent(WebViewEvent.WebViewDisposed) }
-        }
-
         LoadingDialog(
             isVisible = state.isLoadingDialogVisible,
             bodyText = stringResource(id = R.string.loading_saved_scroll_progress)
         )
+        val client = remember {
+            CustomWebViewClient(
+                onNewPageVisited = { viewModel.onEvent(WebViewEvent.NewPageVisited(it)) }
+            )
+        }
+        val scope = rememberCoroutineScope()
         AndroidViewBinding(
             factory = { layoutInflater, parent, attachToParent ->
                 val binding = LayoutWebViewBinding.inflate(layoutInflater, parent, attachToParent)
                 binding.setupListeners(navigator, viewModel)
-                binding.webview.webViewClient = CustomWebViewClient(
-                    onNewPageVisited = { viewModel.onEvent(WebViewEvent.NewPageVisited(it)) }
-                )
+                binding.webview.webViewClient = client
                 viewModel.onEvent(WebViewEvent.WebViewCreated(binding.webview, isSystemInDarkTheme))
+                scope.launch {
+                    with(state.webViewNavigator) { binding.webview.handleNavigationEvents() }
+                }
 
                 binding
             },
             update = {
                 applyMaterialTheme(colorScheme)
+
+                client.state = state.webViewState
+                client.navigator = state.webViewNavigator
+
+                when (val content = state.webViewState.content) {
+                    is WebContent.Url -> {
+                        val url = content.url
+
+                        if (url.isNotEmpty() && url != webview.url) {
+                            webview.loadUrl(url, content.additionalHttpHeaders.toMutableMap())
+                        }
+                    }
+                    else -> {}
+                }
+
             }
         )
     }
@@ -125,9 +154,9 @@ private fun LayoutWebViewBinding.setupListeners(
     viewModel: WebViewViewModel
 ) {
     webviewToolbar.setNavigationOnClickListener { navigator.popBackStack() }
-    etAddressBar.setOnEditorActionListener { _, actionId, _ ->
+    etAddressBar.setOnEditorActionListener { v, actionId, _ ->
         if (actionId != EditorInfo.IME_ACTION_DONE) return@setOnEditorActionListener false
-        viewModel.onEvent(WebViewEvent.SubmittedUrl)
+        viewModel.onEvent(WebViewEvent.SubmittedUrl(v.text.toString()))
         true
     }
     val menu = webviewToolbar.menu

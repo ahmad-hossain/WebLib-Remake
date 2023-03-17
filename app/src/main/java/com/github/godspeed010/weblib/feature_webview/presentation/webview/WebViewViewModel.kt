@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.*
 import androidx.webkit.WebSettingsCompat
@@ -41,23 +40,8 @@ class WebViewViewModel @Inject constructor(
         Timber.d("%s : %s", event::class.simpleName, event.toString())
 
         when(event) {
-            is WebViewEvent.EnteredUrl -> {
-                val addressBarTextStr = state.addressBarText.text
-
-                state = if (state.shouldSelectEntireUrl) {
-                    state.copy(
-                        addressBarText = TextFieldValue(
-                            text = addressBarTextStr,
-                            selection = TextRange(0, addressBarTextStr.length)
-                        ),
-                        shouldSelectEntireUrl = false
-                    )
-                } else {
-                    state.copy(addressBarText = event.url)
-                }
-            }
             is WebViewEvent.SubmittedUrl -> {
-                val validatedUrl = validatedUrlUseCase(state.addressBarText.text)
+                val validatedUrl = validatedUrlUseCase(event.url)
                 Timber.d("Loading url: $validatedUrl")
                 state = state.copy(webViewState = WebViewState(WebContent.Url(validatedUrl)))
             }
@@ -123,6 +107,7 @@ class WebViewViewModel @Inject constructor(
 
                 state = state.copy(webView = event.webView)
                 state.webView?.settings?.javaScriptEnabled = true
+                state = state.copy(webViewState = WebViewState(WebContent.Url(novel.url)))
 
                 restoreLastScrollProgression()
                 setupWebViewUiMode()
@@ -155,11 +140,5 @@ class WebViewViewModel @Inject constructor(
         Timber.d("WebViewViewModel onStop")
 
         viewModelScope.launch { webViewUseCases.updateNovel(state, novel) }
-    }
-
-    init {
-        state = state.copy(
-            webViewState = WebViewState(WebContent.Url(novel.url))
-        )
     }
 }
