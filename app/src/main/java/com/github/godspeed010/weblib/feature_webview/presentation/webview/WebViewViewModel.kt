@@ -132,6 +132,9 @@ class WebViewViewModel @Inject constructor(
                 val url = state.historyItems[event.listIndex].url
                 state = state.copy(isHistoryDropdownExpanded = false, webViewState = WebViewState(WebContent.Url(url)))
             }
+            is WebViewEvent.BackButtonPressed -> {
+                state.webView?.goBack()
+            }
         }
     }
 

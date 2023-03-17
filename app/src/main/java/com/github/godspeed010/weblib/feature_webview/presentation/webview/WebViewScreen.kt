@@ -49,7 +49,7 @@ fun WebViewScreen(
     val state = viewModel.state
 
     BackHandler(state.webViewNavigator.canGoBack) {
-//            viewModel.onEvent(WebViewEvent.BackButtonPressed) // todo webview.goback
+        viewModel.onEvent(WebViewEvent.BackButtonPressed)
     }
     DisposableEffect(Unit) {
         onDispose { viewModel.onEvent(WebViewEvent.WebViewDisposed) }
