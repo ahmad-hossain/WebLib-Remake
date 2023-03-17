@@ -16,7 +16,6 @@ sealed class WebViewEvent {
     object WebViewDisposed : WebViewEvent()
     object UrlFocused : WebViewEvent()
     object BackButtonLongPressed : WebViewEvent()
-    object HistoryDropdownDismissRequest : WebViewEvent()
     data class HistoryItemClicked(val listIndex: Int) : WebViewEvent()
     object BackButtonPressed : WebViewEvent()
 }

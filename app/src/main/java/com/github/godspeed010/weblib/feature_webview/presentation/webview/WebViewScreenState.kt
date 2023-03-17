@@ -16,6 +16,5 @@ data class WebViewScreenState(
     val webView: WebView? = null,
     val shouldSelectEntireUrl: Boolean = false,
     val isLoadingDialogVisible: Boolean = false,
-    val isHistoryDropdownExpanded: Boolean = false,
     val historyItems: List<WebHistoryItem> = listOf(),
 )

@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Build
+import android.view.Menu
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.activity.compose.BackHandler
+import androidx.appcompat.widget.PopupMenu
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.ColorScheme
@@ -173,11 +175,29 @@ private fun LayoutWebViewBinding.setupListeners(
     viewModel: WebViewViewModel
 ) {
     webviewToolbar.setNavigationOnClickListener { navigator.popBackStack() }
+    // Nav Button onLongClick
+    webviewToolbar.getChildAt(0).setOnLongClickListener {
+        viewModel.onEvent(WebViewEvent.BackButtonLongPressed)
+        val popupMenu = PopupMenu(webviewToolbar.context, it)
+        viewModel.state.historyItems.forEachIndexed { index, historyItem ->
+            popupMenu.menu.add(Menu.NONE, index, Menu.NONE, historyItem.title)
+        }
+
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            val historyItemIndex = menuItem.itemId
+            viewModel.onEvent(WebViewEvent.HistoryItemClicked(historyItemIndex))
+            true
+        }
+        popupMenu.show()
+        true
+    }
+
     etAddressBar.setOnEditorActionListener { v, actionId, _ ->
         if (actionId != EditorInfo.IME_ACTION_DONE) return@setOnEditorActionListener false
         viewModel.onEvent(WebViewEvent.SubmittedUrl(v.text.toString()))
         true
     }
+
     val menu = webviewToolbar.menu
     val refresh = menu.findItem(R.id.refresh)
     val moreOptions = menu.findItem(R.id.more_options)
