@@ -91,13 +91,13 @@ fun WebViewScreen(
             },
             update = {
                 updateUiModeMenuItem(state.isWvDarkModeEnabled)
+                updateRefreshButton(state.webViewState.isLoading)
                 applyMaterialTheme(colorScheme)
                 client.state = state.webViewState
                 client.navigator = state.webViewNavigator
                 chromeClient.state = state.webViewState
                 loadUrlIfChanged(state.webViewState.content)
                 updateProgressIndicator(state.webViewState.loadingState)
-                updateRefreshButton(state.webViewState.isLoading)
             }
         )
     }
