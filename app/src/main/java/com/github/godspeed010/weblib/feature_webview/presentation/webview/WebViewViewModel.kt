@@ -62,9 +62,6 @@ class WebViewViewModel @Inject constructor(
             is WebViewEvent.StopLoadingClicked -> {
                 state.webViewNavigator.stopLoading()
             }
-            is WebViewEvent.MoreOptionsToggled -> {
-                state = state.copy(isMoreOptionsDropdownEnabled = !state.isMoreOptionsDropdownEnabled)
-            }
             is WebViewEvent.NewPageVisited -> {
                 viewModelScope.launch {
                     _addressBarText.emit(event.url)
@@ -109,9 +106,6 @@ class WebViewViewModel @Inject constructor(
             }
             is WebViewEvent.WebViewDisposed -> {
                 state = state.copy(webView = null)
-            }
-            is WebViewEvent.UrlFocused -> {
-                state = state.copy(shouldSelectEntireUrl = true)
             }
             is WebViewEvent.BackButtonLongPressed -> {
                 val history = state.webView?.copyBackForwardList() ?: return

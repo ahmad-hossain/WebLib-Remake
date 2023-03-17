@@ -11,10 +11,7 @@ data class WebViewScreenState(
     val isWvDarkModeEnabled: Boolean = false,
     val webViewState: WebViewState = WebViewState(WebContent.Url("")),
     val webViewNavigator: WebViewNavigator,
-    val toolbarOffsetHeightPx: Float = 0f,
-    val isMoreOptionsDropdownEnabled: Boolean = false,
     val webView: WebView? = null,
-    val shouldSelectEntireUrl: Boolean = false,
     val isLoadingDialogVisible: Boolean = false,
     val historyItems: List<WebHistoryItem> = listOf(),
 )
