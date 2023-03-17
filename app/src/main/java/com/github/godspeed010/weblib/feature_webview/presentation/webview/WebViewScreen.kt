@@ -191,18 +191,12 @@ private fun LayoutWebViewBinding.updateUiModeMenuItem(isWvDarkModeEnabled: Boole
     val uiModeMenuItem = subMenu?.findItem(R.id.ui_mode)
     val ctx = root.context
     val (newTitle, newIcon) = when (isWvDarkModeEnabled) {
-        true -> Pair(
-            ctx.getString(R.string.light_mode),
-            ContextCompat.getDrawable(ctx, R.drawable.ic_sun)
-        )
-        false -> Pair(
-            ctx.getString(R.string.dark_mode),
-            ContextCompat.getDrawable(ctx, R.drawable.ic_brightness_3)
-        )
+        true -> Pair(R.string.light_mode, R.drawable.ic_sun)
+        false -> Pair(R.string.dark_mode,R.drawable.ic_brightness_3)
     }
     uiModeMenuItem?.apply {
-        title = newTitle
-        icon = newIcon
+        title = ctx.getString(newTitle)
+        icon = ContextCompat.getDrawable(ctx, newIcon)
     }
 }
 
