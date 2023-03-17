@@ -178,8 +178,8 @@ private fun LayoutWebViewBinding.updateProgressIndicator(loadingState: LoadingSt
 
 fun LayoutWebViewBinding.updateRefreshButton(loading: Boolean) {
     val (newIcon, newTitle) =
-        if (loading) Pair(R.drawable.ic_close, R.string.cancel)
-        else Pair(R.drawable.ic_refresh, R.string.reload)
+        if (loading) Pair(R.drawable.ic_close, R.string.cd_stop_loading_page)
+        else Pair(R.drawable.ic_refresh, R.string.cd_refresh_page)
     webviewToolbar.menu.findItem(R.id.reload_or_cancel).apply {
         title = root.context.getString(newTitle)
         icon = ContextCompat.getDrawable(root.context, newIcon)

@@ -5,13 +5,13 @@
 
     <item
         android:id="@+id/reload_or_cancel"
-        android:title="@string/reload"
+        android:title="@string/cd_refresh_page"
         app:showAsAction="always"
         android:icon="@drawable/ic_refresh"/>
 
     <item
         android:id="@+id/more_options"
-        android:title="More"
+        android:title="@string/cd_more_options"
         android:icon="@drawable/ic_more_vert"
         app:showAsAction="always">
         <menu>
