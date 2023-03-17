@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Build
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.activity.compose.BackHandler
@@ -22,9 +23,7 @@ import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.databinding.LayoutWebViewBinding
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.LoadingDialog
-import com.github.godspeed010.weblib.feature_webview.util.CustomWebViewClient
-import com.github.godspeed010.weblib.feature_webview.util.WebContent
-import com.github.godspeed010.weblib.feature_webview.util.setCursorDrawableColorFilter
+import com.github.godspeed010.weblib.feature_webview.util.*
 import com.github.godspeed010.weblib.observeLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -64,13 +63,18 @@ fun WebViewScreen(
                 onNewPageVisited = { viewModel.onEvent(WebViewEvent.NewPageVisited(it)) }
             )
         }
+        val chromeClient = remember { AccompanistWebChromeClient() }
         val scope = rememberCoroutineScope()
         AndroidViewBinding(
             factory = { layoutInflater, parent, attachToParent ->
                 val binding = LayoutWebViewBinding.inflate(layoutInflater, parent, attachToParent)
                 binding.setupListeners(navigator, viewModel)
+
                 binding.webview.webViewClient = client
+                binding.webview.webChromeClient = chromeClient
+
                 viewModel.onEvent(WebViewEvent.WebViewCreated(binding.webview, isSystemInDarkTheme))
+
                 scope.launch {
                     launch {
                         with(state.webViewNavigator) { binding.webview.handleNavigationEvents() }
@@ -89,7 +93,7 @@ fun WebViewScreen(
 
                 client.state = state.webViewState
                 client.navigator = state.webViewNavigator
-
+                chromeClient.state = state.webViewState
                 when (val content = state.webViewState.content) {
                     is WebContent.Url -> {
                         val url = content.url
@@ -101,6 +105,13 @@ fun WebViewScreen(
                     else -> {}
                 }
 
+                val loadingState = state.webViewState.loadingState
+                if (loadingState is LoadingState.Loading) {
+                    progressIndicator.visibility = View.VISIBLE
+                    progressIndicator.setProgressCompat((loadingState.progress * 100).toInt(), true)
+                } else {
+                    progressIndicator.visibility = View.GONE
+                }
             }
         )
     }
@@ -151,6 +162,10 @@ private fun LayoutWebViewBinding.applyMaterialTheme(colorScheme: ColorScheme) {
 
     // Toolbar Container
     webviewToolbar.setBackgroundColor(colorScheme.surface.toArgb())
+
+    // Progress Indicator
+    progressIndicator.setIndicatorColor(colorScheme.primary.toArgb())
+    progressIndicator.trackColor = colorScheme.surfaceVariant.toArgb()
 }
 
 private fun LayoutWebViewBinding.setupListeners(
