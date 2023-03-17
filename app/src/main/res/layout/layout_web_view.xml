@@ -30,6 +30,7 @@
                 android:selectAllOnFocus="true"
                 android:background="@drawable/shape_rounded_edittext"
                 android:hint="@string/hint_address_bar"
+                android:inputType="textUri"
                 android:imeOptions="actionDone" />
         </androidx.appcompat.widget.Toolbar>
 
