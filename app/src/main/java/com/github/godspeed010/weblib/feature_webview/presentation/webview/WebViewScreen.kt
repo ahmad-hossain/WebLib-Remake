@@ -11,10 +11,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -75,7 +72,14 @@ fun WebViewScreen(
                 binding.webview.webViewClient = client
                 viewModel.onEvent(WebViewEvent.WebViewCreated(binding.webview, isSystemInDarkTheme))
                 scope.launch {
-                    with(state.webViewNavigator) { binding.webview.handleNavigationEvents() }
+                    launch {
+                        with(state.webViewNavigator) { binding.webview.handleNavigationEvents() }
+                    }
+                    launch {
+                        viewModel.addressBarText.collect {
+                            binding.etAddressBar.setText(it)
+                        }
+                    }
                 }
 
                 binding

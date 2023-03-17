@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.*
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
@@ -18,6 +17,8 @@ import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -34,6 +35,9 @@ class WebViewViewModel @Inject constructor(
 
     var state by mutableStateOf(WebViewScreenState(webViewNavigator = WebViewNavigator(viewModelScope)))
         private set
+
+    private val _addressBarText = MutableSharedFlow<String>()
+    val addressBarText = _addressBarText.asSharedFlow()
 
     @SuppressLint("SetJavaScriptEnabled")
     fun onEvent(event: WebViewEvent) {
@@ -63,7 +67,9 @@ class WebViewViewModel @Inject constructor(
                 state = state.copy(isMoreOptionsDropdownEnabled = !state.isMoreOptionsDropdownEnabled)
             }
             is WebViewEvent.NewPageVisited -> {
-                state = state.copy(addressBarText = TextFieldValue(event.url))
+                viewModelScope.launch {
+                    _addressBarText.emit(event.url)
+                }
             }
             is WebViewEvent.WebPageScrolled -> {
                 val toolbarHeightPx = with(event.localDensity) { SmallTopAppBarHeight.roundToPx().toFloat() }
