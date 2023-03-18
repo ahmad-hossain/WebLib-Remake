@@ -3,32 +3,29 @@ package com.github.godspeed010.weblib.feature_library.presentation.folders
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CreateNewFolder
 import androidx.compose.material.icons.outlined.DriveFileRenameOutline
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.godspeed010.weblib.R
+import com.github.godspeed010.weblib.feature_library.domain.use_case.DeleteFolderUseCase
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
 import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class FoldersViewModel @Inject constructor(
     private val libraryRepo: LibraryRepository,
+    private val deleteFolderUseCase: DeleteFolderUseCase,
 ) : ViewModel() {
     var state by mutableStateOf(FoldersState())
         private set
-    private var deleteFolderJob: Job? = null
 
     fun onEvent(event: FoldersEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -51,42 +48,12 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.DeleteFolder -> {
-                if (deleteFolderJob?.isActive == true) {
-                    Timber.d("DeleteFolder: deleteFolderJob is active; cancelling..")
-                    deleteFolderJob?.cancel()
-                    val lastDeletedFolderId = state.hiddenFolderId
-                    viewModelScope.launch(Dispatchers.IO) {
-                        lastDeletedFolderId?.let {
-                            libraryRepo.deleteFolder(Folder(id = it, title = ""))
-                            Timber.d("DeleteFolder: Deleted previous Folder with id: $it")
-                        }
-                    }
-                }
-
-                state = state.copy(
-                    hiddenFolderId = event.folder.id,
-                    expandedDropdownItemListIndex = null
+                deleteFolderUseCase(
+                    scope = viewModelScope,
+                    folder = event.folder,
+                    getState = { state },
+                    updateState = { state = it }
                 )
-
-                deleteFolderJob = viewModelScope.launch(Dispatchers.Main) {
-                    val folderToDelete = event.folder
-                    val snackbarResult = state.snackbarHostState.showSnackbar(
-                        message = "Deleted Folder",
-                        actionLabel = "Undo",
-                        duration = SnackbarDuration.Short
-                    )
-
-                    when (snackbarResult) {
-                        SnackbarResult.Dismissed -> {
-                            withContext(Dispatchers.IO) {
-                                libraryRepo.deleteFolder(folderToDelete)
-                                Timber.d("DeleteFolder: Due to no Undo, deleted Folder with id: ${folderToDelete.id}")
-                                state = state.copy(hiddenFolderId = null)
-                            }
-                        }
-                        SnackbarResult.ActionPerformed -> state = state.copy(hiddenFolderId = null)
-                    }
-                }
             }
             is FoldersEvent.FabClicked -> {
                 //Make AlertDialog for adding a Folder visible
