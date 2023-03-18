@@ -16,6 +16,7 @@ import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRe
 import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -27,6 +28,7 @@ class FoldersViewModel @Inject constructor(
 ) : ViewModel() {
     var state by mutableStateOf(FoldersState())
         private set
+    private var deleteFolderJob: Job? = null
 
     fun onEvent(event: FoldersEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -49,12 +51,25 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.DeleteFolder -> {
+                if (deleteFolderJob?.isActive == true) {
+                    Timber.d("DeleteFolder: deleteFolderJob is active; cancelling..")
+                    deleteFolderJob?.cancel()
+                    val lastDeletedFolderId = state.hiddenFolderId
+                    viewModelScope.launch(Dispatchers.IO) {
+                        lastDeletedFolderId?.let {
+                            libraryRepo.deleteFolder(Folder(id = it, title = ""))
+                            Timber.d("DeleteFolder: Deleted previous Folder with id: $it")
+                        }
+                    }
+                }
+
                 state = state.copy(
                     hiddenFolderId = event.folder.id,
                     expandedDropdownItemListIndex = null
                 )
 
-                viewModelScope.launch(Dispatchers.Main) {
+                deleteFolderJob = viewModelScope.launch(Dispatchers.Main) {
+                    val folderToDelete = event.folder
                     val snackbarResult = state.snackbarHostState.showSnackbar(
                         message = "Deleted Folder",
                         actionLabel = "Undo",
@@ -64,7 +79,8 @@ class FoldersViewModel @Inject constructor(
                     when (snackbarResult) {
                         SnackbarResult.Dismissed -> {
                             withContext(Dispatchers.IO) {
-                                libraryRepo.deleteFolder(event.folder)
+                                libraryRepo.deleteFolder(folderToDelete)
+                                Timber.d("DeleteFolder: Due to no Undo, deleted Folder with id: ${folderToDelete.id}")
                                 state = state.copy(hiddenFolderId = null)
                             }
                         }
