@@ -3,8 +3,6 @@ package com.github.godspeed010.weblib.feature_library.presentation.novels
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BookmarkAdd
 import androidx.compose.material.icons.outlined.DriveFileRenameOutline
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,13 +15,12 @@ import com.github.godspeed010.weblib.feature_library.common.use_case.ValidatedUr
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
+import com.github.godspeed010.weblib.feature_library.domain.use_case.DeleteNovelUseCase
 import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -31,6 +28,7 @@ import javax.inject.Inject
 class NovelsViewModel @Inject constructor(
     private val libraryRepo: LibraryRepository,
     private val validatedUrlUseCase: ValidatedUrl,
+    private val deleteNovelUseCase: DeleteNovelUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     @OptIn(ExperimentalComposeUiApi::class)
@@ -38,7 +36,6 @@ class NovelsViewModel @Inject constructor(
 
     var state by mutableStateOf(NovelsState())
         private set
-    private var deleteNovelJob: Job? = null
 
     fun onEvent(event: NovelsEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -81,42 +78,12 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.DeleteNovel -> {
-                if (deleteNovelJob?.isActive == true) {
-                    Timber.d("DeleteNovel: deleteNovelJob is active; cancelling..")
-                    deleteNovelJob?.cancel()
-                    val lastDeletedNovelId = state.hiddenNovelId
-                    viewModelScope.launch(Dispatchers.IO) {
-                        lastDeletedNovelId?.let {
-                            libraryRepo.deleteNovel( Novel(id = lastDeletedNovelId, title = "", url = "", scrollProgression = 0f, folderId = 0) )
-                            Timber.d("DeleteNovel: Deleted previous Novel with id: $it")
-                        }
-                    }
-                }
-
-                state = state.copy(
-                    hiddenNovelId = event.novel.id,
-                    expandedDropdownNovelListIndex = null
+                deleteNovelUseCase(
+                    scope = viewModelScope,
+                    novel = event.novel,
+                    getState = { state },
+                    updateState = { state = it }
                 )
-
-                deleteNovelJob = viewModelScope.launch(Dispatchers.Main) {
-                    val novelToDelete = event.novel
-                    val snackbarResult = state.snackbarHostState.showSnackbar(
-                        message = "Deleted Novel",
-                        actionLabel = "Undo",
-                        duration = SnackbarDuration.Short
-                    )
-
-                    when (snackbarResult) {
-                        SnackbarResult.Dismissed -> {
-                            withContext(Dispatchers.IO) {
-                                libraryRepo.deleteNovel(novelToDelete)
-                                Timber.d("DeleteNovel: Due to no Undo, deleted Novel with id: ${novelToDelete.id}")
-                                state = state.copy(hiddenNovelId = null)
-                            }
-                        }
-                        SnackbarResult.ActionPerformed -> state = state.copy(hiddenNovelId = null)
-                    }
-                }
             }
             is NovelsEvent.EditNovelClicked -> {
                 //Set TextField state & close Dropdown
