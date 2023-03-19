@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -25,19 +25,26 @@ fun MoveNovelModalBottomSheet(
     onBottomSheetDismissed: () -> Unit,
     onFolderClicked: (Folder) -> Unit
 ) {
-    if (!isVisible) return
+    var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val bottomSheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
-    ModalBottomSheet(
-        modifier = modifier,
-        onDismissRequest = {
+    LaunchedEffect(isVisible) {
+        if (isVisible) {
+            showBottomSheet = true
+        }
+        else {
             scope.launch {
                 bottomSheetState.hide()
             }.invokeOnCompletion {
-                if (bottomSheetState.isVisible) return@invokeOnCompletion
-                onBottomSheetDismissed()
+                showBottomSheet = false
             }
-        },
+        }
+    }
+    if (!showBottomSheet) return
+
+    ModalBottomSheet(
+        modifier = modifier,
+        onDismissRequest = onBottomSheetDismissed,
         sheetState = bottomSheetState,
         content = {
             Text(
