@@ -20,9 +20,9 @@ import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -128,7 +128,24 @@ class NovelsViewModel @Inject constructor(
                     expandedDropdownNovelListIndex = null
                 )
             }
-            is NovelsEvent.MoveNovel -> TODO()
+            is NovelsEvent.MoveNovel -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val folders = libraryRepo.getFolders().first()
+                    withContext(Dispatchers.Main) {
+                        state = state.copy(
+                            expandedDropdownNovelListIndex = null,
+                            isBottomSheetVisible = true,
+                            folders = folders
+                        )
+                    }
+                }
+            }
+            is NovelsEvent.BottomSheetDismissed -> {
+                state = state.copy(isBottomSheetVisible = false)
+            }
+            is NovelsEvent.BottomSheetFolderClicked -> {
+                TODO()
+            }
         }
     }
 

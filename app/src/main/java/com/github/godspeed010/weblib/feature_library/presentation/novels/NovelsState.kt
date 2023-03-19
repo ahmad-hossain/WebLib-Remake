@@ -5,6 +5,7 @@ import androidx.compose.material.icons.outlined.BookmarkAdd
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.github.godspeed010.weblib.R
+import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 
 data class NovelsState(
@@ -16,4 +17,6 @@ data class NovelsState(
     val expandedDropdownNovelListIndex: Int? = null,
     val snackbarHostState: SnackbarHostState = SnackbarHostState(),
     val hiddenNovelId: Int? = null,
+    val isBottomSheetVisible: Boolean = false,
+    val folders: List<Folder> = emptyList(),
 )

@@ -1,5 +1,6 @@
 package com.github.godspeed010.weblib.feature_library.domain.use_case
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarResult
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
@@ -10,6 +11,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Singleton
 class DeleteNovelUseCase @Inject constructor(
     private val libraryRepo: LibraryRepository

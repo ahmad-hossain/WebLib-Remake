@@ -20,6 +20,7 @@ import com.github.godspeed010.weblib.destinations.WebViewScreenDestination
 import com.github.godspeed010.weblib.feature_library.common.Constants
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.presentation.novels.components.AddEditNovelDialog
+import com.github.godspeed010.weblib.feature_library.presentation.novels.components.MoveNovelModalBottomSheet
 import com.github.godspeed010.weblib.feature_library.presentation.novels.components.NovelItem
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -37,6 +38,13 @@ fun NovelsScreen(
     viewModel: NovelsViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
+
+    MoveNovelModalBottomSheet(
+        isVisible = state.isBottomSheetVisible,
+        folders = state.folders,
+        onBottomSheetDismissed = { viewModel.onEvent(NovelsEvent.BottomSheetDismissed) },
+        onFolderClicked = { viewModel.onEvent(NovelsEvent.BottomSheetFolderClicked(it)) }
+    )
 
     Scaffold(
         topBar = {
