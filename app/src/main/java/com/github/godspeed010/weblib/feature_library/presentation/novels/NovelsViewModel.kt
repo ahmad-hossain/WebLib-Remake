@@ -132,7 +132,9 @@ class NovelsViewModel @Inject constructor(
             is NovelsEvent.MoveNovel -> {
                 novelToMove = event.novel
                 viewModelScope.launch(Dispatchers.IO) {
-                    val folders = libraryRepo.getFolders().first()
+                    val folders = libraryRepo.getFolders()
+                        .first()
+                        .filterNot { it.id == folder.id }
                     withContext(Dispatchers.Main) {
                         state = state.copy(
                             expandedDropdownNovelListIndex = null,
