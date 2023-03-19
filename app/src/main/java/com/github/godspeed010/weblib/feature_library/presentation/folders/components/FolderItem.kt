@@ -22,11 +22,12 @@ fun FolderItem(
     isDropdownExpanded: Boolean,
     modifier: Modifier = Modifier,
     onFolderClicked: () -> Unit,
-    onMoreClicked: () -> Unit,
-    onDismissDropdown: () -> Unit,
+    onMoreClicked: () -> Unit = {},
+    onDismissDropdown: () -> Unit = {},
     dropdownOptions: Array<String> = stringArrayResource(id = R.array.folder_dropdown_options),
-    onEditClicked: () -> Unit,
-    onDeleteClicked: () -> Unit
+    onEditClicked: () -> Unit = {},
+    onDeleteClicked: () -> Unit = {},
+    isTrailingContentVisible: Boolean = true,
 ) {
     val edit = stringResource(id = R.string.edit)
     val delete = stringResource(id = R.string.delete)
@@ -38,7 +39,7 @@ fun FolderItem(
             .padding(vertical = 8.dp),
         headlineContent = { Text(text = folder.title) },
         leadingContent = { Icon(imageVector = Icons.Outlined.Folder, contentDescription = "Folder") },
-        trailingContent = {
+        trailingContent = if (!isTrailingContentVisible) { null } else {{
             Box {
                 IconButton(onClick = onMoreClicked) {
                     Icon(
@@ -61,7 +62,7 @@ fun FolderItem(
                     }
                 }
             }
-        }
+        }}
     )
 }
 
