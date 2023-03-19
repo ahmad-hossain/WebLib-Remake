@@ -15,6 +15,8 @@ import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRe
 import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -106,8 +108,8 @@ class FoldersViewModel @Inject constructor(
     }
 
     init {
-        state = state.copy(
-            folders = libraryRepo.getFolders()
-        )
+        libraryRepo.getFolders().onEach {
+            state = state.copy(folders = it)
+        }.launchIn(viewModelScope)
     }
 }

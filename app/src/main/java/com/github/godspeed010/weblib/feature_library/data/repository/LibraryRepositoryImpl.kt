@@ -37,9 +37,7 @@ class LibraryRepositoryImpl(
         return novelDao.findNovelsByNameOrUrl(query)
     }
 
-    override fun getFolders(): LiveData<List<Folder>> {
-        return folderDao.getFolders()
-    }
+    override fun getFolders(): Flow<List<Folder>> = folderDao.getFolders()
 
     override suspend fun getFolderNames(): List<String> {
         return folderDao.getFolderNames()

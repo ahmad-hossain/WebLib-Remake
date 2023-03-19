@@ -19,7 +19,7 @@ interface LibraryRepository {
 
     suspend fun findNovelsByNameOrUrl(query: String): List<Novel>
 
-    fun getFolders() : LiveData<List<Folder>>
+    fun getFolders() : Flow<List<Folder>>
 
     suspend fun getFolderNames(): List<String>
 
