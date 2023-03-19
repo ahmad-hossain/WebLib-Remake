@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FolderItem(
     folder: Folder,
@@ -37,7 +36,7 @@ fun FolderItem(
             .clip(MaterialTheme.shapes.medium)
             .clickable { onFolderClicked() }
             .padding(vertical = 8.dp),
-        headlineText = { Text(text = folder.title) },
+        headlineContent = { Text(text = folder.title) },
         leadingContent = { Icon(imageVector = Icons.Outlined.Folder, contentDescription = "Folder") },
         trailingContent = {
             Box {

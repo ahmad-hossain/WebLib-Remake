@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NovelItem(
     novel: Novel,
@@ -40,7 +39,7 @@ fun NovelItem(
             .clip(MaterialTheme.shapes.medium)
             .clickable { onNovelClicked() }
             .padding(vertical = 8.dp),
-        headlineText = { Text(text = novel.title) },
+        headlineContent = { Text(text = novel.title) },
         leadingContent = { Icon(imageVector = Icons.Outlined.BookmarkBorder, contentDescription = "Novel") },
         trailingContent = {
             Box {
