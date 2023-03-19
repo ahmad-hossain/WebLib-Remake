@@ -7,6 +7,7 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.model.relations.FolderWithNovel
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
+import kotlinx.coroutines.flow.Flow
 
 class LibraryRepositoryImpl(
     private val folderDao: FolderDao,
@@ -56,7 +57,7 @@ class LibraryRepositoryImpl(
         folderDao.delete(folder)
     }
 
-    override fun getFolderWithNovels(folderId: Int): LiveData<FolderWithNovel> {
+    override fun getFolderWithNovels(folderId: Int): Flow<FolderWithNovel> {
         return folderDao.getFolderWithNovels(folderId)
     }
 

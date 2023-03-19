@@ -20,6 +20,8 @@ import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -131,12 +133,9 @@ class NovelsViewModel @Inject constructor(
     }
 
     init {
-        viewModelScope.launch {
-            Timber.d("Opened Folder: ${folder.title}")
-
-            state = state.copy(
-                folderWithNovels = libraryRepo.getFolderWithNovels(folder.id)
-            )
-        }
+        Timber.d("Opened Folder: ${folder.title}")
+        libraryRepo.getFolderWithNovels(folder.id).onEach {
+            state = state.copy(novels = it.novels)
+        }.launchIn(viewModelScope)
     }
 }

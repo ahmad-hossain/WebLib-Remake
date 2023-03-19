@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.model.relations.FolderWithNovel
+import kotlinx.coroutines.flow.Flow
 
 interface LibraryRepository {
     fun getNovels() : LiveData<List<Novel>>
@@ -28,7 +29,7 @@ interface LibraryRepository {
 
     suspend fun deleteFolder(folder: Folder)
 
-    fun getFolderWithNovels(folderId: Int): LiveData<FolderWithNovel>
+    fun getFolderWithNovels(folderId: Int): Flow<FolderWithNovel>
 
     suspend fun insertOrUpdateFolder(folder: Folder)
 }

@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,7 +19,6 @@ import com.github.godspeed010.weblib.common.model.Screen
 import com.github.godspeed010.weblib.destinations.WebViewScreenDestination
 import com.github.godspeed010.weblib.feature_library.common.Constants
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
-import com.github.godspeed010.weblib.feature_library.domain.model.relations.FolderWithNovel
 import com.github.godspeed010.weblib.feature_library.presentation.novels.components.AddEditNovelDialog
 import com.github.godspeed010.weblib.feature_library.presentation.novels.components.NovelItem
 import com.ramcosta.composedestinations.annotation.Destination
@@ -39,13 +37,6 @@ fun NovelsScreen(
     viewModel: NovelsViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
-    val folderWithNovels = state.folderWithNovels.observeAsState(
-        FolderWithNovel(
-            Folder(title = ""),
-            novels = emptyList()
-        )
-    )
-    val novels = folderWithNovels.value.novels
 
     Scaffold(
         topBar = {
@@ -104,7 +95,7 @@ fun NovelsScreen(
             modifier = Modifier.consumeWindowInsets(contentPadding),
             contentPadding = contentPadding
         ) {
-            itemsIndexed(novels) { index, novel ->
+            itemsIndexed(state.novels) { index, novel ->
                 if (novel.id != state.hiddenNovelId) {
                     NovelItem(
                         novel = novel,

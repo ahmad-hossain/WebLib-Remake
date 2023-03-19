@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.relations.FolderWithNovel
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FolderDao : BaseDao<Folder> {
@@ -15,5 +16,5 @@ interface FolderDao : BaseDao<Folder> {
 
     @Transaction
     @Query("SELECT * FROM folder WHERE id = :folderId")
-    fun getFolderWithNovels(folderId: Int): LiveData<FolderWithNovel>
+    fun getFolderWithNovels(folderId: Int): Flow<FolderWithNovel>
 }
