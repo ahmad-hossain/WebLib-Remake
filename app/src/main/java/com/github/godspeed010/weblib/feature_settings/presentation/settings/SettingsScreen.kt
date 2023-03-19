@@ -18,6 +18,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.R
@@ -104,7 +105,8 @@ fun ColumnScope.AuthSection(viewModel: SettingsViewModel = hiltViewModel()) {
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .align(Alignment.CenterHorizontally),
-            text = state.authEmail
+            text = state.authEmail,
+            fontWeight = FontWeight.Bold
         )
 
         Spacer(Modifier.height(8.dp))
