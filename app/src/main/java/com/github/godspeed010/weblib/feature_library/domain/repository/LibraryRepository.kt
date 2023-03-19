@@ -32,4 +32,6 @@ interface LibraryRepository {
     fun getFolderWithNovels(folderId: Int): Flow<FolderWithNovel>
 
     suspend fun insertOrUpdateFolder(folder: Folder)
+
+    suspend fun moveNovel(novel: Novel, to: Folder)
 }

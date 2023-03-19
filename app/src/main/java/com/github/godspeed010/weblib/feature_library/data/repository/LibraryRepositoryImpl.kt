@@ -62,4 +62,9 @@ class LibraryRepositoryImpl(
     override suspend fun insertOrUpdateFolder(folder: Folder) {
         folderDao.insertOrUpdate(folder)
     }
+
+    override suspend fun moveNovel(novel: Novel, to: Folder) {
+        deleteNovel(novel)
+        insertNovel(novel.copy(folderId = to.id))
+    }
 }

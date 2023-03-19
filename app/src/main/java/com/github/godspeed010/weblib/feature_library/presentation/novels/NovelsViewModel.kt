@@ -38,6 +38,7 @@ class NovelsViewModel @Inject constructor(
 
     var state by mutableStateOf(NovelsState())
         private set
+    private var novelToMove: Novel? = null
 
     fun onEvent(event: NovelsEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -129,6 +130,7 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.MoveNovel -> {
+                novelToMove = event.novel
                 viewModelScope.launch(Dispatchers.IO) {
                     val folders = libraryRepo.getFolders().first()
                     withContext(Dispatchers.Main) {
@@ -142,9 +144,16 @@ class NovelsViewModel @Inject constructor(
             }
             is NovelsEvent.BottomSheetDismissed -> {
                 state = state.copy(isBottomSheetVisible = false)
+                novelToMove = null
             }
             is NovelsEvent.BottomSheetFolderClicked -> {
-                TODO()
+                state = state.copy(isBottomSheetVisible = false)
+                novelToMove?.let { novel ->
+                    viewModelScope.launch(Dispatchers.IO) {
+                        libraryRepo.moveNovel(novel, event.folder)
+                        novelToMove = null
+                    }
+                }
             }
         }
     }
