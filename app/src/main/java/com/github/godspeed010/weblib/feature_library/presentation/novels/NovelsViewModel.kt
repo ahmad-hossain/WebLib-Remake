@@ -38,7 +38,11 @@ class NovelsViewModel @Inject constructor(
 
     var state by mutableStateOf(NovelsState())
         private set
+
     private var novelToMove: Novel? = null
+
+    private val _toastMessageResId = MutableSharedFlow<Int>()
+    val toastMessage = _toastMessageResId.asSharedFlow()
 
     fun onEvent(event: NovelsEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -135,6 +139,16 @@ class NovelsViewModel @Inject constructor(
                     val folders = libraryRepo.getFolders()
                         .first()
                         .filterNot { it.id == folder.id }
+
+                    if (folders.isEmpty()) {
+                        withContext(Dispatchers.Main) {
+                            _toastMessageResId.emit(R.string.no_folders)
+                        }
+                        novelToMove = null
+                        state = state.copy(expandedDropdownNovelListIndex = null)
+                        return@launch
+                    }
+
                     withContext(Dispatchers.Main) {
                         state = state.copy(
                             expandedDropdownNovelListIndex = null,

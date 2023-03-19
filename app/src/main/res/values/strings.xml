@@ -40,4 +40,5 @@
     <string name="dark_mode">Dark Mode</string>
     <string name="light_mode">Light Mode</string>
     <string name="loading_saved_scroll_progress">Loading Saved Scroll Progress</string>
+    <string name="no_folders">ERROR: No Folders to Move to</string>
 </resources>
