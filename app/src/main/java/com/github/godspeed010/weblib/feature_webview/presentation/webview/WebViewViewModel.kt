@@ -5,19 +5,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.*
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import com.github.godspeed010.weblib.feature_library.common.use_case.ValidatedUrl
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_webview.domain.use_case.WebViewUseCases
+import com.github.godspeed010.weblib.feature_webview.presentation.webview.components.SmallTopAppBarHeight
 import com.github.godspeed010.weblib.feature_webview.util.*
 import com.github.godspeed010.weblib.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -35,16 +36,28 @@ class WebViewViewModel @Inject constructor(
     var state by mutableStateOf(WebViewScreenState(webViewNavigator = WebViewNavigator(viewModelScope)))
         private set
 
-    private val _addressBarText = MutableSharedFlow<String>()
-    val addressBarText = _addressBarText.asSharedFlow()
-
     @SuppressLint("SetJavaScriptEnabled")
     fun onEvent(event: WebViewEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
 
         when(event) {
+            is WebViewEvent.EnteredUrl -> {
+                val addressBarTextStr = state.addressBarText.text
+
+                state = if (state.shouldSelectEntireUrl) {
+                    state.copy(
+                        addressBarText = TextFieldValue(
+                            text = addressBarTextStr,
+                            selection = TextRange(0, addressBarTextStr.length)
+                        ),
+                        shouldSelectEntireUrl = false
+                    )
+                } else {
+                    state.copy(addressBarText = event.url)
+                }
+            }
             is WebViewEvent.SubmittedUrl -> {
-                val validatedUrl = validatedUrlUseCase(event.url)
+                val validatedUrl = validatedUrlUseCase(state.addressBarText.text)
                 Timber.d("Loading url: $validatedUrl")
                 state = state.copy(webViewState = WebViewState(WebContent.Url(validatedUrl)))
             }
@@ -56,16 +69,27 @@ class WebViewViewModel @Inject constructor(
                 WebSettingsCompat.setForceDark(state.webView?.settings ?: return, forceDarkSetting)
                 state = state.copy(isWvDarkModeEnabled = !state.isWvDarkModeEnabled)
             }
-            is WebViewEvent.ReloadOrCancelClicked -> {
-                if (state.webViewState.isLoading)
-                    state.webViewNavigator.stopLoading()
-                else
-                    state.webViewNavigator.reload()
+            is WebViewEvent.ReloadClicked -> {
+                state.webViewNavigator.reload()
+            }
+            is WebViewEvent.StopLoadingClicked -> {
+                state.webViewNavigator.stopLoading()
+            }
+            is WebViewEvent.MoreOptionsToggled -> {
+                state = state.copy(isMoreOptionsDropdownEnabled = !state.isMoreOptionsDropdownEnabled)
             }
             is WebViewEvent.NewPageVisited -> {
-                viewModelScope.launch {
-                    _addressBarText.emit(event.url)
-                }
+                state = state.copy(addressBarText = TextFieldValue(event.url))
+            }
+            is WebViewEvent.WebPageScrolled -> {
+                val toolbarHeightPx = with(event.localDensity) { SmallTopAppBarHeight.roundToPx().toFloat() }
+                val deltaY = event.oldY - event.y
+                val newOffset = state.toolbarOffsetHeightPx + deltaY
+                Timber.d("Updated toolbar offset: toolbarOffsetHeightPx=$newOffset")
+
+                state = state.copy(
+                    toolbarOffsetHeightPx = newOffset.coerceIn(-toolbarHeightPx, 0f)
+                )
             }
             is WebViewEvent.WebViewCreated -> {
                 fun restoreLastScrollProgression() {
@@ -97,11 +121,8 @@ class WebViewViewModel @Inject constructor(
                     state = state.copy(isWvDarkModeEnabled = true)
                 }
 
-                event.webView.settings.javaScriptEnabled = true
-                state = state.copy(
-                    webView = event.webView,
-                    webViewState = WebViewState(WebContent.Url(novel.url))
-                )
+                state = state.copy(webView = event.webView)
+                state.webView?.settings?.javaScriptEnabled = true
 
                 restoreLastScrollProgression()
                 setupWebViewUiMode()
@@ -109,19 +130,22 @@ class WebViewViewModel @Inject constructor(
             is WebViewEvent.WebViewDisposed -> {
                 state = state.copy(webView = null)
             }
+            is WebViewEvent.UrlFocused -> {
+                state = state.copy(shouldSelectEntireUrl = true)
+            }
             is WebViewEvent.BackButtonLongPressed -> {
                 val history = state.webView?.copyBackForwardList() ?: return
                 val historyItems = (0 until history.size - 1)
                     .reversed()
                     .map { history.getItemAtIndex(it) }
-                state = state.copy(historyItems = historyItems)
+                state = state.copy(isHistoryDropdownExpanded = true, historyItems = historyItems)
+            }
+            is WebViewEvent.HistoryDropdownDismissRequest -> {
+                state = state.copy(isHistoryDropdownExpanded = false)
             }
             is WebViewEvent.HistoryItemClicked -> {
                 val url = state.historyItems[event.listIndex].url
-                state = state.copy(webViewState = WebViewState(WebContent.Url(url)))
-            }
-            is WebViewEvent.BackButtonPressed -> {
-                state.webView?.goBack()
+                state = state.copy(isHistoryDropdownExpanded = false, webViewState = WebViewState(WebContent.Url(url)))
             }
         }
     }
@@ -131,5 +155,11 @@ class WebViewViewModel @Inject constructor(
         Timber.d("WebViewViewModel onStop")
 
         viewModelScope.launch { webViewUseCases.updateNovel(state, novel) }
+    }
+
+    init {
+        state = state.copy(
+            webViewState = WebViewState(WebContent.Url(novel.url))
+        )
     }
 }
