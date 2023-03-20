@@ -2,7 +2,6 @@ package com.github.godspeed010.weblib.feature_webview.presentation.webview.compo
 
 import android.webkit.WebHistoryItem
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
@@ -23,10 +22,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,7 +37,6 @@ import com.github.godspeed010.weblib.R
 
 val SmallTopAppBarHeight = 64.dp
 private val OutlinedTextFieldHeight = 20.dp
-private val AddressBarBackgroundColor = Color.White
 private val AddressBarHorizPadding = 12.dp
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -103,8 +103,7 @@ fun WebViewTopAppBar(
                     .height(SmallTopAppBarHeight)
                     .padding(vertical = 8.dp)
                     .clip(CircleShape)
-                    .background(AddressBarBackgroundColor)
-                    .border(width = 1.dp, color = Color.Black, CircleShape),
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.CenterStart
             ) {
                 var isAddressBarFocused by rememberSaveable { mutableStateOf(false) }
@@ -116,6 +115,8 @@ fun WebViewTopAppBar(
                             isAddressBarFocused = it.isFocused
                             if (it.isFocused) onUrlFocused()
                         },
+                    cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                    textStyle = TextStyle.Default.copy(color = MaterialTheme.colorScheme.onSurface),
                     value = url,
                     onValueChange = onUrlEntered,
                     singleLine = true,
@@ -177,7 +178,7 @@ private fun BoxScope.AddressBarEndPadding() {
             .align(Alignment.CenterEnd)
             .height(OutlinedTextFieldHeight)
             .width(AddressBarHorizPadding)
-            .background(AddressBarBackgroundColor)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
     )
 }
 
@@ -194,7 +195,7 @@ private fun BoxScope.AddressBarEndGradient() {
             .background(
                 brush = Brush.horizontalGradient(
                     colors = listOf(
-                        Color.Transparent, AddressBarBackgroundColor
+                        Color.Transparent, MaterialTheme.colorScheme.surfaceVariant
                     ), startX = startX, endX = endX
                 )
             )
