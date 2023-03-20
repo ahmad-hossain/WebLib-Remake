@@ -17,6 +17,7 @@ import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.common.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.common.model.Screen
 import com.github.godspeed010.weblib.destinations.NovelsScreenDestination
+import com.github.godspeed010.weblib.destinations.SettingsScreenDestination
 import com.github.godspeed010.weblib.feature_library.common.Constants
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.AddEditFolderDialog
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.FolderItem

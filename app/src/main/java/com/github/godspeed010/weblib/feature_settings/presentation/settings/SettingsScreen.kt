@@ -146,7 +146,6 @@ fun LibrarySection(viewModel: SettingsViewModel = hiltViewModel()) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocalBackupSection(viewModel: SettingsViewModel = hiltViewModel()) {
     SettingsSectionHeadline(text = stringResource(R.string.local_backup))
@@ -154,13 +153,13 @@ fun LocalBackupSection(viewModel: SettingsViewModel = hiltViewModel()) {
     ListItem(
         modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.ExportDataClicked) },
         leadingContent = { Icon(Icons.Default.Upload, contentDescription = null) },
-        headlineText = { Text(stringResource(R.string.headline_export_data)) },
-        supportingText = { Text(stringResource(R.string.supporting_export_data)) },
+        headlineContent = { Text(stringResource(R.string.headline_export_data)) },
+        supportingContent = { Text(stringResource(R.string.supporting_export_data)) },
     )
     ListItem(
         modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.ImportDataClicked) },
         leadingContent = { Icon(Icons.Default.Download, contentDescription = null) },
-        headlineText = { Text(stringResource(R.string.headline_import_data)) },
-        supportingText = { Text(stringResource(R.string.supporting_import_data)) },
+        headlineContent = { Text(stringResource(R.string.headline_import_data)) },
+        supportingContent = { Text(stringResource(R.string.supporting_import_data)) },
     )
 }
