@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
@@ -40,6 +41,7 @@ fun NovelItem(
             .clickable { onNovelClicked() }
             .padding(vertical = 8.dp),
         headlineContent = { Text(text = novel.title) },
+        supportingContent = { Text(text = novel.url, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         leadingContent = { Icon(imageVector = Icons.Outlined.BookmarkBorder, contentDescription = "Novel") },
         trailingContent = {
             Box {
