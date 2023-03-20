@@ -9,10 +9,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -155,13 +151,13 @@ fun WebViewTopAppBar(
                     expanded = isMoreOptionsDropdownEnabled,
                     onDismissRequest = onMoreOptionsDropdownDismissRequest) {
                     val uiModeDropdownItemData = if (isDarkModeEnabled)
-                        Pair(R.drawable.circle_left_half_full, R.string.light_mode) else
-                        Pair(R.drawable.circle_right_half_full, R.string.dark_mode)
+                        Pair(Icons.Filled.LightMode, R.string.light_mode) else
+                        Pair(Icons.Filled.DarkMode, R.string.dark_mode)
 
                     DropdownMenuItem(
                         leadingIcon = {
                             Icon(
-                                painter = painterResource(uiModeDropdownItemData.first),
+                                imageVector = uiModeDropdownItemData.first,
                                 contentDescription = null
                             )
                         },
