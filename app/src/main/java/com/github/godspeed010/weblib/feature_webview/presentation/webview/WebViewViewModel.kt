@@ -97,9 +97,11 @@ class WebViewViewModel @Inject constructor(
                     state = state.copy(isWvDarkModeEnabled = true)
                 }
 
-                state = state.copy(webView = event.webView)
-                state.webView?.settings?.javaScriptEnabled = true
-                state = state.copy(webViewState = WebViewState(WebContent.Url(novel.url)))
+                event.webView.settings.javaScriptEnabled = true
+                state = state.copy(
+                    webView = event.webView,
+                    webViewState = WebViewState(WebContent.Url(novel.url))
+                )
 
                 restoreLastScrollProgression()
                 setupWebViewUiMode()
