@@ -9,7 +9,7 @@ sealed class WebViewEvent {
     data class EnteredUrl(val url: TextFieldValue) : WebViewEvent()
     object SubmittedUrl : WebViewEvent()
     data class NewPageVisited(val url: String) : WebViewEvent()
-    data class WebPageScrolled(val localDensity: Density, val x: Int, val y: Int, val oldX: Int, val oldY: Int) : WebViewEvent()
+    data class WebPageScrolled(val localDensity: Density, val deltaY: Float) : WebViewEvent()
     object ReloadClicked : WebViewEvent()
     object StopLoadingClicked : WebViewEvent()
     object MoreOptionsToggled : WebViewEvent()

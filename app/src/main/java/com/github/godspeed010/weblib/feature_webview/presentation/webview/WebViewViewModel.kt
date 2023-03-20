@@ -83,8 +83,7 @@ class WebViewViewModel @Inject constructor(
             }
             is WebViewEvent.WebPageScrolled -> {
                 val toolbarHeightPx = with(event.localDensity) { SmallTopAppBarHeight.roundToPx().toFloat() }
-                val deltaY = event.oldY - event.y
-                val newOffset = state.toolbarOffsetHeightPx + deltaY
+                val newOffset = state.toolbarOffsetHeightPx + event.deltaY
                 Timber.d("Updated toolbar offset: toolbarOffsetHeightPx=$newOffset")
 
                 state = state.copy(

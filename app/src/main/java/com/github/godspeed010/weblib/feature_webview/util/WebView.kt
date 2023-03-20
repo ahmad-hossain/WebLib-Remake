@@ -22,7 +22,6 @@ package com.github.godspeed010.weblib.feature_webview.util
  * limitations under the License.
  */
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
@@ -81,7 +80,6 @@ fun WebView(
     onDispose: (WebView) -> Unit = {},
     client: AccompanistWebViewClient = remember { AccompanistWebViewClient() },
     chromeClient: AccompanistWebChromeClient = remember { AccompanistWebChromeClient() },
-    onWebPageScroll: (x: Int, y: Int, oldX: Int, oldY: Int) -> Unit = { _,_,_,_ -> }
 ) {
     var webView by remember { mutableStateOf<WebView?>(null) }
 
@@ -112,7 +110,7 @@ fun WebView(
 
     AndroidView(
         factory = { context ->
-            CustomWebView(context).apply {
+            NestedWebView(context).apply {
                 onCreated(this)
 
                 layoutParams = ViewGroup.LayoutParams(
@@ -122,8 +120,6 @@ fun WebView(
 
                 webChromeClient = chromeClient
                 webViewClient = client
-
-                onScrollListener = onWebPageScroll
             }.also { webView = it }
         },
         modifier = modifier
@@ -146,15 +142,6 @@ fun WebView(
 
         navigator.canGoBack = view.canGoBack()
         navigator.canGoForward = view.canGoForward()
-    }
-}
-
-class CustomWebView(context: Context) : WebView(context) {
-    var onScrollListener: ((x: Int, y: Int, oldX: Int, oldY: Int) -> Unit)? = null
-
-    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
-        super.onScrollChanged(l, t, oldl, oldt)
-        onScrollListener?.invoke(l, t, oldl, oldt)
     }
 }
 

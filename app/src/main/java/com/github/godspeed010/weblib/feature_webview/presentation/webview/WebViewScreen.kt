@@ -7,7 +7,11 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -81,9 +85,18 @@ fun WebViewScreen(
             )
         }
 
+        val nestedScrollConnection = remember {
+            object: NestedScrollConnection {
+                override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                    viewModel.onEvent(WebViewEvent.WebPageScrolled(localDensity, available.y))
+                    return Offset.Zero
+                }
+            }
+        }
         val isSystemInDarkTheme = isSystemInDarkTheme()
         WebView(
             modifier = Modifier
+                .nestedScroll(nestedScrollConnection)
                 .offset { IntOffset(0, state.toolbarOffsetHeightPx.roundToInt()) },
             state = state.webViewState,
             onCreated = { viewModel.onEvent(WebViewEvent.WebViewCreated(it, isSystemInDarkTheme)) },
@@ -94,9 +107,6 @@ fun WebViewScreen(
                     onNewPageVisited = { viewModel.onEvent(WebViewEvent.NewPageVisited(it)) }
                 )
             },
-            onWebPageScroll = { x, y, oldX, oldY ->
-                viewModel.onEvent(WebViewEvent.WebPageScrolled(localDensity, x, y, oldX, oldY))
-            }
         )
     }
 }
