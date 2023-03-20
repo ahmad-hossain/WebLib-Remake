@@ -108,7 +108,7 @@ fun WebViewTopAppBar(
                 BasicTextField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 4.dp)
+                        .padding(horizontal = 12.dp)
                         .onFocusChanged { if (it.isFocused) onUrlFocused() },
                     value = url,
                     onValueChange = onUrlEntered,
