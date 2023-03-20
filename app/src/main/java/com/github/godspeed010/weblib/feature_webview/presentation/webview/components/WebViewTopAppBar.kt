@@ -116,7 +116,12 @@ fun WebViewTopAppBar(
                             if (it.isFocused) onUrlFocused()
                         },
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-                    textStyle = TextStyle.Default.copy(color = MaterialTheme.colorScheme.onSurface),
+                    textStyle = TextStyle.Default.copy(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
+                        fontWeight = MaterialTheme.typography.bodyLarge.fontWeight
+                    ),
                     value = url,
                     onValueChange = onUrlEntered,
                     singleLine = true,
