@@ -158,6 +158,7 @@ class WebViewViewModel @Inject constructor(
 
     init {
         state = state.copy(
+            addressBarText = TextFieldValue(novel.url),
             webViewState = WebViewState(WebContent.Url(novel.url))
         )
     }

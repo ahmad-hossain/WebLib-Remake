@@ -10,15 +10,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -26,6 +24,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -101,44 +100,31 @@ fun WebViewTopAppBar(
             Box(
                 modifier = Modifier
                     .height(SmallTopAppBarHeight)
+                    .fillMaxWidth()
                     .padding(vertical = 8.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.CenterStart
             ) {
                 var isAddressBarFocused by rememberSaveable { mutableStateOf(false) }
-                BasicTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = AddressBarHorizPadding)
-                        .onFocusChanged {
-                            isAddressBarFocused = it.isFocused
-                            if (it.isFocused) onUrlFocused()
-                        },
-                    cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-                    textStyle = TextStyle.Default.copy(
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
-                        fontWeight = MaterialTheme.typography.bodyLarge.fontWeight
-                    ),
-                    value = url,
-                    onValueChange = onUrlEntered,
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            keyboardController?.hide()
-                            focusManager.clearFocus()
-                            onUrlSubmitted()
-                        }
-                    ),
-                )
-
-                when (isAddressBarFocused) {
-                    true -> AddressBarEndPadding()
-                    false -> AddressBarEndGradient()
+                val shouldShowAddressBarHint by remember(isAddressBarFocused) {
+                    derivedStateOf { url.text.isEmpty() && !isAddressBarFocused }
                 }
+                if (shouldShowAddressBarHint) {
+                    AddressBarHint()
+                }
+                AddressBarTextField(
+                    isAddressBarFocused = isAddressBarFocused,
+                    onFocusChanged = { focused ->
+                        isAddressBarFocused = focused
+                        if (focused) onUrlFocused()
+                    },
+                    url = url,
+                    onUrlEntered = onUrlEntered,
+                    keyboardController = keyboardController,
+                    focusManager = focusManager,
+                    onUrlSubmitted = onUrlSubmitted
+                )
             }
         },
         actions = {
@@ -174,6 +160,60 @@ fun WebViewTopAppBar(
             }
         }
     )
+}
+
+@Composable
+fun AddressBarHint() {
+    Text(
+        modifier = Modifier.padding(start = AddressBarHorizPadding),
+        text = stringResource(R.string.hint_address_bar),
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
+        fontWeight = MaterialTheme.typography.bodyLarge.fontWeight
+    )
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun BoxScope.AddressBarTextField(
+    isAddressBarFocused: Boolean,
+    onFocusChanged: (Boolean) -> Unit,
+    url: TextFieldValue,
+    onUrlEntered: (TextFieldValue) -> Unit,
+    keyboardController: SoftwareKeyboardController?,
+    focusManager: FocusManager,
+    onUrlSubmitted: () -> Unit
+) {
+    BasicTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = AddressBarHorizPadding)
+            .onFocusChanged { onFocusChanged(it.isFocused) },
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+        textStyle = TextStyle.Default.copy(
+            color = MaterialTheme.colorScheme.onSurface,
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+            lineHeight = MaterialTheme.typography.bodyLarge.lineHeight,
+            fontWeight = MaterialTheme.typography.bodyLarge.fontWeight
+        ),
+        value = url,
+        onValueChange = onUrlEntered,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+                onUrlSubmitted()
+            }
+        ),
+    )
+
+    when (isAddressBarFocused) {
+        true -> AddressBarEndPadding()
+        false -> AddressBarEndGradient()
+    }
 }
 
 @Composable
