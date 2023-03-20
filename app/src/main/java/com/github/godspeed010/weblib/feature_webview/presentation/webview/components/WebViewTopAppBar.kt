@@ -3,10 +3,7 @@ package com.github.godspeed010.weblib.feature_webview.presentation.webview.compo
 import android.webkit.WebHistoryItem
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -18,12 +15,18 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -36,6 +39,9 @@ import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
 
 val SmallTopAppBarHeight = 64.dp
+private val OutlinedTextFieldHeight = 20.dp
+private val AddressBarBackgroundColor = Color.White
+private val AddressBarHorizPadding = 12.dp
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -101,15 +107,19 @@ fun WebViewTopAppBar(
                     .height(SmallTopAppBarHeight)
                     .padding(vertical = 8.dp)
                     .clip(CircleShape)
-                    .background(Color.White)
+                    .background(AddressBarBackgroundColor)
                     .border(width = 1.dp, color = Color.Black, CircleShape),
                 contentAlignment = Alignment.CenterStart
             ) {
+                var isAddressBarFocused by rememberSaveable { mutableStateOf(false) }
                 BasicTextField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp)
-                        .onFocusChanged { if (it.isFocused) onUrlFocused() },
+                        .padding(start = AddressBarHorizPadding)
+                        .onFocusChanged {
+                            isAddressBarFocused = it.isFocused
+                            if (it.isFocused) onUrlFocused()
+                        },
                     value = url,
                     onValueChange = onUrlEntered,
                     singleLine = true,
@@ -122,6 +132,11 @@ fun WebViewTopAppBar(
                         }
                     ),
                 )
+
+                when (isAddressBarFocused) {
+                    true -> AddressBarEndPadding()
+                    false -> AddressBarEndGradient()
+                }
             }
         },
         actions = {
@@ -156,6 +171,37 @@ fun WebViewTopAppBar(
                 }
             }
         }
+    )
+}
+
+@Composable
+private fun BoxScope.AddressBarEndPadding() {
+    Spacer(
+        Modifier.Companion
+            .align(Alignment.CenterEnd)
+            .height(OutlinedTextFieldHeight)
+            .width(AddressBarHorizPadding)
+            .background(AddressBarBackgroundColor)
+    )
+}
+
+@Composable
+private fun BoxScope.AddressBarEndGradient() {
+    val (startX, endX) = with(LocalDensity.current) {
+        Pair(0.dp.toPx(), 8.dp.toPx())
+    }
+    Spacer(
+        Modifier.Companion
+            .align(Alignment.CenterEnd)
+            .height(OutlinedTextFieldHeight)
+            .width(AddressBarHorizPadding + 8.dp)
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = listOf(
+                        Color.Transparent, AddressBarBackgroundColor
+                    ), startX = startX, endX = endX
+                )
+            )
     )
 }
 
