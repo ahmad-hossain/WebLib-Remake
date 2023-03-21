@@ -58,7 +58,8 @@ class NovelsViewModel @Inject constructor(
                             folderId = folder.id,
                             title = state.dialogNovelTitle.text,
                             url = validatedUrlUseCase(state.dialogNovelUrl.text),
-                            lastModified = TimeUtil.currentTimeSeconds()
+                            lastModified = TimeUtil.currentTimeSeconds(),
+                            createdAt = if (dialogNovel.isDefaultInstance()) TimeUtil.currentTimeSeconds() else dialogNovel.createdAt
                         )
                     )
                 }

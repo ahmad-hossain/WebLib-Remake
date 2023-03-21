@@ -33,6 +33,8 @@ data class Novel(
     override val lastModified: Long = TimeUtil.currentTimeSeconds(),
 ) : Item(createdAt, lastModified) {
 
+    fun isDefaultInstance(): Boolean = (id == createWithDefaults().id)
+
     companion object {
         fun createWithDefaults(
             title: String = "",

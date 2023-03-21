@@ -42,7 +42,8 @@ class FoldersViewModel @Inject constructor(
                     libraryRepo.insertOrUpdateFolder(
                         dialogFolder.copy(
                             title = state.dialogFolderTitle.text,
-                            lastModified = TimeUtil.currentTimeSeconds()
+                            lastModified = TimeUtil.currentTimeSeconds(),
+                            createdAt = if (dialogFolder.isDefaultInstance()) TimeUtil.currentTimeSeconds() else dialogFolder.createdAt
                         )
                     )
                 }
