@@ -131,7 +131,8 @@ class WebViewViewModel @Inject constructor(
                 state = state.copy(webView = null)
             }
             is WebViewEvent.UrlFocused -> {
-                state = state.copy(shouldSelectEntireUrl = true)
+                val shouldSelectEntireUrl = state.addressBarText.text.isNotEmpty()
+                state = state.copy(shouldSelectEntireUrl = shouldSelectEntireUrl)
             }
             is WebViewEvent.BackButtonLongPressed -> {
                 val history = state.webView?.copyBackForwardList() ?: return
