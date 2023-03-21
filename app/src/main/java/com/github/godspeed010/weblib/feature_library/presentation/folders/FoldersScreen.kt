@@ -68,7 +68,7 @@ fun FoldersScreen(
             AddEditFolderDialog(
                 icon = state.dialogIcon,
                 title = stringResource(id = state.dialogTitleRes),
-                folderName = state.dialogFolder.title,
+                folderName = state.dialogFolderTitle,
                 onTextChange = { folderName ->
                     viewModel.onEvent(FoldersEvent.EnteredFolderName(folderName))
                 },

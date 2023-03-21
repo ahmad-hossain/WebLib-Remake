@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.window.DialogProperties
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.common.components.FixedWidthOutlinedTextField
@@ -27,8 +28,8 @@ fun AddEditFolderDialog(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     title: String,
-    folderName: String,
-    onTextChange: (String) -> Unit,
+    folderName: TextFieldValue,
+    onTextChange: (TextFieldValue) -> Unit,
     onDismissDialog: () -> Unit,
     onConfirmDialog: () -> Unit
 ) {

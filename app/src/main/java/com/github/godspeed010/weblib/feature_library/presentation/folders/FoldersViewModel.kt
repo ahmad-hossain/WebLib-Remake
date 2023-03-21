@@ -6,12 +6,14 @@ import androidx.compose.material.icons.outlined.DriveFileRenameOutline
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.godspeed010.weblib.R
-import com.github.godspeed010.weblib.feature_library.domain.use_case.DeleteFolderUseCase
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
+import com.github.godspeed010.weblib.feature_library.domain.use_case.DeleteFolderUseCase
 import com.github.godspeed010.weblib.feature_library.domain.util.TimeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +30,7 @@ class FoldersViewModel @Inject constructor(
 ) : ViewModel() {
     var state by mutableStateOf(FoldersState())
         private set
+    private var dialogFolder: Folder = Folder.createWithDefaults()
 
     fun onEvent(event: FoldersEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -37,12 +40,14 @@ class FoldersViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     //Add Folder. If id is 0, will generate new id. Else, overrides Folder
                     libraryRepo.insertOrUpdateFolder(
-                        state.dialogFolder.copy(lastModified = TimeUtil.currentTimeSeconds())
+                        dialogFolder.copy(
+                            title = state.dialogFolderTitle.text,
+                            lastModified = TimeUtil.currentTimeSeconds()
+                        )
                     )
                     //Clear TextField state & reset dialogFolderId
-                    state = state.copy(
-                        dialogFolder = Folder.createWithDefaults(),
-                    )
+                    dialogFolder = Folder.createWithDefaults()
+                    state = state.copy(dialogFolderTitle = TextFieldValue())
                 }
                 //Make AlertDialog for adding a Folder invisible
                 state = state.copy(
@@ -69,28 +74,26 @@ class FoldersViewModel @Inject constructor(
                 //Set TextField state & close Dropdown
                 state = state.copy(
                     expandedDropdownItemListIndex = null,
-                    dialogFolder = Folder(
-                        id = event.folder.id,
-                        title = event.folder.title,
-                        createdAt = event.folder.createdAt,
+                    dialogFolderTitle = TextFieldValue(
+                        event.folder.title,
+                        selection = TextRange(event.folder.title.length)
                     ),
                     isAddEditFolderDialogVisible = true,
                     dialogTitleRes = R.string.dialog_edit_folder,
                     dialogIcon = Icons.Outlined.DriveFileRenameOutline,
                 )
+                dialogFolder = event.folder.copy()
             }
             is FoldersEvent.CancelFolderDialog -> {
                 //Make AlertDialog for adding a Folder disappear & clear TextField State
                 state = state.copy(
                     isAddEditFolderDialogVisible = false,
-                    dialogFolder = Folder.createWithDefaults(),
+                    dialogFolderTitle = TextFieldValue(),
                 )
+                dialogFolder = Folder.createWithDefaults()
             }
             is FoldersEvent.EnteredFolderName -> {
-                //update the folderName State
-                state = state.copy(
-                    dialogFolder = state.dialogFolder.copy(title = event.folderName)
-                )
+                state = state.copy(dialogFolderTitle = event.folderName)
             }
             is FoldersEvent.MoreOptionsClicked -> {
                 //Expand Dropdown
