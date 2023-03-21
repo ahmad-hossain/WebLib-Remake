@@ -62,6 +62,7 @@ class WebViewViewModel @Inject constructor(
                 state = state.copy(webViewState = WebViewState(WebContent.Url(validatedUrl)))
             }
             is WebViewEvent.ToggleDarkMode -> {
+                state = state.copy(isMoreOptionsDropdownEnabled = false)
                 val isForceDarkSupported = WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)
                 if (!isForceDarkSupported) return
 
