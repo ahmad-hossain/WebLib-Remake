@@ -188,7 +188,10 @@ private fun BoxScope.AddressBarTextField(
     BasicTextField(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = AddressBarHorizPadding)
+            .padding(
+                start = AddressBarHorizPadding,
+                end = if (isAddressBarFocused) AddressBarHorizPadding else 0.dp
+            )
             .onFocusChanged { onFocusChanged(it.isFocused) },
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         textStyle = TextStyle.Default.copy(
@@ -210,21 +213,9 @@ private fun BoxScope.AddressBarTextField(
         ),
     )
 
-    when (isAddressBarFocused) {
-        true -> AddressBarEndPadding()
-        false -> AddressBarEndGradient()
+    if (!isAddressBarFocused) {
+        AddressBarEndGradient()
     }
-}
-
-@Composable
-private fun BoxScope.AddressBarEndPadding() {
-    Spacer(
-        Modifier.Companion
-            .align(Alignment.CenterEnd)
-            .height(OutlinedTextFieldHeight)
-            .width(AddressBarHorizPadding)
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-    )
 }
 
 @Composable
