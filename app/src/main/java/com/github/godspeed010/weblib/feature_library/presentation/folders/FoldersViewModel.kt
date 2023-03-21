@@ -33,7 +33,7 @@ class FoldersViewModel @Inject constructor(
         Timber.d("%s : %s", event::class.simpleName, event.toString())
 
         when (event) {
-            is FoldersEvent.AddOrUpdateFolder -> {
+            is FoldersEvent.FolderDialogConfirmed -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     //Add Folder. If id is 0, will generate new id. Else, overrides Folder
                     libraryRepo.insertOrUpdateFolder(

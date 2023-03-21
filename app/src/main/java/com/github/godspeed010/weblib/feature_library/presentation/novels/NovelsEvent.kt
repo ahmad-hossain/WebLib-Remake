@@ -4,7 +4,7 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 
 sealed class NovelsEvent {
-    object AddOrUpdateNovel : NovelsEvent()
+    object NovelDialogConfirmed : NovelsEvent()
     data class MoveNovel(val novel: Novel) : NovelsEvent()
     data class DeleteNovel(val novel: Novel) : NovelsEvent()
     object FabClicked : NovelsEvent()

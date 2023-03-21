@@ -105,7 +105,7 @@ fun NovelsScreen(
                 onNovelTitleChanged = { viewModel.onEvent(NovelsEvent.EnteredNovelTitle(it)) },
                 onNovelUrlChanged = { viewModel.onEvent(NovelsEvent.EnteredNovelUrl(it)) },
                 onDismissDialog = { viewModel.onEvent(NovelsEvent.CancelNovelDialog) },
-                onConfirmDialog = { viewModel.onEvent(NovelsEvent.AddOrUpdateNovel) }
+                onConfirmDialog = { viewModel.onEvent(NovelsEvent.NovelDialogConfirmed) }
             )
         }
         LazyColumn(

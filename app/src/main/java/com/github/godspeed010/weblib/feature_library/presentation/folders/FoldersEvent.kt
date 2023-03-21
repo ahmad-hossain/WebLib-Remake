@@ -3,7 +3,7 @@ package com.github.godspeed010.weblib.feature_library.presentation.folders
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 
 sealed class FoldersEvent {
-    object AddOrUpdateFolder : FoldersEvent()
+    object FolderDialogConfirmed : FoldersEvent()
     data class DeleteFolder(val folder: Folder) : FoldersEvent()
     object FabClicked : FoldersEvent()
     data class EditFolderClicked(val folder: Folder) : FoldersEvent()

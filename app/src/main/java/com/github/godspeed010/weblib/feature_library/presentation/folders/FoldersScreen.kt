@@ -76,7 +76,7 @@ fun FoldersScreen(
                     viewModel.onEvent(FoldersEvent.CancelFolderDialog)
                 },
                 onConfirmDialog = {
-                    viewModel.onEvent(FoldersEvent.AddOrUpdateFolder)
+                    viewModel.onEvent(FoldersEvent.FolderDialogConfirmed)
                 }
             )
         }

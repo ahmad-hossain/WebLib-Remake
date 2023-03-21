@@ -48,7 +48,7 @@ class NovelsViewModel @Inject constructor(
         Timber.d("%s : %s", event::class.simpleName, event.toString())
 
         when (event) {
-            is NovelsEvent.AddOrUpdateNovel -> {
+            is NovelsEvent.NovelDialogConfirmed -> {
                 //Add Novel
                 viewModelScope.launch(Dispatchers.IO) {
                     libraryRepo.insertOrUpdateNovel(
