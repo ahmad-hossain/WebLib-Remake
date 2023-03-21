@@ -52,7 +52,6 @@ class NovelsViewModel @Inject constructor(
 
         when (event) {
             is NovelsEvent.NovelDialogConfirmed -> {
-                //Add Novel
                 viewModelScope.launch(Dispatchers.IO) {
                     libraryRepo.insertOrUpdateNovel(
                         dialogNovel.copy(
@@ -62,35 +61,21 @@ class NovelsViewModel @Inject constructor(
                             lastModified = TimeUtil.currentTimeSeconds()
                         )
                     )
-
-                    //Clear TextField states
-                    state = state.copy(
-                        dialogNovelTitle = TextFieldValue(),
-                        dialogNovelUrl = TextFieldValue(),
-                    )
-                    dialogNovel = Novel.createWithDefaults()
                 }
-                //Make AddEditNovelDialog Gone
-                state = state.copy(
-                    isAddEditNovelDialogVisible = false
-                )
+                state = state.copy(isAddEditNovelDialogVisible = false)
             }
             is NovelsEvent.FabClicked -> {
-                //make AddEditNovelDialog visible
                 state = state.copy(
                     dialogTitleRes = R.string.dialog_add_novel,
                     dialogIcon = Icons.Outlined.BookmarkAdd,
-                    isAddEditNovelDialogVisible = true
-                )
-            }
-            is NovelsEvent.CancelNovelDialog -> {
-                //Make Dialog Gone
-                state = state.copy(
-                    isAddEditNovelDialogVisible = false,
                     dialogNovelTitle = TextFieldValue(),
                     dialogNovelUrl = TextFieldValue(),
+                    isAddEditNovelDialogVisible = true
                 )
                 dialogNovel = Novel.createWithDefaults()
+            }
+            is NovelsEvent.CancelNovelDialog -> {
+                state = state.copy(isAddEditNovelDialogVisible = false)
             }
             is NovelsEvent.DeleteNovel -> {
                 deleteNovelUseCase(
@@ -101,7 +86,6 @@ class NovelsViewModel @Inject constructor(
                 )
             }
             is NovelsEvent.EditNovelClicked -> {
-                //Set TextField state & close Dropdown
                 state = state.copy(
                     dialogTitleRes = R.string.dialog_edit_novel,
                     dialogIcon = Icons.Outlined.DriveFileRenameOutline,
@@ -119,28 +103,16 @@ class NovelsViewModel @Inject constructor(
                 dialogNovel = event.novel.copy()
             }
             is NovelsEvent.EnteredNovelTitle -> {
-                //update the novelName State
-                state = state.copy(
-                    dialogNovelTitle = event.novelTitle,
-                )
+                state = state.copy(dialogNovelTitle = event.novelTitle)
             }
             is NovelsEvent.EnteredNovelUrl -> {
-                //update the novelName State
-                state = state.copy(
-                    dialogNovelUrl = event.novelUrl,
-                )
+                state = state.copy(dialogNovelUrl = event.novelUrl)
             }
             is NovelsEvent.MoreOptionsClicked -> {
-                //Expand Dropdown
-                state = state.copy(
-                    expandedDropdownNovelListIndex = event.index
-                )
+                state = state.copy(expandedDropdownNovelListIndex = event.index)
             }
             is NovelsEvent.MoreOptionsDismissed -> {
-                //Collapse Dropdown
-                state = state.copy(
-                    expandedDropdownNovelListIndex = null
-                )
+                state = state.copy(expandedDropdownNovelListIndex = null)
             }
             is NovelsEvent.MoveNovel -> {
                 novelToMove = event.novel
