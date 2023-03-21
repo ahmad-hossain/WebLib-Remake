@@ -66,3 +66,5 @@ local.properties
 
 # DS Store
 *.DS_Store
+
+gradle.properties
