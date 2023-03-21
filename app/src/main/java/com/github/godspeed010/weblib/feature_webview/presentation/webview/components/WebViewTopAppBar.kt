@@ -221,7 +221,7 @@ private fun BoxScope.AddressBarEndGradient() {
         Pair(0.dp.toPx(), 8.dp.toPx())
     }
     Spacer(
-        Modifier.Companion
+        Modifier
             .align(Alignment.CenterEnd)
             .height(OutlinedTextFieldHeight)
             .width(AddressBarHorizPadding + 8.dp)
