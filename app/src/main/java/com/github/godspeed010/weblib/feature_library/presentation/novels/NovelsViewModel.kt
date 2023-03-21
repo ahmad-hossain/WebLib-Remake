@@ -7,6 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -38,6 +40,7 @@ class NovelsViewModel @Inject constructor(
 
     var state by mutableStateOf(NovelsState())
         private set
+    private var dialogNovel: Novel = Novel.createWithDefaults()
 
     private var novelToMove: Novel? = null
 
@@ -52,17 +55,20 @@ class NovelsViewModel @Inject constructor(
                 //Add Novel
                 viewModelScope.launch(Dispatchers.IO) {
                     libraryRepo.insertOrUpdateNovel(
-                        state.dialogNovel.copy(
+                        dialogNovel.copy(
                             folderId = folder.id,
-                            url = validatedUrlUseCase(state.dialogNovel.url),
+                            title = state.dialogNovelTitle.text,
+                            url = validatedUrlUseCase(state.dialogNovelUrl.text),
                             lastModified = TimeUtil.currentTimeSeconds()
                         )
                     )
 
                     //Clear TextField states
                     state = state.copy(
-                        dialogNovel = Novel.createWithDefaults()
+                        dialogNovelTitle = TextFieldValue(),
+                        dialogNovelUrl = TextFieldValue(),
                     )
+                    dialogNovel = Novel.createWithDefaults()
                 }
                 //Make AddEditNovelDialog Gone
                 state = state.copy(
@@ -81,8 +87,10 @@ class NovelsViewModel @Inject constructor(
                 //Make Dialog Gone
                 state = state.copy(
                     isAddEditNovelDialogVisible = false,
-                    dialogNovel = Novel.createWithDefaults()
+                    dialogNovelTitle = TextFieldValue(),
+                    dialogNovelUrl = TextFieldValue(),
                 )
+                dialogNovel = Novel.createWithDefaults()
             }
             is NovelsEvent.DeleteNovel -> {
                 deleteNovelUseCase(
@@ -98,27 +106,28 @@ class NovelsViewModel @Inject constructor(
                     dialogTitleRes = R.string.dialog_edit_novel,
                     dialogIcon = Icons.Outlined.DriveFileRenameOutline,
                     expandedDropdownNovelListIndex = null,
-                    dialogNovel = Novel(
-                        id = event.novel.id,
-                        title = event.novel.title,
-                        url = event.novel.url,
-                        scrollProgression = event.novel.scrollProgression,
-                        folderId = folder.id,
-                        createdAt = event.novel.createdAt,
+                    dialogNovelTitle = TextFieldValue(
+                        text = event.novel.title,
+                        selection = TextRange(event.novel.title.length)
+                    ),
+                    dialogNovelUrl = TextFieldValue(
+                        text = event.novel.url,
+                        selection = TextRange(event.novel.url.length)
                     ),
                     isAddEditNovelDialogVisible = true
                 )
+                dialogNovel = event.novel.copy()
             }
             is NovelsEvent.EnteredNovelTitle -> {
                 //update the novelName State
                 state = state.copy(
-                    dialogNovel = state.dialogNovel.copy(title = event.novelTitle)
+                    dialogNovelTitle = event.novelTitle,
                 )
             }
             is NovelsEvent.EnteredNovelUrl -> {
                 //update the novelName State
                 state = state.copy(
-                    dialogNovel = state.dialogNovel.copy(url = event.novelUrl)
+                    dialogNovelUrl = event.novelUrl,
                 )
             }
             is NovelsEvent.MoreOptionsClicked -> {

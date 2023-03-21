@@ -100,8 +100,8 @@ fun NovelsScreen(
             AddEditNovelDialog(
                 icon = state.dialogIcon,
                 title = stringResource(id = state.dialogTitleRes),
-                novelTitle = state.dialogNovel.title,
-                novelUrl = state.dialogNovel.url,
+                novelTitle = state.dialogNovelTitle,
+                novelUrl = state.dialogNovelUrl,
                 onNovelTitleChanged = { viewModel.onEvent(NovelsEvent.EnteredNovelTitle(it)) },
                 onNovelUrlChanged = { viewModel.onEvent(NovelsEvent.EnteredNovelUrl(it)) },
                 onDismissDialog = { viewModel.onEvent(NovelsEvent.CancelNovelDialog) },
