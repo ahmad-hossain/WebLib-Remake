@@ -45,14 +45,8 @@ class FoldersViewModel @Inject constructor(
                             lastModified = TimeUtil.currentTimeSeconds()
                         )
                     )
-                    //Clear TextField state & reset dialogFolderId
-                    dialogFolder = Folder.createWithDefaults()
-                    state = state.copy(dialogFolderTitle = TextFieldValue())
                 }
-                //Make AlertDialog for adding a Folder invisible
-                state = state.copy(
-                    isAddEditFolderDialogVisible = false
-                )
+                state = state.copy(isAddEditFolderDialogVisible = false)
             }
             is FoldersEvent.DeleteFolder -> {
                 deleteFolderUseCase(
@@ -63,15 +57,15 @@ class FoldersViewModel @Inject constructor(
                 )
             }
             is FoldersEvent.FabClicked -> {
-                //Make AlertDialog for adding a Folder visible
                 state = state.copy(
+                    dialogFolderTitle = TextFieldValue(),
                     isAddEditFolderDialogVisible = true,
                     dialogTitleRes = R.string.dialog_add_folder,
                     dialogIcon = Icons.Outlined.CreateNewFolder,
                 )
+                dialogFolder = Folder.createWithDefaults()
             }
             is FoldersEvent.EditFolderClicked -> {
-                //Set TextField state & close Dropdown
                 state = state.copy(
                     expandedDropdownItemListIndex = null,
                     dialogFolderTitle = TextFieldValue(
@@ -85,27 +79,16 @@ class FoldersViewModel @Inject constructor(
                 dialogFolder = event.folder.copy()
             }
             is FoldersEvent.CancelFolderDialog -> {
-                //Make AlertDialog for adding a Folder disappear & clear TextField State
-                state = state.copy(
-                    isAddEditFolderDialogVisible = false,
-                    dialogFolderTitle = TextFieldValue(),
-                )
-                dialogFolder = Folder.createWithDefaults()
+                state = state.copy(isAddEditFolderDialogVisible = false)
             }
             is FoldersEvent.EnteredFolderName -> {
                 state = state.copy(dialogFolderTitle = event.folderName)
             }
             is FoldersEvent.MoreOptionsClicked -> {
-                //Expand Dropdown
-                state = state.copy(
-                    expandedDropdownItemListIndex = event.listIndex
-                )
+                state = state.copy(expandedDropdownItemListIndex = event.listIndex)
             }
             is FoldersEvent.MoreOptionsDismissed -> {
-                //Collapse Dropdown
-                state = state.copy(
-                    expandedDropdownItemListIndex = null
-                )
+                state = state.copy(expandedDropdownItemListIndex = null)
             }
         }
     }
