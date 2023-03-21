@@ -103,7 +103,8 @@ fun WebViewTopAppBar(
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(start = AddressBarHorizPadding),
                 contentAlignment = Alignment.CenterStart
             ) {
                 var isAddressBarFocused by rememberSaveable { mutableStateOf(false) }
@@ -165,7 +166,6 @@ fun WebViewTopAppBar(
 @Composable
 fun AddressBarHint() {
     Text(
-        modifier = Modifier.padding(start = AddressBarHorizPadding),
         text = stringResource(R.string.hint_address_bar),
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
@@ -188,10 +188,7 @@ private fun BoxScope.AddressBarTextField(
     BasicTextField(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                start = AddressBarHorizPadding,
-                end = if (isAddressBarFocused) AddressBarHorizPadding else 0.dp
-            )
+            .padding(end = if (isAddressBarFocused) AddressBarHorizPadding else 0.dp)
             .onFocusChanged { onFocusChanged(it.isFocused) },
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         textStyle = TextStyle.Default.copy(
