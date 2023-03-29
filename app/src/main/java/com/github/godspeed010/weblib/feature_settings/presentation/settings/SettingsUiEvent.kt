@@ -5,7 +5,6 @@ import androidx.activity.result.IntentSenderRequest
 
 sealed class SettingsUiEvent {
     data class Toast(val s: String) : SettingsUiEvent()
-    data class LaunchOneTapIntent(val intent: IntentSenderRequest) : SettingsUiEvent()
     data class LaunchCreateDocumentIntent(val intent: Intent) : SettingsUiEvent()
     data class LaunchOpenDocumentIntent(val intent: Intent) : SettingsUiEvent()
 }

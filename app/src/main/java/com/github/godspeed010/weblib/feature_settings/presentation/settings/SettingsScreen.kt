@@ -5,27 +5,24 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.common.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.common.model.Screen
 import com.github.godspeed010.weblib.destinations.FoldersScreenDestination
-import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.GoogleSignInButton
 import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.SettingSwitchItem
 import com.github.godspeed010.weblib.feature_settings.presentation.settings.components.SettingsSectionHeadline
 import com.ramcosta.composedestinations.annotation.Destination
@@ -43,11 +40,6 @@ fun SettingsScreen(
 ) {
     val context = LocalContext.current
 
-    val oneTapResultLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            viewModel.onEvent(SettingsEvent.OneTapIntentResult(result))
-        }
-
     val createDocumentActivityResultLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             viewModel.onEvent(SettingsEvent.OnCreateDocumentActivityResult(it))
@@ -62,7 +54,6 @@ fun SettingsScreen(
         viewModel.uiEvent.collect {
             when (it) {
                 is SettingsUiEvent.Toast -> Toast.makeText(context, it.s, Toast.LENGTH_SHORT).show()
-                is SettingsUiEvent.LaunchOneTapIntent -> oneTapResultLauncher.launch(it.intent)
                 is SettingsUiEvent.LaunchCreateDocumentIntent -> createDocumentActivityResultLauncher.launch(it.intent)
                 is SettingsUiEvent.LaunchOpenDocumentIntent -> openDocumentActivityResultLauncher.launch(it.intent)
             }
@@ -81,51 +72,12 @@ fun SettingsScreen(
         },
         content = { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
-                AuthSection()
-                Divider(modifier = Modifier.padding(vertical = 16.dp))
                 LibrarySection()
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
                 LocalBackupSection()
             }
         }
     )
-}
-
-@Composable
-fun ColumnScope.AuthSection(viewModel: SettingsViewModel = hiltViewModel()) {
-    val state = viewModel.state
-
-    SettingsSectionHeadline(
-        modifier = Modifier.padding(bottom = 16.dp),
-        text = stringResource(R.string.cloud_backup)
-    )
-
-    if (state.isAuthed) {
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .align(Alignment.CenterHorizontally),
-            text = state.authEmail,
-            fontWeight = FontWeight.Bold
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        OutlinedButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(8.dp),
-            onClick = { viewModel.onEvent(SettingsEvent.SignOutClicked) }
-        ) {
-            Text(stringResource(R.string.sign_out))
-        }
-    } else {
-        GoogleSignInButton(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            onClick = { viewModel.onEvent(SettingsEvent.SignInClicked) }
-        )
-    }
 }
 
 @Composable
@@ -148,7 +100,7 @@ fun LibrarySection(viewModel: SettingsViewModel = hiltViewModel()) {
 
 @Composable
 fun LocalBackupSection(viewModel: SettingsViewModel = hiltViewModel()) {
-    SettingsSectionHeadline(text = stringResource(R.string.local_backup))
+    SettingsSectionHeadline(text = stringResource(R.string.backup))
 
     ListItem(
         modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.ExportDataClicked) },
