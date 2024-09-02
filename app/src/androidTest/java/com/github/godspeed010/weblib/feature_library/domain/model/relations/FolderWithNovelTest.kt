@@ -46,8 +46,6 @@ class FolderWithNovelTest {
     @Test
     fun getNovelsFromFolder() = runTest {
         val folder = Folder(1, "testFolder")
-        folderDao.insert(folder)
-
         val folderNovels = listOf(
             Novel.createWithDefaults(id = 1, title = "one", url = "url", folderId = 1),
             Novel.createWithDefaults(id = 2, title = "two", url = "url2", folderId = 1),
@@ -55,10 +53,11 @@ class FolderWithNovelTest {
             Novel.createWithDefaults(id = 4, title = "four", url = "url4", folderId = 1),
             Novel.createWithDefaults(id = 5, title = "five", url = "url5", folderId = 1),
         )
+
+        folderDao.insert(folder)
         folderNovels.forEach { novelDao.insert(it) }
 
         val novelsFromFolder = folderDao.getFolderWithNovels(folder.id).first().novels
-
         assertThat(novelsFromFolder).containsExactlyElementsIn(folderNovels)
     }
 
