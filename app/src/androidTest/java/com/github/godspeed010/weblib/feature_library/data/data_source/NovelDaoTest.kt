@@ -10,7 +10,7 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -46,7 +46,7 @@ class NovelDaoTest {
     }
 
     @Test
-    fun folderDeletionDeletesChildNovels() = runBlockingTest {
+    fun folderDeletionDeletesChildNovels() = runTest {
         val parentFolder = Folder(1, "title")
         val remainingFolder = Folder(2, "Title")
         folderDao.insert(parentFolder)
@@ -69,7 +69,7 @@ class NovelDaoTest {
     }
 
     @Test
-    fun addNovel() = runBlockingTest {
+    fun addNovel() = runTest {
         //folder with same folderId must be created first due to parent-child relationship
         val parentFolder = Folder(1, "title")
         folderDao.insert(parentFolder)
@@ -82,7 +82,7 @@ class NovelDaoTest {
     }
 
     @Test
-    fun deleteNovel() = runBlockingTest {
+    fun deleteNovel() = runTest {
         val parentFolder = Folder(1, "title")
         folderDao.insert(parentFolder)
 
@@ -98,7 +98,7 @@ class NovelDaoTest {
     }
 
     @Test
-    fun updateNovel() = runBlockingTest {
+    fun updateNovel() = runTest {
         val parentFolder = Folder(1, "title")
         folderDao.insert(parentFolder)
 
@@ -112,7 +112,7 @@ class NovelDaoTest {
     }
 
     @Test
-    fun findNovelByNameOrUrl() = runBlockingTest {
+    fun findNovelByNameOrUrl() = runTest {
         val folders = listOf(
             Folder(9, "title"),
             Folder(7, "folder_title"),
@@ -136,7 +136,7 @@ class NovelDaoTest {
     }
 
     @Test
-    fun getNovels() = runBlockingTest {
+    fun getNovels() = runTest {
         val parentFolder = Folder(id = 5, title = "title here")
         folderDao.insert(parentFolder)
 

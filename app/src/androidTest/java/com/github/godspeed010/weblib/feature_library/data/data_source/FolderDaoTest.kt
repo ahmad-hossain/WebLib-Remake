@@ -11,7 +11,7 @@ import com.github.godspeed010.weblib.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -47,7 +47,7 @@ class FolderDaoTest {
     }
 
     @Test
-    fun insertFolder() = runBlockingTest {
+    fun insertFolder() = runTest {
         val folder = Folder(1, title = "title")
         folderDao.insert(folder)
 
@@ -57,7 +57,7 @@ class FolderDaoTest {
     }
 
     @Test
-    fun deleteFolder() = runBlockingTest {
+    fun deleteFolder() = runTest {
         val folder = Folder(1, "title")
         val remainingFolder = Folder(2, "a_title")
         folderDao.insert(folder)
@@ -70,7 +70,7 @@ class FolderDaoTest {
     }
 
     @Test
-    fun updateFolder() = runBlockingTest {
+    fun updateFolder() = runTest {
         val folder = Folder(id = 5, "name")
         folderDao.insert(folder)
 
@@ -83,7 +83,7 @@ class FolderDaoTest {
     }
 
     @Test
-    fun folderUpdateRetainsNovels() = runBlockingTest {
+    fun folderUpdateRetainsNovels() = runTest {
         val folder = Folder(5, "name")
         folderDao.insert(folder)
 
@@ -103,7 +103,7 @@ class FolderDaoTest {
     }
 
     @Test
-    fun getFolderNames() = runBlockingTest {
+    fun getFolderNames() = runTest {
         val folders = listOf(
             Folder(1, "one"),
             Folder(2, "two"),

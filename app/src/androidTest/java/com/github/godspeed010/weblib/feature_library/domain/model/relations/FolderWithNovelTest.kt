@@ -13,7 +13,7 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -49,7 +49,7 @@ class FolderWithNovelTest {
     }
 
     @Test
-    fun getNovelsFromFolder() = runBlockingTest {
+    fun getNovelsFromFolder() = runTest {
         val folder = Folder(1, "testFolder")
         folderDao.insert(folder)
 
