@@ -53,11 +53,11 @@ class NovelDaoTest {
         folderDao.insert(remainingFolder)
 
         val novels = listOf(
-            Novel(1, "name", "url", 1),
-            Novel(2, "title", "url", 1),
-            Novel(3, "name", "url_Here", 1),
+            Novel.createWithDefaults(id = 1, title = "name", url = "url", folderId = 1),
+            Novel.createWithDefaults(id = 2, title = "title",url =  "url", folderId = 1),
+            Novel.createWithDefaults(id = 3, title = "name", url = "url_Here", folderId = 1),
         )
-        val remainingNovel = Novel(5, "name", "url_Here", 2)
+        val remainingNovel = Novel.createWithDefaults(id = 5, title = "name", url = "url_Here", folderId = 2)
         novels.forEach { novelDao.insert(it) }
         novelDao.insert(remainingNovel)
 
@@ -74,7 +74,7 @@ class NovelDaoTest {
         val parentFolder = Folder(1, "title")
         folderDao.insert(parentFolder)
 
-        val novel = Novel(1, "title", "url", 1)
+        val novel = Novel.createWithDefaults(id = 1, title = "title", url = "url", folderId = 1)
         novelDao.insert(novel)
 
         val allNovels = novelDao.getNovels().getOrAwaitValue()
@@ -86,8 +86,8 @@ class NovelDaoTest {
         val parentFolder = Folder(1, "title")
         folderDao.insert(parentFolder)
 
-        val novel = Novel(1, "title", "url", 1)
-        val remainingNovel = Novel(2, "something", "urlabc", 1)
+        val novel = Novel.createWithDefaults(id = 1, title = "title", url = "url", folderId = 1)
+        val remainingNovel = Novel.createWithDefaults(id = 2, title = "something", url = "urlabc", folderId = 1)
         novelDao.insert(novel)
         novelDao.insert(remainingNovel)
         novelDao.delete(novel)
@@ -102,8 +102,8 @@ class NovelDaoTest {
         val parentFolder = Folder(1, "title")
         folderDao.insert(parentFolder)
 
-        val novel = Novel(3, "title", "url", 1)
-        val updatedNovel = Novel(3, "new", "newurl", 1)
+        val novel = Novel.createWithDefaults(id = 3, title = "title", url = "url", folderId = 1)
+        val updatedNovel = Novel.createWithDefaults(id = 3, title = "new", url = "newurl", folderId = 1)
         novelDao.insert(novel)
         novelDao.update(updatedNovel)
 
@@ -121,10 +121,10 @@ class NovelDaoTest {
         )
         folders.forEach { folderDao.insert(it) }
 
-        val novel1 = Novel(1, "hello", "url", 9)
-        val novel2 = Novel(2, "hello world", "url", 8)
-        val novel3 = Novel(3, "title", "hello", 7)
-        val noMatch = Novel(4, "title", "url", 6)
+        val novel1 = Novel.createWithDefaults(id = 1, title = "hello", url = "url", folderId = 9)
+        val novel2 = Novel.createWithDefaults(id = 2, title = "hello world", url = "url", folderId = 8)
+        val novel3 = Novel.createWithDefaults(id = 3, title = "title", url = "hello", folderId = 7)
+        val noMatch = Novel.createWithDefaults(id = 4, title = "title", url = "url", folderId = 6)
         novelDao.insert(novel1)
         novelDao.insert(novel2)
         novelDao.insert(novel3)
@@ -141,9 +141,9 @@ class NovelDaoTest {
         folderDao.insert(parentFolder)
 
         val novels = listOf(
-            Novel(1, "title", "url", 5),
-            Novel(2, "titleabc", "url", 5),
-            Novel(3, "title", "url", 5),
+            Novel.createWithDefaults(id = 1, title = "title", url = "url", folderId = 5),
+            Novel.createWithDefaults(id = 2, title = "titleabc", url = "url", folderId = 5),
+            Novel.createWithDefaults(id = 3, title = "title", url = "url", folderId = 5),
         )
         novels.forEach { novelDao.insert(it) }
 

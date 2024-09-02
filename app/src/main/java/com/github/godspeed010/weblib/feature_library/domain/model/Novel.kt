@@ -37,10 +37,11 @@ data class Novel(
 
     companion object {
         fun createWithDefaults(
+            id: Int = 0,
             title: String = "",
             url: String = "",
             scrollProgression: Float = 0f,
             folderId: Int = 0,
-        ) = Novel(title = title, url = url, scrollProgression = scrollProgression, folderId = folderId)
+        ) = Novel(id, title, url, scrollProgression, folderId)
     }
 }

@@ -10,6 +10,7 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
@@ -50,7 +51,7 @@ class FolderDaoTest {
         val folder = Folder(1, title = "title")
         folderDao.insert(folder)
 
-        val allFolders = folderDao.getFolders().getOrAwaitValue()
+        val allFolders = folderDao.getFolders().first()
 
         assertThat(allFolders).contains(folder)
     }
@@ -63,7 +64,7 @@ class FolderDaoTest {
         folderDao.insert(remainingFolder)
         folderDao.delete(folder)
 
-        val allFolders = folderDao.getFolders().getOrAwaitValue()
+        val allFolders = folderDao.getFolders().first()
 
         assertThat(allFolders).containsExactly(remainingFolder)
     }
@@ -76,7 +77,7 @@ class FolderDaoTest {
         val updatedFolder = Folder(5, "updated")
         folderDao.update(updatedFolder)
 
-        val allFolders = folderDao.getFolders().getOrAwaitValue()
+        val allFolders = folderDao.getFolders().first()
 
         assertThat(allFolders).containsExactly(updatedFolder)
     }
@@ -87,9 +88,9 @@ class FolderDaoTest {
         folderDao.insert(folder)
 
         val novels = listOf(
-            Novel(1, "title", "url", 5),
-            Novel(2, "titleabc", "url", 5),
-            Novel(3, "title", "url", 5),
+            Novel.createWithDefaults(id = 1, title = "title", url = "url", folderId = 5),
+            Novel.createWithDefaults(id = 2, title = "titleabc", url = "url", folderId = 5),
+            Novel.createWithDefaults(id = 3, title = "title", url = "url", folderId = 5),
         )
         novels.forEach { novelDao.insert(it) }
 

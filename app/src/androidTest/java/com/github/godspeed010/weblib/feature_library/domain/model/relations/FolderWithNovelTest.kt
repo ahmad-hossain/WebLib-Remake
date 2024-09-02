@@ -10,13 +10,12 @@ import com.github.godspeed010.weblib.feature_library.data.data_source.LibraryDat
 import com.github.godspeed010.weblib.feature_library.data.data_source.NovelDao
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
-import com.github.godspeed010.weblib.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
-
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -55,15 +54,15 @@ class FolderWithNovelTest {
         folderDao.insert(folder)
 
         val folderNovels = listOf(
-            Novel(id = 1, title = "one", "url", 1),
-            Novel(id = 2, title = "two", "url2", 1),
-            Novel(id = 3, title = "three", "url3", 1),
-            Novel(id = 4, title = "four", "url4", 1),
-            Novel(id = 5, title = "five", "url5", 1),
+            Novel.createWithDefaults(id = 1, title = "one", url = "url", folderId = 1),
+            Novel.createWithDefaults(id = 2, title = "two", url = "url2", folderId = 1),
+            Novel.createWithDefaults(id = 3, title = "three", url = "url3", folderId = 1),
+            Novel.createWithDefaults(id = 4, title = "four", url = "url4", folderId = 1),
+            Novel.createWithDefaults(id = 5, title = "five", url = "url5", folderId = 1),
         )
         folderNovels.forEach { novelDao.insert(it) }
 
-        val novelsFromFolder = folder.id.let { folderDao.getFolderWithNovels(it) }.getOrAwaitValue().novels
+        val novelsFromFolder = folderDao.getFolderWithNovels(folder.id).first().novels
 
         assertThat(novelsFromFolder).containsExactlyElementsIn(folderNovels)
     }
