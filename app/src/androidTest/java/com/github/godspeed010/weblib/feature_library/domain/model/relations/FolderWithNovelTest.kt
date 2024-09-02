@@ -1,6 +1,5 @@
 package com.github.godspeed010.weblib.feature_library.domain.model.relations
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -24,9 +22,6 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @SmallTest
 class FolderWithNovelTest {
-
-    @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var folderDao: FolderDao
     private lateinit var novelDao: NovelDao

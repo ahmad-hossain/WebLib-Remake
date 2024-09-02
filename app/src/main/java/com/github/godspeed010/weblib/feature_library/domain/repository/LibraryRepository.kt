@@ -1,13 +1,12 @@
 package com.github.godspeed010.weblib.feature_library.domain.repository
 
-import androidx.lifecycle.LiveData
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.github.godspeed010.weblib.feature_library.domain.model.relations.FolderWithNovel
 import kotlinx.coroutines.flow.Flow
 
 interface LibraryRepository {
-    fun getNovels() : LiveData<List<Novel>>
+    fun getNovels() : Flow<List<Novel>>
 
     suspend fun insertOrUpdateNovel(novel: Novel)
 

@@ -1,6 +1,5 @@
 package com.github.godspeed010.weblib.feature_library.data.repository
 
-import androidx.lifecycle.LiveData
 import com.github.godspeed010.weblib.feature_library.data.data_source.FolderDao
 import com.github.godspeed010.weblib.feature_library.data.data_source.NovelDao
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
@@ -13,7 +12,7 @@ class LibraryRepositoryImpl(
     private val folderDao: FolderDao,
     private val novelDao: NovelDao
 ) : LibraryRepository {
-    override fun getNovels(): LiveData<List<Novel>> {
+    override fun getNovels(): Flow<List<Novel>> {
         return novelDao.getNovels()
     }
 
