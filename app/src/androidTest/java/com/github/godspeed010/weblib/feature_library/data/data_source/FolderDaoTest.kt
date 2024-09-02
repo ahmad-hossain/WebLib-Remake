@@ -43,24 +43,22 @@ class FolderDaoTest {
     @Test
     fun insertFolder() = runTest {
         val folder = Folder(1, title = "title")
+
         folderDao.insert(folder)
 
-        val allFolders = folderDao.getFolders().first()
-
-        assertThat(allFolders).contains(folder)
+        assertThat(getAllFolders()).contains(folder)
     }
 
     @Test
     fun deleteFolder() = runTest {
         val folder = Folder(1, "title")
         val remainingFolder = Folder(2, "a_title")
+
         folderDao.insert(folder)
         folderDao.insert(remainingFolder)
         folderDao.delete(folder)
 
-        val allFolders = folderDao.getFolders().first()
-
-        assertThat(allFolders).containsExactly(remainingFolder)
+        assertThat(getAllFolders()).containsExactly(remainingFolder)
     }
 
     @Test
@@ -71,29 +69,24 @@ class FolderDaoTest {
         val updatedFolder = Folder(5, "updated")
         folderDao.update(updatedFolder)
 
-        val allFolders = folderDao.getFolders().first()
-
-        assertThat(allFolders).containsExactly(updatedFolder)
+        assertThat(getAllFolders()).containsExactly(updatedFolder)
     }
 
     @Test
     fun folderUpdateRetainsNovels() = runTest {
         val folder = Folder(5, "name")
-        folderDao.insert(folder)
-
+        val updatedFolder = folder.copy(title = "updated")
         val novels = listOf(
             Novel.createWithDefaults(id = 1, title = "title", url = "url", folderId = 5),
             Novel.createWithDefaults(id = 2, title = "titleabc", url = "url", folderId = 5),
             Novel.createWithDefaults(id = 3, title = "title", url = "url", folderId = 5),
         )
-        novels.forEach { novelDao.insert(it) }
 
-        val updatedFolder = Folder(5, "updated")
+        folderDao.insert(folder)
+        novels.forEach { novelDao.insert(it) }
         folderDao.update(updatedFolder)
 
-        val allNovels = novelDao.getNovels().first()
-
-        assertThat(allNovels).containsExactlyElementsIn(novels)
+        assertThat(getAllNovels()).containsExactlyElementsIn(novels)
     }
 
     @Test
@@ -105,51 +98,49 @@ class FolderDaoTest {
         )
 
         folders.forEach { folderDao.insert(it) }
+
         val folderNames = folders.map { it.title }
         val dbFolderNames = folderDao.getFolderNames()
-
         assertThat(dbFolderNames).isEqualTo(folderNames)
     }
 
     @Test
     fun insertOrUpdateAddsFolder() = runTest {
         val folder = Folder(id = 1, title = "abc")
+
         folderDao.insertOrUpdate(folder)
 
-        val allFolders = folderDao.getFolders().first()
-        assertThat(allFolders).containsExactly(folder)
+        assertThat(getAllFolders()).containsExactly(folder)
     }
 
     @Test
     fun insertOrUpdateUpdatesFolder() = runTest {
-        var folder = Folder(id = 1, title = "abc")
+        val folder = Folder(id = 1, title = "abc")
+        val updatedFolder = folder.copy(title = "testing123")
+
         folderDao.insertOrUpdate(folder)
+        folderDao.insertOrUpdate(updatedFolder)
 
-        folder = folder.copy(title = "testing123")
-        folderDao.insertOrUpdate(folder)
-
-        val allFolders = folderDao.getFolders().first()
-
-        assertThat(allFolders).containsExactly(folder)
+        assertThat(getAllFolders()).containsExactly(updatedFolder)
     }
 
     @Test
     fun insertOrUpdateRetainsNovels() = runTest {
-        var folder = Folder(5, "name")
-        folderDao.insertOrUpdate(folder)
-
+        val folder = Folder(5, "name")
+        val updatedFolder = folder.copy(title = "updated")
         val novels = listOf(
             Novel.createWithDefaults(id = 1, title = "title", url = "url", folderId = 5),
             Novel.createWithDefaults(id = 2, title = "titleabc", url = "url", folderId = 5),
             Novel.createWithDefaults(id = 3, title = "title", url = "url", folderId = 5),
         )
-        novels.forEach { novelDao.insert(it) }
 
-        folder = folder.copy(title = "updated")
         folderDao.insertOrUpdate(folder)
+        novels.forEach { novelDao.insert(it) }
+        folderDao.insertOrUpdate(updatedFolder)
 
-        val allNovels = novelDao.getNovels().first()
-
-        assertThat(allNovels).containsExactlyElementsIn(novels)
+        assertThat(getAllNovels()).containsExactlyElementsIn(novels)
     }
+
+    private suspend fun getAllFolders(): List<Folder> = folderDao.getFolders().first()
+    private suspend fun getAllNovels(): List<Novel> = novelDao.getNovels().first()
 }
