@@ -4,11 +4,11 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
+import com.github.godspeed010.weblib.feature_library.common.TestDataUtil
+import com.github.godspeed010.weblib.feature_library.common.TestDataUtil.FOLDER_1
 import com.github.godspeed010.weblib.feature_library.data.data_source.FolderDao
 import com.github.godspeed010.weblib.feature_library.data.data_source.LibraryDatabase
 import com.github.godspeed010.weblib.feature_library.data.data_source.NovelDao
-import com.github.godspeed010.weblib.feature_library.domain.model.Folder
-import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -45,14 +45,8 @@ class FolderWithNovelTest {
 
     @Test
     fun getNovelsFromFolder() = runTest {
-        val folder = Folder(1, "testFolder")
-        val folderNovels = listOf(
-            Novel.createWithDefaults(id = 1, title = "one", url = "url", folderId = 1),
-            Novel.createWithDefaults(id = 2, title = "two", url = "url2", folderId = 1),
-            Novel.createWithDefaults(id = 3, title = "three", url = "url3", folderId = 1),
-            Novel.createWithDefaults(id = 4, title = "four", url = "url4", folderId = 1),
-            Novel.createWithDefaults(id = 5, title = "five", url = "url5", folderId = 1),
-        )
+        val folder = FOLDER_1
+        val folderNovels = TestDataUtil.createNovels(count = 5, folderId = folder.id)
 
         folderDao.insert(folder)
         folderNovels.forEach { novelDao.insert(it) }

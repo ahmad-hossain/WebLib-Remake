@@ -4,7 +4,9 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import com.github.godspeed010.weblib.feature_library.domain.model.Folder
+import com.github.godspeed010.weblib.feature_library.common.TestDataUtil
+import com.github.godspeed010.weblib.feature_library.common.TestDataUtil.FOLDER_1
+import com.github.godspeed010.weblib.feature_library.common.TestDataUtil.FOLDER_2
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,15 +44,10 @@ class NovelDaoTest {
 
     @Test
     fun folderDeletionDeletesChildNovels() = runTest {
-        val parentFolder = Folder(1, "title")
-        val remainingFolder = Folder(2, "Title")
-        val novels = listOf(
-            Novel.createWithDefaults(id = 1, title = "name", url = "url", folderId = 1),
-            Novel.createWithDefaults(id = 2, title = "title", url = "url", folderId = 1),
-            Novel.createWithDefaults(id = 3, title = "name", url = "url_Here", folderId = 1),
-        )
-        val remainingNovel =
-            Novel.createWithDefaults(id = 5, title = "name", url = "url_Here", folderId = 2)
+        val parentFolder = FOLDER_1
+        val remainingFolder = FOLDER_2
+        val novels = TestDataUtil.createNovels(count = 3, folderId = parentFolder.id)
+        val remainingNovel = TestDataUtil.createNovelWithId(id = 4, folderId = remainingFolder.id)
 
         folderDao.insert(parentFolder)
         folderDao.insert(remainingFolder)
@@ -63,8 +60,8 @@ class NovelDaoTest {
     @Test
     fun addNovel() = runTest {
         // folder with same folderId must be created first due to parent-child relationship
-        val parentFolder = Folder(1, "title")
-        val novel = Novel.createWithDefaults(id = 1, title = "title", url = "url", folderId = 1)
+        val parentFolder = FOLDER_1
+        val novel = TestDataUtil.createNovelWithId(id = 1, folderId = parentFolder.id)
 
         folderDao.insert(parentFolder)
         novelDao.insert(novel)
@@ -74,10 +71,9 @@ class NovelDaoTest {
 
     @Test
     fun deleteNovel() = runTest {
-        val parentFolder = Folder(1, "title")
-        val novel = Novel.createWithDefaults(id = 1, title = "title", url = "url", folderId = 1)
-        val remainingNovel =
-            Novel.createWithDefaults(id = 2, title = "something", url = "urlabc", folderId = 1)
+        val parentFolder = FOLDER_1
+        val novel = TestDataUtil.createNovelWithId(id = 1, folderId = parentFolder.id)
+        val remainingNovel = TestDataUtil.createNovelWithId(id = 2, folderId = parentFolder.id)
 
         folderDao.insert(parentFolder)
         novelDao.insert(novel)
@@ -89,10 +85,9 @@ class NovelDaoTest {
 
     @Test
     fun updateNovel() = runTest {
-        val parentFolder = Folder(1, "title")
-        val novel = Novel.createWithDefaults(id = 3, title = "title", url = "url", folderId = 1)
-        val updatedNovel =
-            Novel.createWithDefaults(id = 3, title = "new", url = "newurl", folderId = 1)
+        val parentFolder = FOLDER_1
+        val novel = TestDataUtil.createNovelWithId(id = 3, folderId = parentFolder.id)
+        val updatedNovel = novel.copy(title = "new", url = "newurl")
 
         folderDao.insert(parentFolder)
         novelDao.insert(novel)
@@ -103,19 +98,29 @@ class NovelDaoTest {
 
     @Test
     fun findNovelByNameOrUrl() = runTest {
-        val folders = listOf(
-            Folder(9, "title"),
-            Folder(7, "folder_title"),
-            Folder(8, "abcTitle"),
-            Folder(6, "titleHere"),
-        )
+        val folders = TestDataUtil.createFolders(count = 4)
         val novels = listOf(
-            Novel.createWithDefaults(id = 1, title = "hello", url = "url", folderId = 9),
-            Novel.createWithDefaults(id = 2, title = "hello world", url = "url", folderId = 8),
-            Novel.createWithDefaults(id = 3, title = "title", url = "hello", folderId = 7)
+            Novel.createWithDefaults(
+                id = 1,
+                title = "hello",
+                url = "url",
+                folderId = folders[0].id
+            ),
+            Novel.createWithDefaults(
+                id = 2,
+                title = "hello world",
+                url = "url",
+                folderId = folders[1].id
+            ),
+            Novel.createWithDefaults(
+                id = 3,
+                title = "title",
+                url = "hello",
+                folderId = folders[2].id
+            )
         )
         val noMatchNovel =
-            Novel.createWithDefaults(id = 4, title = "title", url = "url", folderId = 6)
+            Novel.createWithDefaults(id = 4, title = "title", url = "url", folderId = folders[3].id)
 
         folders.forEach { folderDao.insert(it) }
         (novels + noMatchNovel).forEach { novelDao.insert(it) }
@@ -126,12 +131,8 @@ class NovelDaoTest {
 
     @Test
     fun getNovels() = runTest {
-        val parentFolder = Folder(id = 5, title = "title here")
-        val novels = listOf(
-            Novel.createWithDefaults(id = 1, title = "title", url = "url", folderId = 5),
-            Novel.createWithDefaults(id = 2, title = "titleabc", url = "url", folderId = 5),
-            Novel.createWithDefaults(id = 3, title = "title", url = "url", folderId = 5),
-        )
+        val parentFolder = FOLDER_1
+        val novels = TestDataUtil.createNovels(count = 3, folderId = parentFolder.id)
 
         folderDao.insert(parentFolder)
         novels.forEach { novelDao.insert(it) }

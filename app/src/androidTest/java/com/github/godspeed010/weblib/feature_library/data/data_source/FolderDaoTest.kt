@@ -4,6 +4,9 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
+import com.github.godspeed010.weblib.feature_library.common.TestDataUtil
+import com.github.godspeed010.weblib.feature_library.common.TestDataUtil.FOLDER_1
+import com.github.godspeed010.weblib.feature_library.common.TestDataUtil.FOLDER_2
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 import com.google.common.truth.Truth.assertThat
@@ -42,17 +45,15 @@ class FolderDaoTest {
 
     @Test
     fun insertFolder() = runTest {
-        val folder = Folder(1, title = "title")
+        folderDao.insert(FOLDER_1)
 
-        folderDao.insert(folder)
-
-        assertThat(getAllFolders()).contains(folder)
+        assertThat(getAllFolders()).contains(FOLDER_1)
     }
 
     @Test
     fun deleteFolder() = runTest {
-        val folder = Folder(1, "title")
-        val remainingFolder = Folder(2, "a_title")
+        val folder = FOLDER_1
+        val remainingFolder = FOLDER_2
 
         folderDao.insert(folder)
         folderDao.insert(remainingFolder)
@@ -63,8 +64,8 @@ class FolderDaoTest {
 
     @Test
     fun updateFolder() = runTest {
-        val folder = Folder(id = 5, "name")
-        val updatedFolder = Folder(5, "updated")
+        val folder = FOLDER_1
+        val updatedFolder = folder.copy(title = "updated")
 
         folderDao.insert(folder)
         folderDao.update(updatedFolder)
@@ -74,13 +75,9 @@ class FolderDaoTest {
 
     @Test
     fun folderUpdateRetainsNovels() = runTest {
-        val folder = Folder(5, "name")
+        val folder = FOLDER_1
         val updatedFolder = folder.copy(title = "updated")
-        val novels = listOf(
-            Novel.createWithDefaults(id = 1, title = "title", url = "url", folderId = 5),
-            Novel.createWithDefaults(id = 2, title = "titleabc", url = "url", folderId = 5),
-            Novel.createWithDefaults(id = 3, title = "title", url = "url", folderId = 5),
-        )
+        val novels = TestDataUtil.createNovels(count = 3, folderId = folder.id)
 
         folderDao.insert(folder)
         novels.forEach { novelDao.insert(it) }
@@ -91,11 +88,7 @@ class FolderDaoTest {
 
     @Test
     fun getFolderNames() = runTest {
-        val folders = listOf(
-            Folder(1, "one"),
-            Folder(2, "two"),
-            Folder(3, "three")
-        )
+        val folders = TestDataUtil.createFolders(count = 3)
 
         folders.forEach { folderDao.insert(it) }
 
@@ -106,16 +99,14 @@ class FolderDaoTest {
 
     @Test
     fun insertOrUpdateAddsFolder() = runTest {
-        val folder = Folder(id = 1, title = "abc")
+        folderDao.insertOrUpdate(FOLDER_1)
 
-        folderDao.insertOrUpdate(folder)
-
-        assertThat(getAllFolders()).containsExactly(folder)
+        assertThat(getAllFolders()).containsExactly(FOLDER_1)
     }
 
     @Test
     fun insertOrUpdateUpdatesFolder() = runTest {
-        val folder = Folder(id = 1, title = "abc")
+        val folder = FOLDER_1
         val updatedFolder = folder.copy(title = "testing123")
 
         folderDao.insertOrUpdate(folder)
@@ -126,13 +117,9 @@ class FolderDaoTest {
 
     @Test
     fun insertOrUpdateRetainsNovels() = runTest {
-        val folder = Folder(5, "name")
+        val folder = FOLDER_1
         val updatedFolder = folder.copy(title = "updated")
-        val novels = listOf(
-            Novel.createWithDefaults(id = 1, title = "title", url = "url", folderId = 5),
-            Novel.createWithDefaults(id = 2, title = "titleabc", url = "url", folderId = 5),
-            Novel.createWithDefaults(id = 3, title = "title", url = "url", folderId = 5),
-        )
+        val novels = TestDataUtil.createNovels(count = 3, folderId = folder.id)
 
         folderDao.insertOrUpdate(folder)
         novels.forEach { novelDao.insert(it) }

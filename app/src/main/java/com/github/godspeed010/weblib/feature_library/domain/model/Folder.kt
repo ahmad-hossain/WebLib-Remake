@@ -19,7 +19,8 @@ data class Folder(
 
     companion object {
         fun createWithDefaults(
+            id: Int = 0,
             title: String = "",
-        ) = Folder(title = title)
+        ) = Folder(id, title)
     }
 }
