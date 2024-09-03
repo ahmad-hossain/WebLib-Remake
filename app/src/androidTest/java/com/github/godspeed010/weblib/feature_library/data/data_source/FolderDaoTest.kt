@@ -64,9 +64,9 @@ class FolderDaoTest {
     @Test
     fun updateFolder() = runTest {
         val folder = Folder(id = 5, "name")
-        folderDao.insert(folder)
-
         val updatedFolder = Folder(5, "updated")
+
+        folderDao.insert(folder)
         folderDao.update(updatedFolder)
 
         assertThat(getAllFolders()).containsExactly(updatedFolder)
