@@ -73,62 +73,46 @@ android {
 }
 
 dependencies {
-    implementation libs.androidx.core.ktx
-    implementation libs.androidx.appcompat
     implementation libs.android.material
-    implementation libs.androidx.compose.ui
+    implementation libs.androidx.activity.compose
+    implementation libs.androidx.appcompat
     implementation libs.androidx.compose.material
+    implementation libs.androidx.compose.ui
     implementation libs.androidx.compose.ui.tooling.preview
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.hilt.navigation.compose
+    ksp libs.androidx.hilt.compiler
+    ksp libs.hilt.android.compiler
+    implementation libs.androidx.lifecycle.runtime.ktx
+    implementation libs.androidx.lifecycle.viewmodel.ktx
+    implementation libs.androidx.material.icons.extended
     implementation libs.androidx.material3
     implementation libs.androidx.material3.window.size
-    implementation libs.androidx.lifecycle.runtime.ktx
-    implementation libs.androidx.activity.compose
-    testImplementation libs.junit
-    testImplementation libs.google.truth
-    androidTestImplementation libs.androidx.junit
-    androidTestImplementation libs.androidx.espresso.core
-    androidTestImplementation libs.androidx.compose.ui.test.junit4
-    androidTestImplementation libs.google.truth
-    androidTestImplementation libs.junit
-    androidTestImplementation libs.dexmaker.mockito
-    androidTestImplementation libs.kotlinx.coroutines.test
-    androidTestImplementation libs.androidx.core.testing
-    androidTestImplementation libs.mockito.core
-    debugImplementation libs.androidx.compose.ui.tooling
-
-    // Room
+    implementation libs.androidx.room.ktx
     implementation libs.androidx.room.runtime
     ksp libs.androidx.room.compiler
-
-    // Kotlin Extensions and Coroutines support for Room
-    implementation libs.androidx.room.ktx
-
-    // Coroutines
-    implementation libs.kotlinx.coroutines.core
-    implementation libs.kotlinx.coroutines.android
-
-    // Coroutine Lifecycle Scopes
-    implementation libs.androidx.lifecycle.viewmodel.ktx
-
-    // Dagger - Hilt
-    implementation libs.hilt.android
-    implementation libs.androidx.hilt.navigation.compose
-    ksp libs.hilt.android.compiler
-    ksp libs.androidx.hilt.compiler
-
-    // Compose LiveData
     implementation libs.androidx.runtime.livedata
-
-    // More Icons
-    implementation libs.androidx.material.icons.extended
-
-    // Compose Destinations
+    implementation libs.androidx.webkit
+    implementation libs.hilt.android
+    implementation libs.kotlinx.coroutines.android
+    implementation libs.kotlinx.coroutines.core
     implementation libs.raamcosta.compose.destinations.core
+    implementation libs.timber
     ksp libs.ksp
 
-    // Timber Logging
-    implementation libs.timber
+    testImplementation libs.google.truth
+    testImplementation libs.junit
 
-    // Webkit for WebView
-    implementation libs.androidx.webkit
+    androidTestImplementation libs.androidx.compose.ui.test.junit4
+    androidTestImplementation libs.androidx.core.testing
+    androidTestImplementation libs.androidx.espresso.core
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.dexmaker.mockito
+    androidTestImplementation libs.google.truth
+    androidTestImplementation libs.junit
+    androidTestImplementation libs.kotlinx.coroutines.test
+    androidTestImplementation libs.mockito.core
+
+    debugImplementation libs.androidx.compose.ui.tooling
+
 }
