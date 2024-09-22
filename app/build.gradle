@@ -58,7 +58,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-//        useIR = true
     }
     buildFeatures {
         compose true
@@ -81,20 +80,26 @@ dependencies {
     implementation libs.androidx.compose.ui
     implementation libs.androidx.compose.material
     implementation libs.androidx.compose.ui.tooling.preview
+    implementation libs.androidx.material3
+    implementation libs.androidx.material3.window.size
     implementation libs.androidx.lifecycle.runtime.ktx
     implementation libs.androidx.activity.compose
     testImplementation libs.junit
+    testImplementation libs.google.truth
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
     androidTestImplementation libs.androidx.compose.ui.test.junit4
+    androidTestImplementation libs.google.truth
+    androidTestImplementation libs.junit
+    androidTestImplementation libs.dexmaker.mockito
+    androidTestImplementation libs.kotlinx.coroutines.test
+    androidTestImplementation libs.androidx.core.testing
+    androidTestImplementation libs.mockito.core
     debugImplementation libs.androidx.compose.ui.tooling
 
-    //Room
+    // Room
     implementation libs.androidx.room.runtime
     kapt libs.androidx.room.compiler
-
-    //Android Testing
-    androidTestImplementation libs.google.truth
 
     // Kotlin Extensions and Coroutines support for Room
     implementation libs.androidx.room.ktx
@@ -105,49 +110,26 @@ dependencies {
 
     // Coroutine Lifecycle Scopes
     implementation libs.androidx.lifecycle.viewmodel.ktx
-//
-//    // Activity KTX for viewModels()
-//    implementation "androidx.activity:activity-ktx:1.4.0"
-//
-    //Dagger - Hilt
+
+    // Dagger - Hilt
     implementation libs.hilt.android
+    implementation libs.androidx.hilt.navigation.compose
     kapt libs.hilt.android.compiler
     kapt libs.androidx.hilt.compiler
-    implementation libs.androidx.hilt.navigation.compose
 
-    //Compose LiveData
+    // Compose LiveData
     implementation libs.androidx.runtime.livedata
 
-    //More Icons
+    // More Icons
     implementation libs.androidx.material.icons.extended
 
-//    // Local Unit Tests
-//    implementation "androidx.test:core:1.4.0"
-//    testImplementation "junit:junit:4.13.2"
-//    testImplementation "org.hamcrest:hamcrest-all:1.3"
-//    testImplementation "androidx.arch.core:core-testing:2.1.0"
-//    testImplementation "org.robolectric:robolectric:4.3.1"
-//    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2"
-    testImplementation libs.google.truth
-//    testImplementation "org.mockito:mockito-core:3.12.4"
-
-    // Instrumented Unit Tests
-    androidTestImplementation libs.junit
-    androidTestImplementation libs.dexmaker.mockito
-    androidTestImplementation libs.kotlinx.coroutines.test
-    androidTestImplementation libs.androidx.core.testing
-    androidTestImplementation libs.mockito.core
-
-    //Compose Destinations
+    // Compose Destinations
     implementation libs.raamcosta.compose.destinations.core
     ksp libs.ksp
 
-    //Timber Logging
+    // Timber Logging
     implementation libs.timber
 
     // Webkit for WebView
     implementation libs.androidx.webkit
-
-    implementation libs.androidx.material3
-    implementation libs.androidx.material3.window.size
 }
