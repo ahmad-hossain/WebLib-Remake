@@ -1,7 +1,7 @@
 [versions]
 activityCompose = "1.4.0"
 appcompat = "1.4.1"
-androidGradle = "7.2.2"
+androidGradle = "8.1.0"
 kotlinGradlePlugin = "1.8.10"
 material3 = "1.1.0-alpha08"
 material3WindowSize = "1.0.1"
