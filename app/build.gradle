@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
 
-    id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     alias libs.plugins.google.devtools.ksp
     id 'kotlin-parcelize'
@@ -99,7 +98,7 @@ dependencies {
 
     // Room
     implementation libs.androidx.room.runtime
-    kapt libs.androidx.room.compiler
+    ksp libs.androidx.room.compiler
 
     // Kotlin Extensions and Coroutines support for Room
     implementation libs.androidx.room.ktx
@@ -114,8 +113,8 @@ dependencies {
     // Dagger - Hilt
     implementation libs.hilt.android
     implementation libs.androidx.hilt.navigation.compose
-    kapt libs.hilt.android.compiler
-    kapt libs.androidx.hilt.compiler
+    ksp libs.hilt.android.compiler
+    ksp libs.androidx.hilt.compiler
 
     // Compose LiveData
     implementation libs.androidx.runtime.livedata
