@@ -98,7 +98,7 @@ dependencies {
     implementation libs.kotlinx.coroutines.core
     implementation libs.raamcosta.compose.destinations.core
     implementation libs.timber
-    ksp libs.ksp
+    ksp libs.raamcosta.compose.destinations.ksp
 
     testImplementation libs.google.truth
     testImplementation libs.junit

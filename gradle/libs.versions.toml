@@ -59,7 +59,7 @@ androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
 android-gradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
 dagger-hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "googleHilt" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "raamcostaDestinations" }
+raamcosta-compose-destinations-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "raamcostaDestinations" }
 raamcosta-compose-destinations-core = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "raamcostaDestinations" }
 dexmaker-mockito = { module = "com.linkedin.dexmaker:dexmaker-mockito", version.ref = "dexmakerMockito" }
 google-truth = { module = "com.google.truth:truth", version.ref = "truth" }
