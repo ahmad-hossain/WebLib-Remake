@@ -32,7 +32,6 @@ truth = "1.1.3"
 webkit = "1.5.0"
 
 [libraries]
-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
 android-material = { module = "com.google.android.material:material", version.ref = "androidMaterial" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -57,13 +56,11 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "livedata" }
 androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
-dagger-hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "googleHilt" }
 dexmaker-mockito = { module = "com.linkedin.dexmaker:dexmaker-mockito", version.ref = "dexmakerMockito" }
 google-truth = { module = "com.google.truth:truth", version.ref = "truth" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "googleHilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "googleHilt" }
 junit = { module = "junit:junit", version.ref = "junit" }
-kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
@@ -73,9 +70,11 @@ raamcosta-compose-destinations-ksp = { module = "io.github.raamcosta.compose-des
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 [plugins]
-android-application = { id = "com.android.application" }
+android-application = { id = "com.android.application", version.ref = "androidGradle" }
+dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "googleHilt" }
 dagger-hilt-android-plugin = { id = "dagger.hilt.android.plugin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-android = { id = "kotlin-android" }
+kotlin-gradle-plugin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinGradlePlugin" }
 kotlin-kapt = { id = "kotlin-kapt" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
