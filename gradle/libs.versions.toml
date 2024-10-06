@@ -11,15 +11,15 @@ coreKtx = "1.7.0"
 coreTesting = "2.1.0"
 dexmakerMockito = "2.28.1"
 espressoCore = "3.4.0"
-googleHilt = "2.46"
+googleHilt = "2.50"
 hiltCompiler = "1.0.0"
 hiltNavigationCompose = "1.0.0-alpha03"
 junit = "4.13.2"
-kotlinGradlePlugin = "1.9.22"
+kotlinGradlePlugin = "1.9.23"
 kotlinxCoroutinesAndroid = "1.5.2"
 kotlinxCoroutinesCore = "1.5.2"
 kotlinxCoroutinesTest = "1.6.0"
-ksp = '1.9.22-1.0.17' # Depends on your kotlin version
+ksp = '1.9.23-1.0.20' # Depends on your kotlin version
 livedata = "1.2.1"
 material3 = "1.1.0-alpha08"
 material3WindowSize = "1.0.1"
@@ -76,5 +76,4 @@ dagger-hilt-android-plugin = { id = "dagger.hilt.android.plugin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-android = { id = "kotlin-android" }
 kotlin-gradle-plugin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinGradlePlugin" }
-kotlin-kapt = { id = "kotlin-kapt" }
 kotlin-parcelize = { id = "kotlin-parcelize" }

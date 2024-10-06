@@ -3,7 +3,6 @@ plugins {
     alias libs.plugins.dagger.hilt.android.plugin
     alias libs.plugins.google.devtools.ksp
     alias libs.plugins.kotlin.android
-    alias libs.plugins.kotlin.kapt
     alias libs.plugins.kotlin.parcelize
 }
 
@@ -57,7 +56,7 @@ android {
         buildConfig true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.9'
+        kotlinCompilerExtensionVersion '1.5.11'
     }
     namespace 'com.github.godspeed010.weblib'
     packagingOptions {
@@ -80,7 +79,7 @@ dependencies {
     implementation libs.androidx.core.ktx
     implementation libs.androidx.hilt.navigation.compose
     ksp libs.androidx.hilt.compiler
-    kapt libs.hilt.android.compiler
+    ksp libs.hilt.android.compiler
     implementation libs.androidx.lifecycle.runtime.ktx
     implementation libs.androidx.lifecycle.viewmodel.ktx
     implementation libs.androidx.material.icons.extended
