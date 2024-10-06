@@ -15,11 +15,11 @@ googleHilt = "2.50"
 hiltCompiler = "1.0.0"
 hiltNavigationCompose = "1.0.0-alpha03"
 junit = "4.13.2"
-kotlinGradlePlugin = "1.9.23"
+kotlinGradlePlugin = "2.0.0"
 kotlinxCoroutinesAndroid = "1.5.2"
 kotlinxCoroutinesCore = "1.5.2"
 kotlinxCoroutinesTest = "1.6.0"
-ksp = '1.9.23-1.0.20' # Depends on your kotlin version
+ksp = '2.0.0-1.0.24' # Depends on your kotlin version
 livedata = "1.2.1"
 material3 = "1.1.0-alpha08"
 material3WindowSize = "1.0.1"
@@ -71,6 +71,7 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradle" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinGradlePlugin" }
 dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "googleHilt" }
 dagger-hilt-android-plugin = { id = "dagger.hilt.android.plugin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

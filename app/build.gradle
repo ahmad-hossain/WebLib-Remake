@@ -1,5 +1,6 @@
 plugins {
     alias libs.plugins.android.application
+    alias(libs.plugins.compose.compiler)
     alias libs.plugins.dagger.hilt.android.plugin
     alias libs.plugins.google.devtools.ksp
     alias libs.plugins.kotlin.android
@@ -55,10 +56,10 @@ android {
         compose true
         buildConfig true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.5.11'
-    }
     namespace 'com.github.godspeed010.weblib'
+    composeCompiler {
+        enableStrongSkippingMode = true
+    }
     packagingOptions {
         resources {
             excludes += ['/META-INF/{AL2.0,LGPL2.1}', '**/attach_hotspot_windows.dll', 'META-INF/licenses/**', 'META-INF/AL2.0', 'META-INF/LGPL2.1']

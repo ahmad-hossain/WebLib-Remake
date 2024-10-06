@@ -52,6 +52,8 @@ local.properties
 .settings/
 .loadpath
 
+.kotlin/
+
 # External tool builders
 .externalToolBuilders/
 
