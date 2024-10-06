@@ -77,4 +77,5 @@ android-application = { id = "com.android.application" }
 dagger-hilt-android-plugin = { id = "dagger.hilt.android.plugin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-android = { id = "kotlin-android" }
+kotlin-kapt = { id = "kotlin-kapt" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
