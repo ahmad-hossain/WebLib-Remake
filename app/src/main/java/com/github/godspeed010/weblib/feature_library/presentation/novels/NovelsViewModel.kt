@@ -48,7 +48,7 @@ class NovelsViewModel @Inject constructor(
     val toastMessage = _toastMessageResId.asSharedFlow()
 
     fun onEvent(event: NovelsEvent) {
-        Timber.d("%s : %s", event::class.simpleName, event.toString())
+        Timber.d("[%s] - onEvent : %s", javaClass.simpleName, event.toString())
 
         when (event) {
             is NovelsEvent.NovelDialogConfirmed -> {

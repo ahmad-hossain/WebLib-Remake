@@ -33,7 +33,7 @@ class FoldersViewModel @Inject constructor(
     private var dialogFolder: Folder = Folder.createWithDefaults()
 
     fun onEvent(event: FoldersEvent) {
-        Timber.d("%s : %s", event::class.simpleName, event.toString())
+        Timber.d("[%s] - onEvent : %s", javaClass.simpleName, event.toString())
 
         when (event) {
             is FoldersEvent.FolderDialogConfirmed -> {

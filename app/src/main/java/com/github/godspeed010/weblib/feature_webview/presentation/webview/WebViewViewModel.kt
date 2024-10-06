@@ -38,7 +38,7 @@ class WebViewViewModel @Inject constructor(
 
     @SuppressLint("SetJavaScriptEnabled")
     fun onEvent(event: WebViewEvent) {
-        Timber.d("%s : %s", event::class.simpleName, event.toString())
+        Timber.d("%s : %s", javaClass.simpleName, event.toString())
 
         when(event) {
             is WebViewEvent.EnteredUrl -> {
