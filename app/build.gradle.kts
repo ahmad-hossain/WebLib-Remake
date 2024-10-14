@@ -30,6 +30,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testOptions.unitTests.isIncludeAndroidResources = true
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -109,8 +110,11 @@ dependencies {
     implementation(libs.timber)
     ksp(libs.raamcosta.compose.destinations.ksp)
 
+    testImplementation(libs.androidx.core.testing)
     testImplementation(libs.google.truth)
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.robolectric)
 
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.core.testing)
