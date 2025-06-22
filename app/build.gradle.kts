@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.screenshot)
 }
 
 kotlin {
@@ -20,7 +21,9 @@ kotlin {
 
 android {
     namespace = "com.github.godspeed010.weblib"
-    compileSdk = 33
+    compileSdk = 34
+
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 
     defaultConfig {
         applicationId = "com.github.godspeed010.weblib"
@@ -125,6 +128,9 @@ dependencies {
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.mockito.core)
+
+    screenshotTestImplementation(libs.screenshot.validation.api)
+    screenshotTestImplementation(libs.androidx.compose.ui.tooling)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 }
