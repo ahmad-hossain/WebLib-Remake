@@ -2,6 +2,9 @@ package com.github.godspeed010.weblib.feature_library.presentation.folders.compo
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CreateNewFolder
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -18,9 +21,11 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.common.components.FixedWidthOutlinedTextField
+import com.github.godspeed010.weblib.ui.theme.WebLibTheme
 
 @ExperimentalComposeUiApi
 @Composable
@@ -67,4 +72,20 @@ fun AddEditFolderDialog(
             )
         },
     )
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Preview(showBackground = true)
+@Composable
+private fun PreviewAddEditFolderDialog() {
+    WebLibTheme {
+        AddEditFolderDialog(
+            title = "",
+            icon = Icons.Default.CreateNewFolder,
+            folderName = TextFieldValue("some folder name"),
+            onTextChange = {},
+            onDismissDialog = {},
+            onConfirmDialog = {}
+        )
+    }
 }

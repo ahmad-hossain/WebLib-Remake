@@ -1,32 +1,55 @@
 package com.github.godspeed010.weblib.feature_library.presentation.novels
 
+import android.annotation.SuppressLint
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.common.components.WebLibBottomAppBar
 import com.github.godspeed010.weblib.common.model.Screen
 import com.github.godspeed010.weblib.destinations.WebViewScreenDestination
 import com.github.godspeed010.weblib.feature_library.common.Constants
+import com.github.godspeed010.weblib.feature_library.common.use_case.ValidatedUrl
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
+import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
+import com.github.godspeed010.weblib.feature_library.domain.use_case.DeleteNovelUseCase
 import com.github.godspeed010.weblib.feature_library.presentation.novels.components.AddEditNovelDialog
 import com.github.godspeed010.weblib.feature_library.presentation.novels.components.MoveNovelModalBottomSheet
 import com.github.godspeed010.weblib.feature_library.presentation.novels.components.NovelItem
+import com.github.godspeed010.weblib.navArgs
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import kotlinx.coroutines.flow.emptyFlow
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 
 data class NovelsScreenNavArgs(
     val folder: Folder
@@ -116,7 +139,7 @@ fun NovelsScreen(
                 if (novel.id != state.hiddenNovelId) {
                     NovelItem(
                         novel = novel,
-                        isDropdownExpanded =  (index == state.expandedDropdownNovelListIndex),
+                        isDropdownExpanded = (index == state.expandedDropdownNovelListIndex),
                         onNovelClicked = { navigator.navigate(WebViewScreenDestination(novel)) },
                         onMoreClicked = { viewModel.onEvent(NovelsEvent.MoreOptionsClicked(index)) },
                         onDismissDropdown = { viewModel.onEvent(NovelsEvent.MoreOptionsDismissed) },

@@ -10,8 +10,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.common.model.Screen
+
+data class NavItem(
+    val screen: Screen,
+    val onClickAction: () -> Unit,
+    val icon: ImageVector,
+    val iconContentDescriptionRes: Int,
+)
 
 @Composable
 fun WebLibBottomAppBar(
@@ -55,9 +63,10 @@ fun WebLibBottomAppBar(
     }
 }
 
-data class NavItem(
-    val screen: Screen,
-    val onClickAction: () -> Unit,
-    val icon: ImageVector,
-    val iconContentDescriptionRes: Int,
-)
+@Preview
+@Composable
+private fun PreviewWebLibBottomAppBar() {
+    WebLibBottomAppBar(
+        currentScreen = Screen.Home
+    )
+}

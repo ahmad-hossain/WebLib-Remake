@@ -4,16 +4,30 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import com.github.godspeed010.weblib.R
+import com.github.godspeed010.weblib.ui.theme.WebLibTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,10 +60,10 @@ fun FixedWidthOutlinedTextField(
         value = if (width == null) "" else value,
         onValueChange = onValueChange,
         modifier =
-        if (width == null)
-            modifier.onSizeChanged { with(density) { width = it.width.toDp() } }
-        else
-            modifier.requiredWidth(width!!),
+            if (width == null)
+                modifier.onSizeChanged { with(density) { width = it.width.toDp() } }
+            else
+                modifier.requiredWidth(width!!),
         enabled = enabled,
         readOnly = readOnly,
         textStyle = textStyle,
@@ -102,10 +116,10 @@ fun FixedWidthOutlinedTextField(
         value = if (width == null) TextFieldValue("") else value,
         onValueChange = onValueChange,
         modifier =
-        if (width == null)
-            modifier.onSizeChanged { with(density) { width = it.width.toDp() } }
-        else
-            modifier.requiredWidth(width!!),
+            if (width == null)
+                modifier.onSizeChanged { with(density) { width = it.width.toDp() } }
+            else
+                modifier.requiredWidth(width!!),
         enabled = enabled,
         readOnly = readOnly,
         textStyle = textStyle,
@@ -125,4 +139,17 @@ fun FixedWidthOutlinedTextField(
         shape = shape,
         colors = colors
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewFixedWidthOutlinedTextField() {
+    WebLibTheme {
+        FixedWidthOutlinedTextField(
+            value = "this is a very very very very very very very very long piece of text",
+            label = {},
+            onValueChange = {},
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        )
+    }
 }
