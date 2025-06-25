@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -15,12 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.FolderItem
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,21 +36,12 @@ fun MoveNovelModalBottomSheet(
     onBottomSheetDismissed: () -> Unit,
     onFolderClicked: (Folder) -> Unit
 ) {
-    var showBottomSheet by rememberSaveable { mutableStateOf(isVisible) }
-    val scope = rememberCoroutineScope()
     LaunchedEffect(isVisible) {
-        if (isVisible) {
-            showBottomSheet = true
-        }
-        else {
-            scope.launch {
-                bottomSheetState.hide()
-            }.invokeOnCompletion {
-                showBottomSheet = false
-            }
+        if (!isVisible) {
+            bottomSheetState.hide()
         }
     }
-    if (!showBottomSheet) return
+    if (!isVisible) return
 
     ModalBottomSheet(
         modifier = modifier,
@@ -71,6 +58,7 @@ fun MoveNovelModalBottomSheet(
             LazyColumn {
                 items(folders) {
                     FolderItem(
+                        containerColor = BottomSheetDefaults.ContainerColor,
                         folder = it,
                         isDropdownExpanded = false,
                         onFolderClicked = { onFolderClicked(it) },
@@ -90,6 +78,7 @@ private fun PreviewMoveNovelModalBottomSheet() {
         isVisible = true,
         bottomSheetState = SheetState(
             skipPartiallyExpanded = true,
+            density = LocalDensity.current,
             initialValue = SheetValue.Expanded
         ),
         folders = listOf(

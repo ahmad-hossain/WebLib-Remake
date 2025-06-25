@@ -21,7 +21,7 @@ kotlin {
 
 android {
     namespace = "com.github.godspeed010.weblib"
-    compileSdk = 34
+    compileSdk = 35
 
     experimentalProperties["android.experimental.enableScreenshotTest"] = true
 

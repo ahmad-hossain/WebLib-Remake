@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,9 +19,10 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 
 @Composable
 fun FolderItem(
+    modifier: Modifier = Modifier,
+    containerColor: Color = ListItemDefaults.containerColor,
     folder: Folder,
     isDropdownExpanded: Boolean,
-    modifier: Modifier = Modifier,
     onFolderClicked: () -> Unit,
     onMoreClicked: () -> Unit = {},
     onDismissDropdown: () -> Unit = {},
@@ -37,6 +39,7 @@ fun FolderItem(
             .clip(MaterialTheme.shapes.medium)
             .clickable { onFolderClicked() }
             .padding(vertical = 8.dp),
+        colors = ListItemDefaults.colors(containerColor = containerColor),
         headlineContent = { Text(text = folder.title) },
         leadingContent = { Icon(imageVector = Icons.Outlined.Folder, contentDescription = "Folder") },
         trailingContent = if (!isTrailingContentVisible) { null } else {{
