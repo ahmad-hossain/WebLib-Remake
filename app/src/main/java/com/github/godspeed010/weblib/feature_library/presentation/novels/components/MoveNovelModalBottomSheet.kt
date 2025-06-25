@@ -6,8 +6,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -54,7 +54,7 @@ fun MoveNovelModalBottomSheet(
                 fontSize = MaterialTheme.typography.headlineLarge.fontSize,
                 textAlign = TextAlign.Center,
             )
-            Divider(Modifier.padding(vertical = 8.dp, horizontal = 16.dp))
+            HorizontalDivider(Modifier.padding(vertical = 8.dp, horizontal = 16.dp))
             LazyColumn {
                 items(folders) {
                     FolderItem(
