@@ -87,6 +87,7 @@ fun FoldersScreen(
             itemsIndexed(state.folders) { index, folder ->
                 if (folder.id != state.hiddenFolderId) {
                     FolderItem(
+                        modifier = Modifier.animateItem(),
                         folder = folder,
                         isDropdownExpanded = (index == state.expandedDropdownItemListIndex),
                         onFolderClicked = { navigator.navigate(NovelsScreenDestination(folder)) },

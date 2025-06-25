@@ -20,8 +20,8 @@ import com.github.godspeed010.weblib.feature_library.domain.model.Novel
 
 @Composable
 fun NovelItem(
-    novel: Novel,
     modifier: Modifier = Modifier,
+    novel: Novel,
     isDropdownExpanded: Boolean,
     onNovelClicked: () -> Unit,
     onMoreClicked: () -> Unit,
