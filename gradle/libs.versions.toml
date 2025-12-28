@@ -40,6 +40,7 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx-compose-material = { module = "androidx.compose.material:material", version.ref = "androidxMaterial" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "composeUi" }
 androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeUi" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "composeUi" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "composeUi" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "composeUi" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -62,6 +63,7 @@ dexmaker-mockito = { module = "com.linkedin.dexmaker:dexmaker-mockito", version.
 google-truth = { module = "com.google.truth:truth", version.ref = "truth" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "googleHilt" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "googleHilt" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "googleHilt" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }

@@ -49,10 +49,10 @@ fun FoldersScreen(
         snackbarHost = { SnackbarHost(hostState = state.snackbarHostState) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
-            FloatingActionButton(onClick = { viewModel.onEvent(FoldersEvent.FabClicked)}) {
+            FloatingActionButton(onClick = { viewModel.onEvent(FoldersEvent.FabClicked) }) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    "Add Folder"
+                    stringResource(R.string.cd_add_folder),
                 )
             }
         }

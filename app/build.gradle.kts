@@ -32,7 +32,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.github.godspeed010.weblib.HiltTestRunner"
         testOptions.unitTests.isIncludeAndroidResources = true
         vectorDrawables {
             useSupportLibrary = true
@@ -128,9 +128,9 @@ dependencies {
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.mockito.core)
+    androidTestImplementation(libs.hilt.android.testing)
 
-    implementation(libs.dexmaker.mockito)
-    implementation(libs.mockito.core)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     screenshotTestImplementation(libs.screenshot.validation.api)
     screenshotTestImplementation(libs.androidx.compose.ui.tooling)
