@@ -70,8 +70,8 @@ class FoldersScreenTest {
 
     @After
     fun tearDown() {
-        libraryDatabase.clearAllTables()
         libraryDatabase.close()
+        libraryDatabase.clearAllTables()
     }
 
     @Test
