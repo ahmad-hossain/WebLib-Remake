@@ -1,6 +1,5 @@
 package com.github.godspeed010.weblib.feature_library.presentation.folders
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -12,17 +11,19 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
-import androidx.test.platform.app.InstrumentationRegistry
 import com.github.godspeed010.weblib.MainActivity
 import com.github.godspeed010.weblib.R
+import com.github.godspeed010.weblib.feature_library.data.data_source.LibraryDatabase
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
 import com.github.godspeed010.weblib.test_util.data_set.ManyFoldersAndNovelsDataSet
+import com.github.godspeed010.weblib.test_util.getString
 import com.github.godspeed010.weblib.test_util.matcher.Matchers
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -46,6 +47,8 @@ class FoldersScreenTest {
 
     @Inject
     lateinit var libraryRepository: LibraryRepository
+    @Inject
+    lateinit var libraryDatabase: LibraryDatabase
 
     private val dataSet = ManyFoldersAndNovelsDataSet
     private val matchers = Matchers()
@@ -58,6 +61,12 @@ class FoldersScreenTest {
             dataSet.FOLDERS.forEach { libraryRepository.insertFolder(it) }
             dataSet.NOVELS.forEach { libraryRepository.insertNovel(it) }
         }
+    }
+
+    @After
+    fun tearDown() {
+        libraryDatabase.clearAllTables()
+        libraryDatabase.close()
     }
 
     @Test
@@ -106,6 +115,22 @@ class FoldersScreenTest {
         assertThat(libraryRepository.getFolderNames()).doesNotContain("folder2")
     }
 
-    private fun getString(@StringRes id: Int) =
-        InstrumentationRegistry.getInstrumentation().targetContext.resources.getString(id)
+    @Test
+    fun clickFolder_folderWithNovels_expectedNovelsAreVisibleOnNovelsScreen() = runTest {
+        composeTestRule
+            .onNode(matchers.foldersScreen.folder(dataSet.FOLDERS[0].title).matcher)
+            .performClick()
+        val foldersScreen = matchers.foldersScreen
+
+        val folder1Novels = dataSet.NOVELS_FOLDER_1
+        composeTestRule.waitUntilExactlyOneExists(
+            foldersScreen.novel(name = folder1Novels[0].title, url = folder1Novels[0].url).matcher
+        )
+        composeTestRule.waitUntilExactlyOneExists(
+            foldersScreen.novel(name = folder1Novels[1].title, url = folder1Novels[1].url).matcher
+        )
+        composeTestRule.waitUntilDoesNotExist(
+            foldersScreen.novel(dataSet.NOVELS_FOLDER_3[0].title).matcher
+        )
+    }
 }

@@ -10,27 +10,30 @@ object ManyFoldersAndNovelsDataSet {
         Folder(id = 3, title = "folder3"),
         Folder(id = 4, title = "folder4"),
     )
-    val NOVELS = listOf(
+    val NOVELS_FOLDER_1 = listOf(
         Novel(
-            id = 0,
+            id = 1,
             title = "novel1",
             url = "https://google.com",
             scrollProgression = 0f,
             folderId = 1
         ),
         Novel(
-            id = 1,
+            id = 2,
             title = "novel2",
             url = "https://example.com",
             scrollProgression = 0f,
             folderId = 1
         ),
+    )
+    val NOVELS_FOLDER_3 = listOf(
         Novel(
-            id = 2,
+            id = 3,
             title = "novel3",
             url = "https://bing.com",
             scrollProgression = 0f,
             folderId = 3
         ),
     )
+    val NOVELS = NOVELS_FOLDER_1 + NOVELS_FOLDER_3
 }
