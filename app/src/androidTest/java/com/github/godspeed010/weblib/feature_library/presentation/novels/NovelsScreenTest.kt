@@ -14,7 +14,10 @@ import com.github.godspeed010.weblib.feature_library.data.data_source.LibraryDat
 import com.github.godspeed010.weblib.feature_library.domain.repository.LibraryRepository
 import com.github.godspeed010.weblib.test_util.data_set.ManyFoldersAndNovelsDataSet
 import com.github.godspeed010.weblib.test_util.getString
-import com.github.godspeed010.weblib.test_util.matcher.Matchers
+import com.github.godspeed010.weblib.test_util.element.AddEditNovelDialogElements
+import com.github.godspeed010.weblib.test_util.element.FoldersScreenElements
+import com.github.godspeed010.weblib.test_util.element.Elements
+import com.github.godspeed010.weblib.test_util.element.NovelsScreenElements
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -50,10 +53,18 @@ class NovelsScreenTest {
     lateinit var libraryDatabase: LibraryDatabase
 
     private val dataSet = ManyFoldersAndNovelsDataSet
+    private lateinit var elements: Elements
+    private lateinit var foldersScreen: FoldersScreenElements
+    private lateinit var novelsScreen: NovelsScreenElements
+    private lateinit var addEditNovelDialog: AddEditNovelDialogElements
 
     @Before
     fun setUp() {
         hiltTestRule.inject()
+        elements = Elements(composeTestRule)
+        foldersScreen = elements.foldersScreen
+        novelsScreen = elements.novelsScreen
+        addEditNovelDialog = elements.addEditNovelDialog
 
         runBlocking {
             dataSet.FOLDERS.forEach { libraryRepository.insertFolder(it) }
@@ -70,22 +81,14 @@ class NovelsScreenTest {
     @Test
     fun addNovel_addsNovelAtEnd() = runTest {
         val folder = dataSet.FOLDERS[0]
-        composeTestRule
-            .onNode(Matchers.foldersScreen.folder(folder).matcher)
-            .performClick()
+        foldersScreen.folder(folder).node.performClick()
 
-        composeTestRule
-            .onNode(Matchers.novelsScreen.addNovelFab)
-            .performClick()
-        composeTestRule
-            .onNode(Matchers.addEditNovelDialog.novelTitleTextField)
+        novelsScreen.addNovelFab.node.performClick()
+        addEditNovelDialog.titleTextField.node
             .performTextInput("new_novel_1")
-        composeTestRule
-            .onNode(Matchers.addEditNovelDialog.novelUrlTextField)
+        addEditNovelDialog.novelUrlTextField.node
             .performTextInput("https://example.com/new_novel_1")
-        composeTestRule
-            .onNode(Matchers.addEditNovelDialog.saveButton)
-            .performClick()
+        addEditNovelDialog.saveButton.node.performClick()
 
         composeTestRule.waitUntilExactlyOneExists(hasText("new_novel_1"))
         composeTestRule.waitUntilExactlyOneExists(hasText("https://example.com/new_novel_1"))
@@ -100,23 +103,15 @@ class NovelsScreenTest {
     fun editNovel_novelIsUpdated() = runTest {
         val folder = dataSet.FOLDERS[0]
         val novel = dataSet.NOVELS_FOLDER_1[0]
-        composeTestRule
-            .onNode(Matchers.foldersScreen.folder(folder).matcher)
-            .performClick()
+        foldersScreen.folder(folder).node.performClick()
 
-        composeTestRule
-            .onNode(Matchers.novelsScreen.novel(novel.title).moreButton)
-            .performClick()
+        novelsScreen.novel(novel.title).moreButton.node.performClick()
         composeTestRule.onNode(hasText(getString(R.string.edit))).performClick()
-        composeTestRule
-            .onNode(Matchers.addEditNovelDialog.novelTitleTextField)
+        addEditNovelDialog.titleTextField.node
             .performTextReplacement("updated_novel_1")
-        composeTestRule
-            .onNode(Matchers.addEditNovelDialog.novelUrlTextField)
+        addEditNovelDialog.novelUrlTextField.node
             .performTextReplacement("https://example.com/updated_novel_1")
-        composeTestRule
-            .onNode(Matchers.addEditNovelDialog.saveButton)
-            .performClick()
+        addEditNovelDialog.saveButton.node.performClick()
 
         composeTestRule.waitUntilDoesNotExist(hasText(novel.title))
         composeTestRule.waitUntilDoesNotExist(hasText(novel.url))
@@ -135,13 +130,9 @@ class NovelsScreenTest {
     fun deleteNovel_novelIsDeleted() = runTest {
         val folder = dataSet.FOLDERS[0]
         val novel = dataSet.NOVELS_FOLDER_1[0]
-        composeTestRule
-            .onNode(Matchers.foldersScreen.folder(folder).matcher)
-            .performClick()
+        foldersScreen.folder(folder).node.performClick()
 
-        composeTestRule
-            .onNode(Matchers.novelsScreen.novel(novel.title).moreButton)
-            .performClick()
+        novelsScreen.novel(novel.title).moreButton.node.performClick()
         composeTestRule
             .onNode(hasText(getString(R.string.delete)))
             .performClick()
@@ -149,7 +140,8 @@ class NovelsScreenTest {
         composeTestRule.waitUntilDoesNotExist(hasText("Undo"), timeoutMillis = 5_000L)
         composeTestRule.waitUntilDoesNotExist(hasText(novel.title))
         composeTestRule.waitUntilDoesNotExist(hasText(novel.url))
-        val deletedNovel = libraryRepository.getNovels().first().firstOrNull { it.title == novel.title }
+        val deletedNovel =
+            libraryRepository.getNovels().first().firstOrNull { it.title == novel.title }
         assertThat(deletedNovel).isNull()
     }
 }
