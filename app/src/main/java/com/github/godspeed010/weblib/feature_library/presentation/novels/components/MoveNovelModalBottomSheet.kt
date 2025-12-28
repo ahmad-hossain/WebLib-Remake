@@ -11,13 +11,11 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.github.godspeed010.weblib.R
 import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 import com.github.godspeed010.weblib.feature_library.presentation.folders.components.FolderItem
+import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,13 +73,11 @@ fun MoveNovelModalBottomSheet(
 @Preview
 @Composable
 private fun PreviewMoveNovelModalBottomSheet() {
+    val sheetState = rememberModalBottomSheetState()
+    runBlocking { sheetState.expand() }
     MoveNovelModalBottomSheet(
         isVisible = true,
-        bottomSheetState = SheetState(
-            skipPartiallyExpanded = true,
-            density = LocalDensity.current,
-            initialValue = SheetValue.Expanded
-        ),
+        bottomSheetState = sheetState,
         folders = listOf(
             Folder(title = "folder 1"),
             Folder(title = "folder 2"),
