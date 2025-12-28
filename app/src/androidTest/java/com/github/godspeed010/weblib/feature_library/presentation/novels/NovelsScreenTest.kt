@@ -137,7 +137,9 @@ class NovelsScreenTest {
             .onNode(hasText(getString(R.string.delete)))
             .performClick()
 
-        composeTestRule.waitUntilDoesNotExist(hasText("Undo"), timeoutMillis = 5_000L)
+        composeTestRule.waitUntilExactlyOneExists(hasText("Undo"))
+        composeTestRule.mainClock.advanceTimeBy(5_000L)
+        composeTestRule.waitUntilDoesNotExist(hasText("Undo"))
         composeTestRule.waitUntilDoesNotExist(hasText(novel.title))
         composeTestRule.waitUntilDoesNotExist(hasText(novel.url))
         val deletedNovel =

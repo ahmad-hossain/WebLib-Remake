@@ -107,7 +107,9 @@ class FoldersScreenTest {
 
         assertThat(oldFolderNames).contains("folder2")
         composeTestRule.waitUntilDoesNotExist(hasText("folder2"))
-        composeTestRule.waitUntilDoesNotExist(hasText("Undo"), timeoutMillis = 5_000L)
+        composeTestRule.waitUntilExactlyOneExists(hasText("Undo"))
+        composeTestRule.mainClock.advanceTimeBy(5_000L)
+        composeTestRule.waitUntilDoesNotExist(hasText("Undo"))
         assertThat(libraryRepository.getFolderNames()).doesNotContain("folder2")
     }
 
