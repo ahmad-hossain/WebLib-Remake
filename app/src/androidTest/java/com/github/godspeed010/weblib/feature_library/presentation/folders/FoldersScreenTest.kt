@@ -75,9 +75,9 @@ class FoldersScreenTest {
             .performClick()
         composeTestRule.onNode(hasSetTextAction()).performTextInput("new_folder_1")
         composeTestRule
-            .onNode(Matchers.addEditItemDialog.saveButton)
+            .onNode(Matchers.addEditFolderDialog.saveButton)
             .performClick()
-        composeTestRule.waitUntilDoesNotExist(Matchers.addEditItemDialog.saveButton)
+        composeTestRule.waitUntilDoesNotExist(Matchers.addEditFolderDialog.saveButton)
 
         assertThat(libraryRepository.getFolderNames()).contains("new_folder_1")
         composeTestRule.onNodeWithText("new_folder_1").assertIsDisplayed()
@@ -86,15 +86,15 @@ class FoldersScreenTest {
     @Test
     fun editFolder_folderIsUpdated() = runTest {
         composeTestRule
-            .onNode(Matchers.foldersScreen.folder("folder1").moreButton)
+            .onNode(Matchers.foldersScreen.folder(dataSet.FOLDERS[0]).moreButton)
             .performClick()
         composeTestRule.onNode(hasText(getString(R.string.edit))).performClick()
 
         composeTestRule.onNode(hasSetTextAction()).performTextReplacement("edited_folder")
         composeTestRule
-            .onNode(Matchers.addEditItemDialog.saveButton)
+            .onNode(Matchers.addEditFolderDialog.saveButton)
             .performClick()
-        composeTestRule.waitUntilDoesNotExist(Matchers.addEditItemDialog.saveButton)
+        composeTestRule.waitUntilDoesNotExist(Matchers.addEditFolderDialog.saveButton)
 
         assertThat(libraryRepository.getFolderNames()).contains("edited_folder")
         composeTestRule.onNodeWithText("edited_folder").assertIsDisplayed()
@@ -104,7 +104,7 @@ class FoldersScreenTest {
     fun deleteFolder_folderIsDeleted() = runTest {
         val oldFolderNames = libraryRepository.getFolderNames()
         composeTestRule
-            .onNode(Matchers.foldersScreen.folder("folder2").moreButton)
+            .onNode(Matchers.foldersScreen.folder(dataSet.FOLDERS[1]).moreButton)
             .performClick()
         composeTestRule.onNode(hasText(getString(R.string.delete))).performClick()
 
@@ -117,19 +117,19 @@ class FoldersScreenTest {
     @Test
     fun clickFolder_folderWithNovels_expectedNovelsAreVisibleOnNovelsScreen() = runTest {
         composeTestRule
-            .onNode(Matchers.foldersScreen.folder(dataSet.FOLDERS[0].title).matcher)
+            .onNode(Matchers.foldersScreen.folder(dataSet.FOLDERS[0]).matcher)
             .performClick()
-        val foldersScreen = Matchers.foldersScreen
+        val novelsScreen = Matchers.novelsScreen
 
         val folder1Novels = dataSet.NOVELS_FOLDER_1
         composeTestRule.waitUntilExactlyOneExists(
-            foldersScreen.novel(name = folder1Novels[0].title, url = folder1Novels[0].url).matcher
+            novelsScreen.novel(name = folder1Novels[0].title, url = folder1Novels[0].url).matcher
         )
         composeTestRule.waitUntilExactlyOneExists(
-            foldersScreen.novel(name = folder1Novels[1].title, url = folder1Novels[1].url).matcher
+            novelsScreen.novel(name = folder1Novels[1].title, url = folder1Novels[1].url).matcher
         )
         composeTestRule.waitUntilDoesNotExist(
-            foldersScreen.novel(dataSet.NOVELS_FOLDER_3[0].title).matcher
+            novelsScreen.novel(dataSet.NOVELS_FOLDER_3[0].title).matcher
         )
     }
 }

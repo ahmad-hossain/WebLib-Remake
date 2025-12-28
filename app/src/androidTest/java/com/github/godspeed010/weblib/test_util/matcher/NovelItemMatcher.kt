@@ -4,13 +4,16 @@ import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasText
-import com.github.godspeed010.weblib.feature_library.domain.model.Folder
 
-class FolderItemMatcher(
-    private val folder: Folder
-) : BaseMatcher() {
+class NovelItemMatcher(
+    private val name: String,
+    private val url: String?
+): BaseMatcher() {
     override val matcher: SemanticsMatcher
-        get() = hasText(folder.title)
+        get() = when (url == null) {
+            true -> hasText(name)
+            false -> hasText(name) and hasText(url)
+        }
 
     val moreButton: SemanticsMatcher
         get() = hasParent(matcher) and hasContentDescription("More")

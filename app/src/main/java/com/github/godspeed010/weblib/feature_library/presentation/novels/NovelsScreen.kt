@@ -96,7 +96,7 @@ fun NovelsScreen(
                 }) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    "Add Novel"
+                    stringResource(R.string.cd_add_novel)
                 )
             }
         }
